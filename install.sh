@@ -48,6 +48,9 @@ OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/overrides"
 echo "Setting up development directories"
 source "$OVERRIDES_DIR/setup-directories.sh"
 
+echo "Installing Node.js runtime"
+source "$OVERRIDES_DIR/install-nvm.sh"
+
 echo "Installing AMD graphics drivers"
 source "$OVERRIDES_DIR/install-amd-drivers.sh"
 
