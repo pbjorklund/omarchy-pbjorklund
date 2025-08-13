@@ -51,9 +51,13 @@ source "$OVERRIDES_DIR/setup-directories.sh"
 echo "Installing AMD graphics drivers"
 source "$OVERRIDES_DIR/install-amd-drivers.sh"
 
+echo "Replacing chromium with zen browser"
+source "$OVERRIDES_DIR/install-zen-browser.sh"
+
+echo "Installing AMD-optimized screen recorder"
+source "$OVERRIDES_DIR/install-screen-recorder.sh"
+
 echo "Installing personal applications"
-source "$OVERRIDES_DIR/install-obsidian.sh"
-source "$OVERRIDES_DIR/install-zotero.sh"
 source "$OVERRIDES_DIR/install-opencode.sh"
 source "$OVERRIDES_DIR/install-claude-code.sh"
 
@@ -67,6 +71,9 @@ source "$OVERRIDES_DIR/link-dotfiles.sh"
 echo "Setting up desktop integration"
 source "$OVERRIDES_DIR/copy-desktop-files.sh"
 source "$OVERRIDES_DIR/set-theme-pbjorklund.sh"
+
+echo "Installing zotero"
+source "$OVERRIDES_DIR/install-zotero.sh"
 
 echo
 echo "Personal omarchy configuration complete!"
