@@ -48,6 +48,9 @@ OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/overrides"
 echo "Setting up development directories"
 source "$OVERRIDES_DIR/setup-directories.sh"
 
+echo "Installing AMD graphics drivers"
+source "$OVERRIDES_DIR/install-amd-drivers.sh"
+
 echo "Installing personal applications"
 source "$OVERRIDES_DIR/install-obsidian.sh"
 source "$OVERRIDES_DIR/install-zotero.sh"
