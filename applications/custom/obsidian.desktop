@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Obsidian
+Comment=Note Taking
+Exec=obsidian
+Icon=obsidian
+Type=Application
+Categories=Office;TextEditor;
+StartupNotify=true

@@ -1,0 +1,6 @@
+# Machine-specific configuration
+config.env
+
+# Temporary files
+*.tmp
+.DS_Store

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Zotero
+Comment=Reference Manager
+Exec=zotero
+Icon=zotero
+Type=Application
+Categories=Office;Education;
+StartupNotify=true

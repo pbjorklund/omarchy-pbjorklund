@@ -1,0 +1,158 @@
+// VS Code User Settings
+// Features: Editor appearance, formatting, file handling, git integration, extensions
+// Location: ~/.config/Code/User/settings.json
+{
+  "editor.fontFamily": "'FiraCode Nerd Font', 'Fira Code', 'Inter', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 12,
+  "editor.lineHeight": 1.4,
+  "editor.fontWeight": "400",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [80, 120],
+  "editor.wordWrap": "off",
+  "editor.wordWrapColumn": 120,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.occurrencesHighlight": "off",
+  "editor.renderLineHighlight": "gutter",
+  "editor.glyphMargin": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "welcomePage",
+  "workbench.tree.indent": 20,
+  "workbench.activityBar.location": "bottom",
+  "workbench.panel.defaultLocation": "left",
+  "workbench.sideBar.location": "left",
+  "window.titleBarStyle": "custom",
+  "window.layoutControl.enabled": true,
+  "breadcrumbs.enabled": false,
+  "workbench.statusBar.visible": true,
+  "terminal.integrated.fontFamily": "'FiraCode Nerd Font', 'Fira Code', 'Inter', monospace",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  "files.autoSaveDelay": 1000,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "extensions.autoUpdate": true,
+  "update.mode": "manual",
+  "telemetry.telemetryLevel": "off",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "dotfiles.repository": "pbjorklund/dotfiles",
+  "dotfiles.targetPath": "/home/vscode/dotfiles",
+  "dotfiles.installCommand": "/home/vscode/dotfiles/dotfiles/install.sh",
+  "git.enableSmartCommit": true,
+  "chat.editing.confirmEditRequestRetry": false,
+  "chat.editing.confirmEditRequestRemoval": false,
+  "chat.tools.autoApprove": true,
+  "inlineChat.enableV2": true,
+  "roo-cline.allowedCommands": [
+    "npm test",
+    "npm install",
+    "tsc",
+    "git log",
+    "git diff",
+    "git show",
+    "*"
+  ],
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "vim.useCtrlKeys": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "[nginx]": {
+    "editor.defaultFormatter": "raynigon.nginx-formatter"
+  },
+  "chat.commandCenter.enabled": false,
+  "inlineChat.holdToSpeech": false,
+  "github.copilot.chat.agent.thinkingTool": true,
+  "accessibility.signals.progress": {
+    "sound": "off"
+  },
+  "accessibility.signalOptions.volume": 0,
+  "markdown-preview-enhanced.enablePreviewZenMode": true,
+  "markdown-preview-enhanced.codeBlockTheme": "atom-dark.css",
+  "markdown-preview-enhanced.previewTheme": "solarized-dark.css",
+  "peacock.affectStatusBar": false,
+  "peacock.favoriteColors": [
+    {
+      "name": "Muted Steel",
+      "value": "#8a9ba8"
+    },
+    {
+      "name": "Muted Sage",
+      "value": "#a8c4a0"
+    },
+    {
+      "name": "Soft Charcoal",
+      "value": "#a8a8a8"
+    },
+    {
+      "name": "Pale Sky",
+      "value": "#9bb5d1"
+    },
+    {
+      "name": "Soft Peach",
+      "value": "#d4b89c"
+    },
+    {
+      "name": "Gentle Mint",
+      "value": "#a0c4b8"
+    },
+    {
+      "name": "Muted Olive",
+      "value": "#b5b88a"
+    },
+    {
+      "name": "Warm Sand",
+      "value": "#c9b896"
+    },
+    {
+      "name": "Soft Teal",
+      "value": "#8fb3b3"
+    }
+  ],
+  "workbench.navigationControl.enabled": false,
+  "workbench.layoutControl.enabled": false,
+  "chat.agent.maxRequests": 50,
+  "window.commandCenter": false,
+  "explorer.confirmPasteNative": false,
+  "editor.accessibilitySupport": "off",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "keep",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.defaultColorDecorators": "never",
+    "editor.quickSuggestions": {
+      "strings": true,
+      "other": true,
+      "comments": false
+    },
+    "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
+    "editor.formatOnSave": true
+  }
+}

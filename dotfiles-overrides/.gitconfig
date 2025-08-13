@@ -1,0 +1,21 @@
+[alias]
+co = checkout
+ci = commit
+st = status
+br = branch
+hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+type = cat-file -t
+dump = cat-file -p
+[user]
+name = Patrik Björklund
+email = patrik@cognit.se
+[pull]
+rebase = false
+[color]
+branch = auto
+diff = auto
+status = auto
+[color "status"]
+added = yellow
+changed = green bold
+untracked = blue bold
