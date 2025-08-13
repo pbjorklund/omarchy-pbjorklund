@@ -13,7 +13,22 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Install latest LTS Node.js
-nvm install --lts
-nvm use --lts
-nvm alias default lts/*
+# Check if nvm is available, if not try alternative sourcing
+if ! command -v nvm &> /dev/null; then
+    # Try sourcing from common locations
+    if [ -s "$HOME/.bashrc" ]; then
+        source "$HOME/.bashrc"
+    fi
+    if [ -s "$HOME/.zshrc" ]; then
+        source "$HOME/.zshrc"
+    fi
+fi
+
+# Install latest LTS Node.js if nvm is available
+if command -v nvm &> /dev/null; then
+    nvm install --lts
+    nvm use --lts
+    nvm alias default lts/*
+else
+    echo "Warning: nvm not available in current session. Please restart your shell and run 'nvm install --lts' manually."
+fi
