@@ -4,4 +4,8 @@
 set -e
 
 # For AMD GPUs, use wl-screenrec (better for AMD than wf-recorder)
-yay -S --noconfirm --needed wl-screenrec
+if ! pacman -Q wl-screenrec >/dev/null 2>&1; then
+    yay -S --noconfirm wl-screenrec
+else
+    echo "wl-screenrec already installed"
+fi

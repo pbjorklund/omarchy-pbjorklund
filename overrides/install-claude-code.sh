@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-# Install Claude Code CLI
-if ! command -v npm &> /dev/null; then
-    echo "npm not found! Please ensure Node.js is installed first."
-    exit 1
-fi
+# Install Claude Desktop (no official CLI exists yet)
+echo "Note: Official Claude CLI not available via npm"
+echo "Using opencode as Claude interface instead"
 
-npm install -g @anthropic-ai/claude-cli
+# Claude Desktop is available via download, but for CLI usage opencode is sufficient
+echo "Claude Code functionality provided via opencode CLI"

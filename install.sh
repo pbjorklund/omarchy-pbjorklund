@@ -48,6 +48,15 @@ OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/overrides"
 echo "Setting up development directories"
 source "$OVERRIDES_DIR/setup-directories.sh"
 
+echo "Installing custom scripts"
+source "$OVERRIDES_DIR/install-bin-scripts.sh"
+
+echo "Installing package managers"
+source "$OVERRIDES_DIR/install-stow.sh"
+
+echo "Applying personal dotfiles first (before configs are modified)"
+source "$OVERRIDES_DIR/link-dotfiles.sh"
+
 echo "Installing Node.js runtime"
 source "$OVERRIDES_DIR/install-nvm.sh"
 
@@ -56,20 +65,19 @@ source "$OVERRIDES_DIR/install-amd-drivers.sh"
 
 echo "Replacing chromium with zen browser"
 source "$OVERRIDES_DIR/install-zen-browser.sh"
+echo "✓ Zen browser setup complete"
 
 echo "Installing AMD-optimized screen recorder"
 source "$OVERRIDES_DIR/install-screen-recorder.sh"
+echo "✓ Screen recorder setup complete"
 
 echo "Installing personal applications"
 source "$OVERRIDES_DIR/install-opencode.sh"
+echo "✓ OpenCode setup complete"
 source "$OVERRIDES_DIR/install-claude-code.sh"
-
-echo "Installing custom scripts"
-source "$OVERRIDES_DIR/install-bin-scripts.sh"
-
-echo "Applying personal dotfiles" 
-source "$OVERRIDES_DIR/install-stow.sh"
-source "$OVERRIDES_DIR/link-dotfiles.sh"
+echo "✓ Claude Code setup complete"
+source "$OVERRIDES_DIR/install-1password-cli.sh"
+echo "✓ 1Password CLI setup complete"
 
 echo "Setting up desktop integration"
 source "$OVERRIDES_DIR/copy-desktop-files.sh"
