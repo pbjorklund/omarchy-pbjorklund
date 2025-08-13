@@ -60,7 +60,7 @@ if [[ $(whoami) != "vscode" ]]; then
 
     # Created by `pipx` on 2025-06-16 12:33:17
     export PATH="$PATH:$HOME/.local/bin"
-    . "$HOME/.cargo/env"
+    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
     export PATH="$HOME/.cargo/bin:$PATH"
 
     # Disable crash reporting
