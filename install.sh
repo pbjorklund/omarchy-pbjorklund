@@ -13,7 +13,15 @@ catch_errors() {
   exit $exit_code
 }
 
+cleanup() {
+  # Kill any background jobs
+  jobs -p | xargs -r kill 2>/dev/null || true
+  # Ensure we exit
+  exit 0
+}
+
 trap 'catch_errors $LINENO' ERR
+trap cleanup EXIT
 
 # Function to run a script step with proper isolation and error handling
 run_step() {
@@ -95,6 +103,7 @@ declare -a INSTALL_STEPS=(
   "setup-directories.sh|Development directories setup"
   "install-bin-scripts.sh|Custom scripts installation"
   "install-stow.sh|Package managers installation"
+  "install-terminal-tools.sh|Terminal tools installation"
   "link-dotfiles.sh|Personal dotfiles deployment"
   "HYPRLAND_RELOAD|Hyprland configuration reload"
   "install-nvm.sh|Node.js runtime setup"
@@ -136,4 +145,11 @@ echo "  Compare configs: omarchy-compare-config ~/.config/hypr/bindings.conf"
 echo "  Reapply configs: cd dotfiles-overrides && stow -t \$HOME ."
 
 # Ensure clean exit
+echo "Script execution finished at $(date)"
+echo "Exit status: 0"
+
+# Force flush any remaining output
+exec 1>&1 2>&2
+
+# Explicit exit
 exit 0
