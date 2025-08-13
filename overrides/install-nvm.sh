@@ -8,7 +8,7 @@ echo "Setting up Node.js via NVM..."
 # Check if node is already available
 if command -v node &>/dev/null; then
   echo "Node.js already available: $(node --version)"
-  exit 0
+  return 0
 fi
 
 # Install nvm if not already installed

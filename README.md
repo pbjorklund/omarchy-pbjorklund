@@ -10,7 +10,13 @@ Personal overrides for omarchy that add additional applications, a custom theme,
 
 **You must have omarchy installed first.**
 
-Install Arch Linux + omarchy following instructions at https://omarchy.org, then run this script to apply personal customizations.
+1. Install Arch Linux + omarchy following instructions at https://omarchy.org
+2. **Set up 1Password before running this script:**
+   - Open 1Password desktop app (pre-installed with omarchy)
+   - Sign in to your 1Password account
+   - Import your SSH key named "pbjorklund-ssh" into 1Password
+   - Enable SSH agent: Settings → Developer → "Use the SSH agent"
+3. Run this script to apply personal customizations
 
 ## Quick Start
 

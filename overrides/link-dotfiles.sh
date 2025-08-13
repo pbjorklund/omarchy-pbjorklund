@@ -37,5 +37,5 @@ if [ -d "$DOTFILES_DIR" ]; then
     echo "Original configs backed up to: $BACKUP_DIR"
 else
     echo "Dotfiles directory not found: $DOTFILES_DIR"
-    exit 1
+    return 1
 fi
