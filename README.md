@@ -21,7 +21,6 @@ This setup adds development tools, applications, and personal dotfiles to omarch
 1. Complete omarchy installation from https://omarchy.org
 2. Copy `config.env.example` to `config.env` and customize for your environment
 3. Set up 1Password SSH agent:
-   - Install 1Password desktop app from https://1password.com/downloads/linux/
    - Add your SSH key to 1Password (generate new or import existing)
    - Note the SSH key name in 1Password and set `SSH_KEY_NAME` in `config.env` to match
    - Enable SSH agent in Settings → Developer → "Use the SSH agent"
