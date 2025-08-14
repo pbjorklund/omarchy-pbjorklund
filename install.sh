@@ -120,6 +120,7 @@ declare -a INSTALL_STEPS=(
   "install-zotero.sh|Zotero installation"
   "install-plexamp.sh|Plexamp installation"
   "install-tailscale.sh|Tailscale installation"
+  "configure-audio.sh|USB Audio configuration"
   "install-pbp.sh|Personal project setup"
 )
 
