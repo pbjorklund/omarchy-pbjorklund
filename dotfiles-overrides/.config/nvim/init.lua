@@ -507,7 +507,7 @@ require("lazy").setup({
       vim.g.mkdp_port = ""
       vim.g.mkdp_page_title = "「${name}」"
       vim.g.mkdp_theme = "dark"
-      
+
       -- Key mappings
       vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreview<cr>", { desc = "Markdown Preview Start" })
       vim.keymap.set("n", "<leader>ms", "<cmd>MarkdownPreviewStop<cr>", { desc = "Markdown Preview Stop" })
