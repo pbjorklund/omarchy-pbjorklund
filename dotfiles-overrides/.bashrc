@@ -99,7 +99,72 @@ if [[ $(whoami) != "vscode" ]]; then
     # opencode
     export PATH=$HOME/.opencode/bin:$PATH
 
+  # File system
+  alias ls='eza -lh --group-directories-first --icons=auto'
+  alias lsa='ls -a'
+  alias lt='eza --tree --level=2 --long --icons --git'
+  alias lta='lt -a'
+  alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
+  alias cd="zd"
+  zd() {
+    if [ $# -eq 0 ]; then
+      builtin cd ~ && return
+    elif [ -d "$1" ]; then
+      builtin cd "$1"
+    else
+      z "$@" && printf " \U000F17A9 " && pwd || echo "Error: Directory not found"
+    fi
+  }
+  open() {
+    xdg-open "$@" >/dev/null 2>&1 &
+  }
+
+  # Directories
+  alias ..='cd ..'
+  alias ...='cd ../..'
+  alias ....='cd ../../..'
+
+  # Tools
+  alias g='git'
+  alias d='docker'
+  alias r='rails'
+  n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+
+  # Git
+  alias gcm='git commit -m'
+  alias gcam='git commit -a -m'
+  alias gcad='git commit -a --amend'
+
+
+  # Editor used by CLI
+  export EDITOR="nvim"
+  export SUDO_EDITOR="$EDITOR"
+  export BAT_THEME=ansi
+
+  if command -v mise &> /dev/null; then
+    eval "$(mise activate bash)"
+  fi
+
+  if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init bash)"
+  fi
+
+  if command -v fzf &> /dev/null; then
+    if [[ -f /usr/share/fzf/completion.bash ]]; then
+      source /usr/share/fzf/completion.bash
+    fi
+    if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
+      source /usr/share/fzf/key-bindings.bash
+    fi
+  fi
+
+  # Autocompletion
+  if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
+    source /usr/share/bash-completion/bash_completion
+  fi
+
 fi
+
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Only set TERM if not in tmux (let tmux handle it)

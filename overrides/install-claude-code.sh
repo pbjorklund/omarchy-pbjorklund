@@ -1,9 +1,21 @@
 #!/bin/bash
 set -e
 
-# Install Claude Desktop (no official CLI exists yet)
-echo "Note: Official Claude CLI not available via npm"
-echo "Using opencode as Claude interface instead"
+# Install Claude Code
+echo "Installing Claude Code..."
 
-# Claude Desktop is available via download, but for CLI usage opencode is sufficient
-echo "Claude Code functionality provided via opencode CLI"
+# Check if Claude Code is already installed
+if command -v claude-code &>/dev/null; then
+    echo "Claude Code already installed"
+    return 0
+fi
+
+# Install Claude Code via AUR
+if command -v yay &>/dev/null; then
+    echo "Installing Claude Code via AUR..."
+    yay -S --noconfirm claude-code
+    echo "Claude Code installation completed"
+else
+    echo "ERROR: yay not found - please ensure AUR helper is installed"
+    return 1
+fi
