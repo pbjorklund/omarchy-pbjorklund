@@ -45,6 +45,6 @@
 ## 1Password SSH Setup Required
 The install script configures Git to use SSH with 1Password's SSH agent. You must:
 1. Install 1Password desktop app from https://1password.com/downloads/linux/
-2. Import your SSH key named "pbjorklund-ssh" into 1Password
+2. Import your SSH key with the name specified in config.env into 1Password
 3. Enable SSH agent in 1Password → Settings → Developer → "Use the SSH agent"
 4. Restart terminal after running install script for SSH_AUTH_SOCK to take effect

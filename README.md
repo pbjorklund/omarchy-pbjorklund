@@ -19,8 +19,9 @@ This setup adds development tools, applications, and personal dotfiles to omarch
 ## Prerequisites
 
 1. Complete omarchy installation from https://omarchy.org
-2. Set up 1Password SSH agent:
-   - Import SSH key named "pbjorklund-ssh"
+2. Copy `config.env.example` to `config.env` and customize for your environment
+3. Set up 1Password SSH agent:
+   - Import SSH key with the name specified in `config.env`
    - Enable SSH agent in Settings → Developer
 
 ## Installation
@@ -28,6 +29,8 @@ This setup adds development tools, applications, and personal dotfiles to omarch
 ```bash
 git clone <this-repo-url>
 cd omarchy-pbjorklund
+cp config.env.example config.env
+# Edit config.env with your values
 ./install.sh
 ```
 
@@ -36,7 +39,7 @@ The install script sources each override script in sequence, with error handling
 ## Post-Installation
 
 1. Configure keyring: `seahorse`
-2. Connect Tailscale: `sudo tailscale up --login-server=https://headscale.pbjorklund.com`
+2. Connect Tailscale: `sudo tailscale up --login-server=<your-headscale-server>`
 
 ---
 

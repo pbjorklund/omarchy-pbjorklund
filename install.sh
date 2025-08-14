@@ -60,11 +60,21 @@ run_inline_step() {
   fi
 }
 
+# Load configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/config.env" ]; then
+    source "$SCRIPT_DIR/config.env"
+else
+    echo "Error: config.env not found at $SCRIPT_DIR/config.env"
+    echo "Please create config.env from config.env.example"
+    exit 1
+fi
+
 echo "Personal Omarchy Configuration"
 echo
 echo "IMPORTANT: Ensure 1Password is set up before running this script:"
 echo "- Sign in to 1Password desktop app"
-echo "- Import SSH key 'pbjorklund-ssh' into 1Password"  
+echo "- Import SSH key '$SSH_KEY_NAME' into 1Password"  
 echo "- Enable SSH agent in 1Password Settings → Developer"
 echo
 
@@ -152,7 +162,7 @@ echo "  1. Launch Seahorse: seahorse"
 echo "  2. Create a default keyring if prompted"
 echo "  3. This enables 1Password keyring integration"
 echo "  4. Connect to Headscale:"
-echo "     sudo tailscale up --login-server=https://headscale.pbjorklund.com --accept-routes"
+echo "     sudo tailscale up --login-server=$HEADSCALE_SERVER --accept-routes"
 echo "     Visit the authentication URL provided"
 echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)"
 echo "     Then use: tsui (TUI for managing Tailscale connections)"
