@@ -8,6 +8,7 @@ alias la='ls -A'               # All files except . and ..
 alias l='ls -CF'               # Compact listing with file types
 alias grep='grep --color=auto' # Colorized grep output
 alias ls='ls --color=auto'     # Colorized ls output
+alias tmux='zellij'            # Use zellij instead of tmux
 
 # Disable pagers for better agent interaction
 export SYSTEMD_PAGER=''                  # Disable pager for systemctl
@@ -41,7 +42,7 @@ else
 
     # Created by `pipx` on 2025-06-16 12:33:17
     export PATH="$PATH:/home/pbjorklund/.local/bin"
-    . "$HOME/.cargo/env"
+    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
     export PATH="$HOME/.cargo/bin:$PATH"
 
     # Disable crash reporting
@@ -69,6 +70,11 @@ else
 
     # opencode
     export PATH=/home/pbjorklund/.opencode/bin:$PATH
+
+    # Auto-start zellij if not already in a session
+    if [[ -z "$ZELLIJ" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
+        zellij
+    fi
 fi
 
 # SSH wrapper to handle terminal compatibility

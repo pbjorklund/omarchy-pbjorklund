@@ -37,6 +37,7 @@ alias l='ls -CF'               # Compact listing with file types
 alias grep='grep --color=auto' # Colorized grep output
 alias ls='ls --color=auto'     # Colorized ls output
 alias c='claude --dangerously-skip-permissions'     # Yolo Claude, skip permissions
+alias tmux='zellij'            # Use zellij instead of tmux
 
 # Disable pagers for better agent interaction
 export SYSTEMD_PAGER=''                  # Disable pager for systemctl
@@ -98,6 +99,11 @@ if [[ $(whoami) != "vscode" ]]; then
 
     # opencode
     export PATH=$HOME/.opencode/bin:$PATH
+
+    # Auto-attach to existing zellij session or create new one (like tmux behavior)
+    if [[ -z "$ZELLIJ" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
+        zellij attach -c
+    fi
 
   # File system
   alias ls='eza -lh --group-directories-first --icons=auto'

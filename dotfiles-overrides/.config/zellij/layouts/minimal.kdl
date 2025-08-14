@@ -1,0 +1,7 @@
+layout {
+    pane
+
+    tab_template name="minimal_tab" {
+        children
+    }
+}
