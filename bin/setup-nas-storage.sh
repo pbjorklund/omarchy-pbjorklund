@@ -30,12 +30,13 @@ fi
 echo "Setting up NAS storage..."
 
 # Install required packages
-sudo pacman -S --noconfirm --needed cifs-utils autofs
+echo "Installing NAS storage packages..."
+sudo pacman -S --noconfirm --needed cifs-utils > /dev/null 2>&1
+yay -S --noconfirm autofs > /dev/null 2>&1
 
-# Create mount directories
+# Remove any existing mount directories (autofs direct mounts create them automatically)
 for share in "${NAS_SHARES[@]}"; do
-    sudo mkdir -p "/mnt/$share"
-    sudo chmod 755 "/mnt/$share"
+    sudo rmdir "/mnt/$share" 2>/dev/null || true
 done
 
 # Get credentials from 1Password using configured item name
@@ -63,6 +64,14 @@ EOF
 
 # Enable and start autofs
 sudo systemctl enable --now autofs
+
+# Remove mount directories for direct mounts (autofs creates them)
+for share in "${NAS_SHARES[@]}"; do
+    sudo rmdir "/mnt/$share" 2>/dev/null || true
+done
+
+# Restart autofs to pick up the configuration
+sudo systemctl restart autofs
 
 echo "NAS storage configured - shares auto-mount at:"
 for share in "${NAS_SHARES[@]}"; do
