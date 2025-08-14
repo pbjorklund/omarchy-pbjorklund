@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Tailscale (TUI)
+Comment=Tailscale TUI Manager
+Exec=alacritty --title "Tailscale Manager" --class "Tailscale-TUI" -e sudo tsui
+Terminal=false
+Type=Application
+Icon=/home/pbjorklund/.local/share/applications/icons/Tailscale.png
+StartupNotify=true
+Categories=Network;

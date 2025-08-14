@@ -104,6 +104,7 @@ declare -a INSTALL_STEPS=(
   "install-bin-scripts.sh|Custom scripts installation"
   "install-stow.sh|Package managers installation"
   "install-terminal-tools.sh|Terminal tools installation"
+  "install-iac-tools.sh|Infrastructure as Code tools installation"
   "link-dotfiles.sh|Personal dotfiles deployment"
   "HYPRLAND_RELOAD|Hyprland configuration reload"
   "install-nvm.sh|Node.js runtime setup"
@@ -112,10 +113,14 @@ declare -a INSTALL_STEPS=(
   "install-screen-recorder.sh|Screen recorder setup"
   "install-opencode.sh|OpenCode setup"
   "install-claude-code.sh|Claude Code setup"
+  "install-keyring-setup.sh|Keyring management setup"
   "install-1password-cli.sh|1Password CLI setup"
   "copy-desktop-files.sh|Desktop files copying"
   "set-theme-pbjorklund.sh|Personal theme application"
   "install-zotero.sh|Zotero installation"
+  "install-plexamp.sh|Plexamp installation"
+  "install-tailscale.sh|Tailscale installation"
+  "install-pbp.sh|Personal project setup"
 )
 
 # Execute all steps
@@ -137,9 +142,21 @@ for step in "${INSTALL_STEPS[@]}"; do
 done
 
 echo
+echo "========================================="
 echo "Personal omarchy configuration complete!"
+echo "========================================="
 echo
-echo "Management commands:"
+echo "IMPORTANT POST-SETUP STEPS:"
+echo "  1. Launch Seahorse: seahorse"
+echo "  2. Create a default keyring if prompted"
+echo "  3. This enables 1Password keyring integration"
+echo "  4. Connect to Headscale:"
+echo "     sudo tailscale up --login-server=https://headscale.pbjorklund.com --accept-routes"
+echo "     Visit the authentication URL provided"
+echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)"
+echo "     Then use: tsui (TUI for managing Tailscale connections)"
+echo
+echo "MANAGEMENT COMMANDS:"
 echo "  Reset to omarchy defaults: omarchy-refresh-hyprland"
 echo "  Compare configs: omarchy-compare-config ~/.config/hypr/bindings.conf"
 echo "  Reapply configs: cd dotfiles-overrides && stow -t \$HOME ."

@@ -11,6 +11,12 @@ else
     echo "Chromium not installed, skipping removal"
 fi
 
+# Remove chromium desktop entry if it exists
+if [ -f "applications/chromium.desktop" ]; then
+    echo "Removing chromium desktop entry..."
+    rm applications/chromium.desktop
+fi
+
 # Install zen browser from AUR (skip if already installed)
 if ! pacman -Q zen-browser-bin >/dev/null 2>&1; then
     echo "Installing zen browser..."
@@ -32,6 +38,12 @@ if xdg-mime default zen-browser.desktop x-scheme-handler/http 2>/dev/null && \
     echo "MIME associations set successfully"
 else
     echo "Warning: Could not set MIME associations (may need to set manually)"
+fi
+
+# Fix omarchy-menu script to use zen instead of chromium
+if [ -f "$HOME/.local/share/omarchy/bin/omarchy-menu" ]; then
+    echo "Updating omarchy-menu to use zen browser..."
+    sed -i 's/setsid chromium --new-window --app=/setsid zen-browser --new-window --app=/' "$HOME/.local/share/omarchy/bin/omarchy-menu"
 fi
 
 # Configure 1Password integration

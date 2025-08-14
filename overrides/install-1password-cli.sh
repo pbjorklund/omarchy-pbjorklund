@@ -12,6 +12,9 @@ if ! command -v 1password >/dev/null 2>&1; then
     echo "Visit: https://1password.com/downloads/linux/"
 fi
 
+# Remind about keyring setup
+echo "NOTE: If 1Password asks about keyring integration, use Seahorse to create a default keyring first"
+
 # Install 1Password CLI from AUR (skip if already installed)
 if ! pacman -Q 1password-cli >/dev/null 2>&1; then
     echo "Installing 1Password CLI..."

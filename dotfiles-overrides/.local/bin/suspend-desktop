@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+# Disable all USB device wake sources
+for device in /sys/bus/usb/devices/*/power/wakeup; do
+    if [ -w "$device" ] || sudo test -w "$device"; then
+        echo disabled | sudo tee "$device" >/dev/null 2>&1 || true
+    fi
+done
+
+# Enable only keyboard wake (find USB keyboard device)
+keyboard_device=""
+for device in /sys/bus/usb/devices/*/product; do
+    if [ -f "$device" ] && grep -qi "keyboard" "$device" 2>/dev/null; then
+        device_dir="$(dirname "$device")"
+        wakeup_file="$device_dir/power/wakeup"
+        if [ -f "$wakeup_file" ]; then
+            keyboard_device="$(basename "$device_dir")"
+            echo enabled | sudo tee "$wakeup_file" >/dev/null 2>&1 || true
+            echo "Enabled keyboard wake: $keyboard_device"
+            break
+        fi
+    fi
+done
+
+# Disable ACPI USB controller wake sources
+sudo bash -c '
+for device in XHC0 XHC1 XHC2 XH00; do
+    if grep -q "^$device.*enabled" /proc/acpi/wakeup 2>/dev/null; then
+        echo $device > /proc/acpi/wakeup
+    fi
+done
+' || true
+
+# Suspend the system
+systemctl suspend
