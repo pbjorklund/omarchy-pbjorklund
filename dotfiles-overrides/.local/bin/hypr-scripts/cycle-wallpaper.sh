@@ -61,16 +61,16 @@ case "$1" in
 laptop)
     TARGET_DESC="BOE 0x094C"
     MONITOR=$(find_monitor_connector "$TARGET_DESC")
-    WALLPAPERS=($(find "$WALLPAPER_DIR" -name 'laptop*' -o -name 'main*' | grep -E '\.(jpg|webp|png)$' | sort))
+    WALLPAPERS=($(find -L "$WALLPAPER_DIR" \( -name 'laptop*' -o -name 'main*' \) -type f | grep -E '\.(jpg|webp|png)$' | sort))
     ;;
 main)
     TARGET_DESC=$(determine_main_monitor)
     MONITOR=$(find_monitor_connector "$TARGET_DESC")
     # Choose wallpapers based on monitor type
     if [[ "$TARGET_DESC" == "Samsung Electric Company SE790C HTRH401237" ]]; then
-        WALLPAPERS=($(find "$WALLPAPER_DIR" -name 'ultra*' -o -name 'main*' | grep -E '\.(jpg|webp|png)$' | sort))
+        WALLPAPERS=($(find -L "$WALLPAPER_DIR" \( -name 'ultra*' -o -name 'main*' \) -type f | grep -E '\.(jpg|webp|png)$' | sort))
     else
-        WALLPAPERS=($(find "$WALLPAPER_DIR" -name 'main*' -o -name 'work*' | grep -E '\.(jpg|webp|png)$' | sort))
+        WALLPAPERS=($(find -L "$WALLPAPER_DIR" \( -name 'main*' -o -name 'work*' \) -type f | grep -E '\.(jpg|webp|png)$' | sort))
     fi
     ;;
 secondary)
@@ -82,9 +82,9 @@ secondary)
     MONITOR=$(find_monitor_connector "$TARGET_DESC")
     # Choose wallpapers based on monitor type
     if [[ "$TARGET_DESC" == "Acer Technologies XV240Y P 0x944166C5" ]]; then
-        WALLPAPERS=($(find "$WALLPAPER_DIR" -name 'portrait*' | grep -E '\.(jpg|webp|png)$' | sort))
+        WALLPAPERS=($(find -L "$WALLPAPER_DIR" -name 'portrait*' -type f | grep -E '\.(jpg|webp|png)$' | sort))
     else
-        WALLPAPERS=($(find "$WALLPAPER_DIR" -name 'main*' | grep -E '\.(jpg|webp|png)$' | sort))
+        WALLPAPERS=($(find -L "$WALLPAPER_DIR" -name 'main*' -type f | grep -E '\.(jpg|webp|png)$' | sort))
     fi
     ;;
 *)
