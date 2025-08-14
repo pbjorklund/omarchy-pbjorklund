@@ -39,9 +39,25 @@ The install script sources each override script in sequence, with error handling
 
 ## Post-Installation
 
+### Required Setup Steps
 1. Configure keyring: `seahorse` (creates default keyring for 1Password integration)
 2. Restart terminal for SSH agent to take effect
 3. Connect Tailscale: `sudo tailscale up --login-server=<your-headscale-server>`
+
+### Optional Manual Setup
+
+#### NAS Storage Setup
+Run `./bin/setup-nas-storage.sh` to mount network storage shares. Requires:
+- NAS credentials stored in 1Password (item name specified in `config.env`)
+- Network connectivity to your NAS device
+
+#### Zen Browser Configuration
+1. Sign in with Mozilla account (note: pinned tabs don't sync)
+2. Configure 1Password extension properly:
+   - Disable 1Password extension temporarily
+   - Turn off "save passwords" in browser settings
+   - Re-enable 1Password extension
+   - This prevents browser from saving passwords/form data (1Password handles this)
 
 ---
 
