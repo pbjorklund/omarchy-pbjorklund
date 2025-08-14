@@ -31,9 +31,7 @@ background = '#7aa2f7'
 [mouse]
 hide_when_typing = true
 
-[[mouse.bindings]]
-mouse = "Left"
-action = "ClickLink"
+# URL clicking is handled automatically in newer Alacritty versions
+# Use Ctrl+Click to open URLs
 
-[terminal.osc52]
-default_timeout = 5
+# OSC52 clipboard support (enabled by default in newer versions)
