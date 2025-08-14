@@ -8,8 +8,8 @@ echo "Setting up Node.js via NVM..."
 # Check if node is already available
 if command -v node &>/dev/null; then
   echo "Node.js already available: $(node --version)"
-  return 0
-fi
+  echo "Skipping NVM installation"
+else
 
 # Install nvm if not already installed
 if [ ! -d "$HOME/.config/nvm" ] && [ ! -d "$HOME/.nvm" ]; then
@@ -38,4 +38,6 @@ if command -v nvm &>/dev/null; then
 else
   echo "WARNING: nvm not available in current session"
   echo "Please restart your shell and run 'nvm install --lts' manually"
+fi
+
 fi
