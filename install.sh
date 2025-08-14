@@ -144,6 +144,7 @@ declare -a INSTALL_STEPS=(
   "install-claude-code.sh|Claude Code setup"
   "install-keyring-setup.sh|Keyring management setup"
   "install-1password-cli.sh|1Password CLI setup"
+  "setup-mouse.sh|Gaming mouse configuration"
   "copy-desktop-files.sh|Desktop files copying"
   "install-theme-pbjorklund.sh|Personal theme installation"
   "install-zotero.sh|Zotero installation"
