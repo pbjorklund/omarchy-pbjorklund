@@ -36,8 +36,8 @@ bash install.sh
 ## Management Commands
 
 ```bash
-# Switch back to pbjorklund theme
-bash overrides/set-theme-pbjorklund.sh
+# Install pbjorklund theme (available but not set as current)
+bash overrides/install-theme-pbjorklund.sh
 
 # Reapply dotfiles after changes
 cd dotfiles-overrides && stow -t $HOME .
