@@ -116,7 +116,7 @@ declare -a INSTALL_STEPS=(
   "install-keyring-setup.sh|Keyring management setup"
   "install-1password-cli.sh|1Password CLI setup"
   "copy-desktop-files.sh|Desktop files copying"
-  "set-theme-pbjorklund.sh|Personal theme application"
+  "install-theme-pbjorklund.sh|Personal theme installation"
   "install-zotero.sh|Zotero installation"
   "install-plexamp.sh|Plexamp installation"
   "install-tailscale.sh|Tailscale installation"
