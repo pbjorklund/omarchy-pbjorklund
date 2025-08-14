@@ -21,8 +21,9 @@ This setup adds development tools, applications, and personal dotfiles to omarch
 1. Complete omarchy installation from https://omarchy.org
 2. Copy `config.env.example` to `config.env` and customize for your environment
 3. Set up 1Password SSH agent:
+   - Install 1Password desktop app from https://1password.com/downloads/linux/
    - Import SSH key with the name specified in `config.env`
-   - Enable SSH agent in Settings → Developer
+   - Enable SSH agent in Settings → Developer → "Use the SSH agent"
 
 ## Installation
 
@@ -38,16 +39,11 @@ The install script sources each override script in sequence, with error handling
 
 ## Post-Installation
 
-1. Configure keyring: `seahorse`
-2. Connect Tailscale: `sudo tailscale up --login-server=<your-headscale-server>`
+1. Configure keyring: `seahorse` (creates default keyring for 1Password integration)
+2. Restart terminal for SSH agent to take effect
+3. Connect Tailscale: `sudo tailscale up --login-server=<your-headscale-server>`
 
 ---
 
-*Based on omarchy by DHH and 37signals*
-
-
-
----
-
-**Based on omarchy by DHH and 37signals**  
+*Based on omarchy by DHH and 37signals*  
 See https://omarchy.org for the base system

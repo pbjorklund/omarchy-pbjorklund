@@ -42,9 +42,15 @@
 - Single-user system focus
 - Error trap catches failures and shows retry instructions
 
-## 1Password SSH Setup Required
-The install script configures Git to use SSH with 1Password's SSH agent. You must:
-1. Install 1Password desktop app from https://1password.com/downloads/linux/
-2. Import your SSH key with the name specified in config.env into 1Password
-3. Enable SSH agent in 1Password → Settings → Developer → "Use the SSH agent"
-4. Restart terminal after running install script for SSH_AUTH_SOCK to take effect
+## Configuration Management
+- All sensitive values (URLs, keys) go in `config.env` - never hardcode in scripts
+- Scripts must load `config.env` before using variables
+- Update both `config.env.example` and actual `config.env` when adding new variables
+- SSH setup relies on 1Password SSH agent integration - scripts assume this is configured
+
+## Code Style & Standards
+- Follow existing patterns in the codebase
+- Match omarchy's clean, minimal aesthetic (no decorative elements)
+- Shell scripts use bash with `set -e` for strict error handling
+- No sudo prompts - user runs install.sh as regular user
+- Preserve omarchy's update compatibility - use overrides, not replacements
