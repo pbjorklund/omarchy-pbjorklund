@@ -31,13 +31,32 @@ run_step() {
   
   echo "Running: $description"
   
-  # Source script instead of executing in subshell
-  if source "$script_path"; then
+  # Capture output and errors, but show errors if script fails
+  local temp_output=$(mktemp)
+  local temp_error=$(mktemp)
+  
+  # Source script instead of executing in subshell, capture output
+  if (source "$script_path") >"$temp_output" 2>"$temp_error"; then
+    # Show any output from the script (allows scripts to control their own messaging)
+    if [ -s "$temp_output" ]; then
+      cat "$temp_output"
+    fi
     echo "✓ $description complete"
+    rm -f "$temp_output" "$temp_error"
     return 0
   else
     local exit_code=$?
+    # Show errors when script fails
+    if [ -s "$temp_error" ]; then
+      echo "Error output:"
+      cat "$temp_error" >&2
+    fi
+    if [ -s "$temp_output" ]; then
+      echo "Script output:"
+      cat "$temp_output"
+    fi
     echo "✗ $description failed (exit code: $exit_code)"
+    rm -f "$temp_output" "$temp_error"
     return $exit_code
   fi
 }
@@ -132,6 +151,9 @@ declare -a INSTALL_STEPS=(
   "install-tailscale.sh|Tailscale installation"
   "configure-audio.sh|USB Audio configuration"
   "install-pbp.sh|Personal project setup"
+  "setup-ssh-server.sh|SSH server setup"
+  "uninstall-typora.sh|Typora removal"
+  "uninstall-spotify.sh|Spotify removal"
 )
 
 # Execute all steps

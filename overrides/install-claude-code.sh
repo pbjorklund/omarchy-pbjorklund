@@ -13,7 +13,7 @@ fi
 # Install Claude Code via AUR
 if command -v yay &>/dev/null; then
     echo "Installing Claude Code via AUR..."
-    yay -S --noconfirm claude-code
+    yay -S --noconfirm claude-code >/dev/null 2>&1
     echo "Claude Code installation completed"
 else
     echo "ERROR: yay not found - please ensure AUR helper is installed"
