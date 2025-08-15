@@ -146,7 +146,6 @@ declare -a INSTALL_STEPS=(
   "install-1password-cli.sh|1Password CLI setup"
   "setup-mouse.sh|Gaming mouse configuration"
   "copy-desktop-files.sh|Desktop files copying"
-  "install-theme-pbjorklund.sh|Personal theme installation"
   "install-zotero.sh|Zotero installation"
   "install-plexamp.sh|Plexamp installation"
   "install-tailscale.sh|Tailscale installation"
