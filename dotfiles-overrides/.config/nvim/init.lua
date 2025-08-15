@@ -538,7 +538,7 @@ require("lazy").setup({
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = "cd app && yarn install",
+    build = "cd app && npm install",
     config = function()
       vim.g.mkdp_auto_start = 0
       vim.g.mkdp_auto_close = 1
@@ -546,7 +546,7 @@ require("lazy").setup({
       vim.g.mkdp_command_for_global = 0
       vim.g.mkdp_open_to_the_world = 0
       vim.g.mkdp_open_ip = ""
-      vim.g.mkdp_browser = ""
+      vim.g.mkdp_browser = "zen-browser"
       vim.g.mkdp_echo_preview_url = 1
       vim.g.mkdp_browserfunc = ""
       vim.g.mkdp_preview_options = {

@@ -2,11 +2,7 @@
 // Features: Editor appearance, formatting, file handling, git integration, extensions
 // Location: ~/.config/Code/User/settings.json
 {
-  "editor.fontFamily": "'FiraCode Nerd Font', 'Fira Code', 'Inter', monospace",
   "editor.fontLigatures": true,
-  "editor.fontSize": 12,
-  "editor.lineHeight": 1.4,
-  "editor.fontWeight": "400",
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.smoothScrolling": true,
@@ -34,8 +30,8 @@
   "window.layoutControl.enabled": true,
   "breadcrumbs.enabled": false,
   "workbench.statusBar.visible": true,
-  "terminal.integrated.fontFamily": "'FiraCode Nerd Font', 'Fira Code', 'Inter', monospace",
-  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontFamily": "monospace",
+  "terminal.integrated.fontSize": 15,
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
   "files.autoSaveDelay": 1000,
@@ -60,7 +56,6 @@
   "git.enableSmartCommit": true,
   "chat.editing.confirmEditRequestRetry": false,
   "chat.editing.confirmEditRequestRemoval": false,
-  "chat.tools.autoApprove": true,
   "inlineChat.enableV2": true,
   "roo-cline.allowedCommands": [
     "npm test",
@@ -154,5 +149,10 @@
     },
     "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
     "editor.formatOnSave": true
-  }
+  },
+  "chat.mcp.autostart": "newAndOutdated",
+  "editor.fontFamily": "monospace",
+  "editor.fontSize": 15,
+  "chat.tools.autoApprove": true,
+  "chat.todoListTool.enabled": true
 }
