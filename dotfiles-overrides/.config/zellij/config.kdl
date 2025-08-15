@@ -1,14 +1,18 @@
 // Zellij config with vim-friendly keybinds
 default_shell "bash"
 mouse_mode true
-copy_command "wl-copy"
+// copy_command "wl-copy"
 copy_on_select true
 simplified_ui true
 
 keybinds {
-  normal clear-defaults=false {
+  normal {
     bind "Ctrl b" { SwitchToMode "tmux"; }
+    // Change to not conflict with my vim navigation
+    unbind "Ctrl h"
+    bind "Ctrl m" { SwitchToMode "move"; }
   }
+
 }
 
 // Tokyo Night theme
