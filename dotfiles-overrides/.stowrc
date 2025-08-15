@@ -1,0 +1,3 @@
+# Stow configuration for selective symlinks
+# Prevent stow from creating entire .config/Code directory
+--ignore=Code$

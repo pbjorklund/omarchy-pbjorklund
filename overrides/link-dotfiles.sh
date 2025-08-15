@@ -9,8 +9,12 @@ if [ -d "$DOTFILES_DIR" ]; then
     cd "$(dirname "$DOTFILES_DIR")"
     echo "Deploying personal dotfiles..."
     
+    # Create VS Code directory structure first to avoid full symlink
+    mkdir -p "$HOME/.config/Code/User"
+    
     # Use stow restow to handle both initial deployment and updates atomically
-    stow -R -t "$HOME" dotfiles-overrides
+    # --no-folding prevents stow from creating directory symlinks
+    stow -R --no-folding -t "$HOME" dotfiles-overrides
     
     echo "Personal dotfiles deployed successfully"
 else

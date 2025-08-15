@@ -15,21 +15,4 @@ keybinds {
 
 }
 
-// Tokyo Night theme
-themes {
-  jade {
-    bg "#99C867"
-    fg "#a9b1d6"
-    red "#f7768e"
-    green "#9ece6a"
-    blue "#7aa2f7"
-    yellow "#e0af68"
-    magenta "#bb9af7"
-    orange "#ff9e64"
-    cyan "#0db9d7"
-    black "#32344a"
-    white "#acb0d0"
-  }
-}
-
-theme "jade"
+theme "atelier-sulphurpool"
