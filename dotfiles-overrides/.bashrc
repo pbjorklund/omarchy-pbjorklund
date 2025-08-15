@@ -1,110 +1,78 @@
 #!/bin/bash
 
-# Bash configuration for development workstation
-# Features: extended history, useful aliases, modern editor integration
-
-# If not running interactively, don't do anything
+# Exit if shell is not interactive (prevents issues in scripts/non-interactive contexts)
 case $- in
-*i*) ;;
-*) return ;;
+  *i*) ;;
+  *) return ;;
 esac
 
-# History Configuration
-shopt -s histappend   # Append to history file, don't overwrite
-HISTSIZE=10000        # Commands in memory
-HISTFILESIZE=20000    # Commands in history file
-shopt -s checkwinsize # Update window size after each command
+# =============================================================================
+# SHELL CONFIGURATION
+# =============================================================================
 
-# Git branch detection function for prompt
+shopt -s histappend checkwinsize
+HISTSIZE=10000
+HISTFILESIZE=20000
+
 git_branch() {
-    local branch
-    if branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); then
-        if [[ $branch == "HEAD" ]]; then
-            branch=$(git rev-parse --short HEAD 2>/dev/null)
-        fi
-        echo " ($branch)"
+  local branch
+  if branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); then
+    if [[ $branch == "HEAD" ]]; then
+      branch=$(git rev-parse --short HEAD 2>/dev/null)
     fi
+    echo " ($branch)"
+  fi
 }
 
-# Prompt Configuration - colorized with git integration
-# Colors: cyan user@host, blue path, green git branch, white prompt
 PS1='\[\e[0;36m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;32m\]$(git_branch)\[\e[0m\]\$ '
 
-# Essential Aliases
-alias ll='ls -alF'             # Long listing with file types
-alias la='ls -A'               # All files except . and ..
-alias l='ls -CF'               # Compact listing with file types
-alias grep='grep --color=auto' # Colorized grep output
-alias ls='ls --color=auto'     # Colorized ls output
-alias c='claude --dangerously-skip-permissions'     # Yolo Claude, skip permissions
-alias tmux='zellij'            # Use zellij instead of tmux
+# =============================================================================
+# ENVIRONMENT VARIABLES
+# =============================================================================
 
-# Disable pagers for better agent interaction
-export SYSTEMD_PAGER=''                  # Disable pager for systemctl
-export PAGER='cat'                       # Use cat instead of less/more
-export MANPAGER='cat'                    # Use cat for manual pages
-alias systemctl='systemctl --no-pager'   # Force systemctl to not use pager
-alias journalctl='journalctl --no-pager' # Force journalctl to not use pager
+export EDITOR=nvim
+export SUDO_EDITOR="$EDITOR"
+export BAT_THEME=ansi
+export COLORTERM=truecolor
 
-# 1Password integration - only for non-vscode users
+# Agent integration
+export SYSTEMD_PAGER=''
+export PAGER='cat'
+export MANPAGER='cat'
+
+# Security
+umask 077
+export TMPDIR="/tmp/$(whoami)"
+mkdir -p "$TMPDIR"
+chmod 700 "$TMPDIR"
+
+# 1Password integration
 export SSH_AUTH_SOCK=~/.1password/agent.sock
-export OP_BIOMETRIC_UNLOCK_ENABLED=true
+export OP_BIOMETRIC_UNLOCK_ENABLED=false
 
-# Conditional Loading
-# Load additional configurations if they exist
-[[ -f ~/.bash_aliases ]] && source ~/.bash_aliases
-[[ -f ~/.bash_local ]] && source ~/.bash_local
+# =============================================================================
+# PATH CONFIGURATION
+# =============================================================================
 
+export NPM_CONFIG_PREFIX=~/.npm-global
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:$HOME/.opencode/bin:$PATH"
+
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# =============================================================================
+# ALIASES
+# =============================================================================
+
+# Core utilities
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias grep='grep --color=auto'
+alias systemctl='systemctl --no-pager'
+alias journalctl='journalctl --no-pager'
+
+# Non-VSCode only aliases and functions
 if [[ $(whoami) != "vscode" ]]; then
-    # Editor Configuration
-    export EDITOR=nvim # Use neovim as default editor
-
-    # Created by `pipx` on 2025-06-16 12:33:17
-    export PATH="$PATH:$HOME/.local/bin"
-    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
-    export PATH="$HOME/.cargo/bin:$PATH"
-
-    # Disable crash reporting
-    export GNOME_DISABLE_CRASH_DIALOG=1
-
-    # Reduce information leakage
-    umask 077 # Restrictive file permissions by default
-
-    # Secure temporary files
-    export TMPDIR="/tmp/$(whoami)"
-    mkdir -p "$TMPDIR"
-    chmod 700 "$TMPDIR"
-
-    # npm configuration - use home directory for global packages to avoid permissions issues
-    export NPM_CONFIG_PREFIX=~/.npm-global
-    export PATH=~/.npm-global/bin:$PATH
-
-    # GitHub token function - only loads when needed
-    gh_token() {
-        if [ -z "$GH_TOKEN" ]; then
-            export GH_TOKEN=$(op item get "GitHub Personal Access Token" --fields credential --reveal 2>/dev/null)
-        fi
-        echo "$GH_TOKEN"
-    }
-
-    # SSH wrapper to handle terminal compatibility
-    ssh() {
-        # If current TERM is kitty-based, use xterm-256color for SSH
-        if [[ "$TERM" == *"kitty"* ]]; then
-            env TERM=xterm-256color command ssh "$@"
-        else
-            command ssh "$@"
-        fi
-    }
-
-    # opencode
-    export PATH=$HOME/.opencode/bin:$PATH
-
-    # Auto-attach to existing zellij session or create new one (like tmux behavior)
-    if [[ -z "$ZELLIJ" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
-        zellij attach -c
-    fi
-
   # File system
   alias ls='eza -lh --group-directories-first --icons=auto'
   alias lsa='ls -a'
@@ -112,6 +80,17 @@ if [[ $(whoami) != "vscode" ]]; then
   alias lta='lt -a'
   alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
   alias cd="zd"
+
+  # Application shortcuts
+  alias c='claude --dangerously-skip-permissions'
+  alias zel='zellij a'
+fi
+
+# =============================================================================
+# FUNCTIONS
+# =============================================================================
+
+if [[ $(whoami) != "vscode" ]]; then
   zd() {
     if [ $# -eq 0 ]; then
       builtin cd ~ && return
@@ -121,63 +100,61 @@ if [[ $(whoami) != "vscode" ]]; then
       z "$@" && printf " \U000F17A9 " && pwd || echo "Error: Directory not found"
     fi
   }
+
   open() {
     xdg-open "$@" >/dev/null 2>&1 &
   }
 
-  # Directories
-  alias ..='cd ..'
-  alias ...='cd ../..'
-  alias ....='cd ../../..'
-
-  # Tools
-  alias g='git'
-  alias d='docker'
-  alias r='rails'
-  n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
-
-  # Git
-  alias gcm='git commit -m'
-  alias gcam='git commit -a -m'
-  alias gcad='git commit -a --amend'
-
-
-  # Editor used by CLI
-  export EDITOR="nvim"
-  export SUDO_EDITOR="$EDITOR"
-  export BAT_THEME=ansi
-
-  if command -v mise &> /dev/null; then
-    eval "$(mise activate bash)"
-  fi
-
-  if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init bash)"
-  fi
-
-  if command -v fzf &> /dev/null; then
-    if [[ -f /usr/share/fzf/completion.bash ]]; then
-      source /usr/share/fzf/completion.bash
+  n() {
+    if [ "$#" -eq 0 ]; then
+      nvim .
+    else
+      nvim "$@"
     fi
-    if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
-      source /usr/share/fzf/key-bindings.bash
+  }
+
+  ssh() {
+    if [[ "$TERM" == *"kitty"* ]]; then
+      env TERM=xterm-256color command ssh "$@"
+    else
+      command ssh "$@"
     fi
+  }
+fi
+
+# =============================================================================
+# TOOL INTEGRATION
+# =============================================================================
+
+if [[ $(whoami) != "vscode" ]]; then
+  command -v mise &>/dev/null && eval "$(mise activate bash)"
+  command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+
+  if command -v fzf &>/dev/null; then
+    [[ -f /usr/share/fzf/completion.bash ]] && source /usr/share/fzf/completion.bash
+    [[ -f /usr/share/fzf/key-bindings.bash ]] && source /usr/share/fzf/key-bindings.bash
   fi
 
-  # Autocompletion
   if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
     source /usr/share/bash-completion/bash_completion
   fi
-
 fi
 
-export PATH="$HOME/.cargo/bin:$PATH"
+if [[ "$OPENCODE" == "1" ]]; then
+    export PAGER=cat
+    export MANPAGER=cat
+    export SYSTEMD_PAGER=
+    # Disable git pager
+    export GIT_PAGER=cat
+    # Disable other common pagers
+    alias less=cat
+    alias more=cat
+fi
 
-# Only set TERM if not in tmux (let tmux handle it)
-[[ -z "$TMUX" ]] && export TERM=xterm-256color
-export COLORTERM=truecolor # Enable true color support
+# =============================================================================
+# STARTUP
+# =============================================================================
 
-# Show system info and color test on new interactive shells (only if interactive)
 if [[ $- == *i* ]] >/dev/null 2>&1; then
-    fastfetch -c paleofetch
+  fastfetch
 fi
