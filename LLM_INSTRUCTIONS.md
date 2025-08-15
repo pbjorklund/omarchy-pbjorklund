@@ -54,3 +54,17 @@
 - Shell scripts use bash with `set -e` for strict error handling
 - No sudo prompts - user runs install.sh as regular user
 - Preserve omarchy's update compatibility - use overrides, not replacements
+
+## Dotfiles & Stow Configuration
+- **Dotfiles managed via GNU Stow** from `dotfiles-overrides/` directory
+- **Omarchy integration**: omarchy provides base configs, we provide overrides via symlinks
+- **Hyprland pattern**: omarchy's `hyprland.conf` sources both defaults AND our personal overrides
+  - Keep omarchy's main `hyprland.conf` (orchestrates includes)
+  - Our dotfiles provide individual `.conf` files that get symlinked and sourced
+- **VS Code special handling**: 
+  - Create `~/.config/Code/User/` directory structure before stowing
+  - Only symlink `settings.json`, never the entire `Code/` directory
+  - VS Code needs to write additional files/dirs without conflicts
+- **Stow flags**: Use `-R --no-folding` to prevent directory symlinks, allow file-level control
+- **Initial deployment**: omarchy may pre-create some config files; stow `-R` handles existing symlinks but won't replace regular files
+- **No `--adopt` flag**: This moves existing files INTO dotfiles, overwriting customizations
