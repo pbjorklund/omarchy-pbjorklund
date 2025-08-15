@@ -325,6 +325,53 @@ require("lazy").setup({
     end,
   },
 
+  -- Buffer line (visual tabs for buffers)
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("bufferline").setup({
+        options = {
+          numbers = "ordinal", -- Show buffer numbers
+          diagnostics = "nvim_lsp", -- Show LSP diagnostics
+          show_buffer_close_icons = true,
+          show_close_icon = false, -- Hide global close icon
+          separator_style = "slant", -- "slant" | "thick" | "thin"
+          offsets = {
+            {
+              filetype = "NvimTree",
+              text = "File Explorer",
+              highlight = "Directory",
+              text_align = "left"
+            }
+          }
+        }
+      })
+
+      -- Buffer navigation (tmux-style keymaps)
+      vim.keymap.set("n", "<leader>bn", ":BufferLineCycleNext<CR>", { desc = "Next buffer" })
+      vim.keymap.set("n", "<leader>bp", ":BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
+
+      -- Buffer actions (tmux-style)
+      vim.keymap.set("n", "<leader>bx", ":bdelete<CR>", { desc = "Close current buffer" })
+      vim.keymap.set("n", "<leader>bc", ":enew<CR>", { desc = "Create new buffer" })
+
+      -- Additional useful ones
+      vim.keymap.set("n", "<leader>bX", ":BufferLineCloseOthers<CR>", { desc = "Close other buffers" })
+      vim.keymap.set("n", "<leader>bb", ":BufferLinePick<CR>", { desc = "Pick buffer" })
+
+      -- Move buffers
+      vim.keymap.set("n", "<leader>b<", ":BufferLineMovePrev<CR>", { desc = "Move buffer left" })
+      vim.keymap.set("n", "<leader>b>", ":BufferLineMoveNext<CR>", { desc = "Move buffer right" })
+
+      -- Direct buffer access (1-9)
+      for i = 1, 9 do
+        vim.keymap.set("n", "<leader>b" .. i, "<Cmd>BufferLineGoToBuffer " .. i .. "<CR>", { desc = "Go to buffer " .. i })
+      end
+    end,
+  },
+
   -- File tree
   {
     "nvim-tree/nvim-tree.lua",
@@ -418,6 +465,15 @@ require("lazy").setup({
         { "<leader>fd", desc = "Diagnostics" },
         { "<leader>e", desc = "Toggle File Tree" },
         { "<leader>v", desc = "Edit config" },
+        { "<leader>b", group = "Buffer" },
+        { "<leader>bn", desc = "Next buffer" },
+        { "<leader>bp", desc = "Previous buffer" },
+        { "<leader>bx", desc = "Close current buffer" },
+        { "<leader>bc", desc = "Create new buffer" },
+        { "<leader>bX", desc = "Close other buffers" },
+        { "<leader>bb", desc = "Pick buffer" },
+        { "<leader>b<", desc = "Move buffer left" },
+        { "<leader>b>", desc = "Move buffer right" },
         { "<leader>c", group = "Code/Copilot" },
         { "<leader>ca", desc = "Code Action" },
         { "<leader>cc", desc = "Copilot Chat" },
