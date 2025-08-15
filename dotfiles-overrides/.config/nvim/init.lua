@@ -1,4 +1,4 @@
--- Bootstrap lazy.nvim
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -16,31 +16,31 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Basic settings (migrated from vimrc)
-vim.opt.hidden = true
-vim.opt.mouse = "a"
-vim.opt.cursorline = true
-vim.opt.expandtab = true
-vim.opt.wildmode = "list:longest"
-vim.opt.directory = vim.fn.expand("~/.vim/tmp")
-vim.opt.backspace = "indent,eol,start"
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.scrolloff = 8
-vim.opt.timeout = false
-vim.opt.incsearch = true
-vim.opt.foldmethod = "manual"
-vim.opt.foldnestmax = 10
-vim.opt.foldlevel = 1
-vim.opt.foldlevelstart = 99
-vim.opt.laststatus = 2
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.hlsearch = true
-vim.opt.autoread = true
+vim.opt.hidden = true -- Allow switching buffers without saving
+vim.opt.mouse = "a" -- Enable mouse support in all modes
+vim.opt.cursorline = true -- Highlight current line
+vim.opt.expandtab = true -- Convert tabs to spaces
+vim.opt.wildmode = "list:longest" -- Command completion behavior
+vim.opt.directory = vim.fn.expand("~/.vim/tmp") -- Swap file location
+vim.opt.backspace = "indent,eol,start" -- Allow backspace over everything
+vim.opt.splitright = true -- New vertical splits open right
+vim.opt.splitbelow = true -- New horizontal splits open below
+vim.opt.tabstop = 2 -- Tab width in spaces
+vim.opt.shiftwidth = 2 -- Indentation width
+vim.opt.scrolloff = 8 -- Keep 8 lines visible around cursor
+vim.opt.timeout = false -- Disable timeout for key sequences
+vim.opt.incsearch = true -- Show matches while typing search
+vim.opt.laststatus = 2 -- Always show status line
+vim.opt.relativenumber = true -- Show relative line numbers
+vim.opt.ignorecase = true -- Case-insensitive search by default
+vim.opt.smartcase = true -- Case-sensitive if search has uppercase
+vim.opt.hlsearch = true -- Highlight all search matches
+vim.opt.autoread = true -- Auto-reload files changed outside vim
+vim.opt.foldenable = true -- Enable folding
+vim.opt.foldmethod = "expr" -- Use indentation for folding
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldlevel = 99 -- Start with all folds open
+vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
 
 -- More aggressive file watching
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
@@ -91,35 +91,26 @@ vim.api.nvim_create_autocmd("FileChangedShell", {
   end,
 })
 
-
 -- Set leader key
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
--- Configure clipboard to use wl-copy (Wayland)
 vim.opt.clipboard = "unnamedplus"
-vim.g.clipboard = {
-  name = "wl-clipboard",
-  copy = {
-    ["+"] = "wl-copy",
-    ["*"] = "wl-copy",
-  },
-  paste = {
-    ["+"] = "wl-paste --no-newline",
-    ["*"] = "wl-paste --no-newline",
-  },
-  cache_enabled = 0,
-}
 
 -- Key mappings (migrated from vimrc)
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set("i", "jj", "<Esc>")
 vim.keymap.set("n", "<C-k>", "<C-w><Up>")
 vim.keymap.set("n", "<C-j>", "<C-w><Down>")
 vim.keymap.set("n", "<C-l>", "<C-w><Right>")
 vim.keymap.set("n", "<C-h>", "<C-w><Left>")
-vim.keymap.set("n", "<leader>v", ":e $MYVIMRC<CR>", { desc = "Edit config" })
-vim.keymap.set("n", "<F1>", ":lopen<CR>")
 vim.keymap.set("n", "<F2>", ":set invpaste paste?<CR>")
+
+-- Window resizing mappings
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { silent = true })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { silent = true })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { silent = true })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { silent = true })
 
 -- Folding mappings
 vim.keymap.set("n", "<Space>", "za")
@@ -135,15 +126,6 @@ end
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*",
   callback = strip_trailing_whitespace,
-})
-
--- Crontab fix
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "crontab",
-  callback = function()
-    vim.opt_local.backup = false
-    vim.opt_local.writebackup = false
-  end,
 })
 
 -- Plugin setup
@@ -336,6 +318,9 @@ require("lazy").setup({
         indent = {
           enable = true,
         },
+        fold = {
+          enable = true,
+        },
       })
     end,
   },
@@ -351,6 +336,10 @@ require("lazy").setup({
         },
         renderer = {
           group_empty = true,
+        },
+        update_focused_file = {
+          enable = true,
+          update_root = false,
         },
       })
       vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
@@ -381,11 +370,27 @@ require("lazy").setup({
     config = function()
       require("CopilotChat").setup({
         debug = false,
+        model = "claude-sonnet-4"
+      })
+
+      -- Enable copilot.vim tab completion in chat buffers
+      vim.api.nvim_create_autocmd('BufEnter', {
+        pattern = 'copilot-*',
+        callback = function()
+          -- Ensure copilot.vim is enabled and map Tab to accept suggestions
+          vim.b.copilot_enabled = true
+          vim.keymap.set('i', '<Tab>', 'copilot#Accept("\\<Tab>")', {
+            buffer = true,
+            expr = true,
+            replace_keycodes = false,
+            silent = true
+          })
+        end,
       })
 
       -- Key mappings
       vim.keymap.set("n", "<leader>cc", ":CopilotChat<CR>", { desc = "Open Copilot Chat" })
-      vim.keymap.set("v", "<leader>cc", ":CopilotChatVisual<CR>", { desc = "Copilot Chat with selection" })
+      vim.keymap.set("v", "<leader>cc", ":CopilotChat<CR>", { desc = "Copilot Chat with selection" })
       vim.keymap.set("n", "<leader>ce", ":CopilotChatExplain<CR>", { desc = "Explain code" })
       vim.keymap.set("n", "<leader>cf", ":CopilotChatFix<CR>", { desc = "Fix code" })
       vim.keymap.set("n", "<leader>co", ":CopilotChatOptimize<CR>", { desc = "Optimize code" })
