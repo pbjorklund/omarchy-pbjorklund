@@ -4,3 +4,6 @@ config.env
 # Temporary files
 *.tmp
 .DS_Store
+
+# Neovim lazy plugin locks
+lazy-lock.json
