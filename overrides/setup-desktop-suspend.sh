@@ -20,10 +20,17 @@ fi
 echo "Applying wake source configuration..."
 /home/pbjorklund/omarchy-pbjorklund/bin/setup-wake-sources.sh
 
-# Restart hypridle to apply new config
-echo "Restarting hypridle..."
-pkill hypridle || true
-hypridle &
+# Configure hypridle service
+echo "Configuring hypridle service..."
+systemctl --user enable hypridle.service >/dev/null 2>&1 || true
+systemctl --user restart hypridle.service >/dev/null 2>&1 || true
+
+# Verify hypridle is running
+if systemctl --user is-active --quiet hypridle.service; then
+    echo "hypridle service is running"
+else
+    echo "Warning: hypridle service failed to start"
+fi
 
 echo "Desktop suspend setup complete!"
 echo ""

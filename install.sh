@@ -152,6 +152,7 @@ declare -a INSTALL_STEPS=(
   "install-tailscale.sh|Tailscale installation"
   "configure-audio.sh|USB Audio configuration"
   "install-pbp.sh|Personal project setup"
+  "setup-desktop-suspend.sh|Desktop suspend and hypridle setup"
   "setup-ssh-server.sh|SSH server setup"
   "uninstall-typora.sh|Typora removal"
   "uninstall-spotify.sh|Spotify removal"
