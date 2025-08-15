@@ -4,7 +4,11 @@ set -e
 
 # Install terminal tools
 if ! command -v tmux &> /dev/null; then
-    sudo pacman -S --noconfirm tmux
+    yay -S --noconfirm tmux < /dev/null
+fi
+
+if ! command -v zellij &> /dev/null; then
+    yay -S --noconfirm zellij < /dev/null
 fi
 
 # Install TPM (Tmux Plugin Manager) if not present

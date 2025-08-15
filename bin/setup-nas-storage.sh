@@ -31,7 +31,7 @@ echo "Setting up NAS storage..."
 
 # Install required packages
 echo "Installing NAS storage packages..."
-sudo pacman -S --noconfirm --needed cifs-utils > /dev/null 2>&1
+yay -S --noconfirm --needed cifs-utils < /dev/null > /dev/null 2>&1
 yay -S --noconfirm autofs > /dev/null 2>&1
 
 # Remove any existing mount directories (autofs direct mounts create them automatically)

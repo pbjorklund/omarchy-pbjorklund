@@ -24,7 +24,7 @@ echo "Setting up SSH server..."
 # Install OpenSSH server if not already installed
 if ! pacman -Q openssh >/dev/null 2>&1; then
     echo "Installing OpenSSH server..."
-    sudo pacman -S --noconfirm openssh >/dev/null 2>&1
+    yay -S --noconfirm openssh < /dev/null >/dev/null 2>&1
 else
     echo "OpenSSH server already installed"
 fi

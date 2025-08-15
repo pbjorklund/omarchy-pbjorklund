@@ -15,7 +15,7 @@ fi
 # Install Ansible
 echo "Installing Ansible..."
 if ! command -v ansible &> /dev/null; then
-    sudo pacman -S --noconfirm ansible
+    yay -S --noconfirm ansible < /dev/null
     echo "Ansible installed successfully"
 else
     echo "Ansible already installed"

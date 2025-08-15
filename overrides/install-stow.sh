@@ -2,5 +2,5 @@
 
 # Install GNU Stow for dotfiles management
 if ! command -v stow &> /dev/null; then
-    sudo pacman -S --noconfirm stow
+    yay -S --noconfirm stow < /dev/null
 fi

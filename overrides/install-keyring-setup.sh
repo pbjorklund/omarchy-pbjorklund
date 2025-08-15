@@ -8,7 +8,7 @@ echo "Setting up keyring management..."
 # Install seahorse for keyring management
 if ! pacman -Q seahorse >/dev/null 2>&1; then
     echo "Installing Seahorse..."
-    sudo pacman -S --noconfirm seahorse
+    yay -S --noconfirm seahorse < /dev/null
 else
     echo "Seahorse already installed"
 fi

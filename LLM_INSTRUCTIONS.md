@@ -5,6 +5,7 @@
 - Use `source` not `bash` in install.sh
 - No interactive prompts
 - Test on fresh Arch VM before committing
+- NEVER run interactive commands (pacman without --noconfirm, etc.)
 
 ## Output Style Guidelines (Match Omarchy)
 - **NO EMOJIS** - omarchy uses clean text only
@@ -17,8 +18,8 @@
 - **Management commands**: List simply at end, no bullet styling
 
 ## Package Rules
-- Check pacman before AUR
-- Use `yay -S --noconfirm` for AUR
+- Use `yay -S --noconfirm` for all packages (handles both official repos and AUR)
+- Add `< /dev/null` to prevent hanging on prompts
 - Flatpak for GUI apps
 
 ## Don't Break

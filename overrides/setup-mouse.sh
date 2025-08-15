@@ -7,7 +7,7 @@ echo "Installing mouse configuration tools"
 yay -S --noconfirm piper
 
 # libratbag should already be installed, but ensure it's there
-sudo pacman -S --noconfirm --needed libratbag
+yay -S --noconfirm --needed libratbag < /dev/null
 
 echo "Configuring gaming mouse DPI settings"
 
