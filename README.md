@@ -27,22 +27,33 @@ This setup adds development tools, applications, and personal dotfiles to omarch
 
 ## Installation
 
-```bash
-git clone <this-repo-url>
-cd omarchy-pbjorklund
-cp config.env.example config.env
-# Edit config.env with your values
-./install.sh
-```
+1. **Preflight Setup** (Essential - Run First):
+   ```bash
+   git clone <this-repo-url>
+   cd omarchy-pbjorklund
+   cp config.env.example config.env
+   # Edit config.env with your values
+   ./preflight.sh
+   ```
+   
+   The preflight script will:
+   - Install and configure seahorse (keyring manager)
+   - Guide you through creating a default keyring
+   - Validate 1Password setup
+   - Require a system reboot after keyring setup
+
+2. **Main Installation** (After Preflight + Reboot):
+   ```bash
+   ./install.sh
+   ```
 
 The install script sources each override script in sequence, with error handling and retry instructions on failure.
 
 ## Post-Installation
 
 ### Required Setup Steps
-1. Configure keyring: `seahorse` (creates default keyring for 1Password integration)
-2. Restart terminal for SSH agent to take effect
-3. Connect Tailscale: `sudo tailscale up --login-server=<your-headscale-server>`
+1. Restart terminal for SSH agent to take effect
+2. Connect Tailscale: `sudo tailscale up --login-server=<your-headscale-server>`
 
 ### Optional Manual Setup
 

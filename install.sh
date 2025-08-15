@@ -91,10 +91,25 @@ fi
 
 echo "Personal Omarchy Configuration"
 echo
-echo "IMPORTANT: Ensure 1Password is set up before running this script:"
-echo "- Sign in to 1Password desktop app"
-echo "- Import SSH key '$SSH_KEY_NAME' into 1Password"  
-echo "- Enable SSH agent in 1Password Settings → Developer"
+
+# Check preflight completion
+if [ ! -f "$HOME/.omarchy-preflight-complete" ]; then
+    echo "ERROR: Preflight setup not completed"
+    echo
+    echo "Please run the preflight script first:"
+    echo "  bash preflight.sh"
+    echo
+    echo "This ensures:"
+    echo "- 1Password is installed and configured"
+    echo "- SSH key '$SSH_KEY_NAME' is imported into 1Password"
+    echo "- SSH agent is enabled in 1Password Settings → Developer"
+    echo "- Keyring (seahorse) is properly configured"
+    echo "- System has been rebooted after keyring setup"
+    echo
+    exit 1
+fi
+
+echo "✅ Preflight checks passed"
 echo
 
 # Prerequisites check
@@ -142,7 +157,6 @@ declare -a INSTALL_STEPS=(
   "install-screen-recorder.sh|Screen recorder setup"
   "install-opencode.sh|OpenCode setup"
   "install-claude-code.sh|Claude Code setup"
-  "install-keyring-setup.sh|Keyring management setup"
   "install-1password-cli.sh|1Password CLI setup"
   "setup-mouse.sh|Gaming mouse configuration"
   "copy-desktop-files.sh|Desktop files copying"
@@ -181,10 +195,7 @@ echo "Personal omarchy configuration complete!"
 echo "========================================="
 echo
 echo "IMPORTANT POST-SETUP STEPS:"
-echo "  1. Launch Seahorse: seahorse"
-echo "  2. Create a default keyring if prompted"
-echo "  3. This enables 1Password keyring integration"
-echo "  4. Connect to Headscale:"
+echo "  1. Connect to Headscale:"
 echo "     sudo tailscale up --login-server=$HEADSCALE_SERVER --accept-routes"
 echo "     Visit the authentication URL provided"
 echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)"
