@@ -1,31 +1,13 @@
 #!/bin/bash
-
 set -e
 
-declare -a INSTALL_STEPS=(
-  "setup-directories.sh|Development directories setup"
-  "install-bin-scripts.sh|Custom scripts installation"
-  "install-stow.sh|Package managers installation"
-  "link-dotfiles.sh|Personal dotfiles deployment"
-  "install-node-lts.sh|Node.js LTS installation"
-  "install-terminal-tools.sh|Terminal tools installation"
-  "install-amd-drivers.sh|AMD graphics drivers setup"
-  "install-zen-browser.sh|Zen browser setup"
-  "install-screen-recorder.sh|Screen recorder setup"
-  "install-opencode.sh|OpenCode setup"
-  "install-claude-code.sh|Claude Code setup"
-  "install-zotero.sh|Zotero installation"
-  "install-plexamp.sh|Plexamp installation"
-  "install-tailscale.sh|Tailscale installation"
-  "install-pbp.sh|Personal project setup"
-  "copy-desktop-files.sh|Desktop files copying"
-  "setup-desktop-suspend.sh|Desktop suspend and hypridle setup"
-  "install-iac-tools.sh|Infrastructure as Code tools installation"
-  "uninstall-typora.sh|Typora removal"
-  "uninstall-spotify.sh|Spotify removal"
-  "configure-audio.sh|USB Audio configuration"
-  "setup-mouse.sh|Gaming mouse configuration"
-)
+# INSTALL SCRIPT NAMING PATTERNS:
+# install-*   - Package/software installation
+# setup-*     - System configuration and setup
+# configure-* - Hardware/service configuration
+# uninstall-* - Package removal
+# copy-*      - File deployment/copying
+# link-*      - Symlink creation
 
 source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 init_logging "install"
@@ -104,7 +86,7 @@ validate_prerequisites() {
   [ -f "$HOME/.local/share/omarchy/install.sh" ] || show_error "Omarchy not found - please install omarchy first"
   command -v hyprctl &> /dev/null || show_error "Hyprland not found - ensure omarchy installation is complete"
 
-  OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/overrides"
+  OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/install-scripts"
 }
 
 show_completion_message() {
@@ -146,6 +128,31 @@ echo | tee -a "$MAIN_LOG"
 
 load_configuration
 validate_prerequisites
+
+declare -a INSTALL_STEPS=(
+  "setup-directories.sh|Development directories setup"
+  "install-bin-scripts.sh|Custom scripts installation"
+  "install-stow.sh|Package managers installation"
+  "link-dotfiles.sh|Personal dotfiles deployment"
+  "install-node-lts.sh|Node.js LTS installation"
+  "install-terminal-tools.sh|Terminal tools installation"
+  "install-amd-drivers.sh|AMD graphics drivers setup"
+  "install-zen-browser.sh|Zen browser setup"
+  "install-screen-recorder.sh|Screen recorder setup"
+  "install-opencode.sh|OpenCode setup"
+  "install-claude-code.sh|Claude Code setup"
+  "install-zotero.sh|Zotero installation"
+  "install-plexamp.sh|Plexamp installation"
+  "install-tailscale.sh|Tailscale installation"
+  "install-pbp.sh|Personal project setup"
+  "copy-desktop-files.sh|Desktop files copying"
+  "setup-desktop-suspend.sh|Desktop suspend and hypridle setup"
+  "install-iac-tools.sh|Infrastructure as Code tools installation"
+  "uninstall-typora.sh|Typora removal"
+  "uninstall-spotify.sh|Spotify removal"
+  "configure-audio.sh|USB Audio configuration"
+  "setup-mouse.sh|Gaming mouse configuration"
+)
 
 for step in "${INSTALL_STEPS[@]}"; do
   IFS='|' read -r script_name description <<< "$step"

@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# PREFLIGHT SCRIPT NAMING PATTERNS:
+# check-*     - Pure validation, no changes made
+# setup-*     - Actual automated configuration  
+# install-*   - Actual package installation
+# start-*     - Actual service startup
+# prompt-*    - User guidance for manual tasks
+
 source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 init_logging "preflight"
 
@@ -8,54 +15,41 @@ show_header "=== Preflight Setup ==="
 echo -e "${CYAN}Configuring prerequisites for installation${NC}"
 echo
 
-command -v pacman &> /dev/null || show_error "Requires Arch Linux"
-command -v yay &> /dev/null || show_error "yay not found (should be installed by omarchy)"
+# Define preflight checks directory
+PREFLIGHT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/preflight-checks"
 
-if sudo -n true 2>/dev/null; then
-    show_skip "Passwordless sudo already enabled"
-else
-    show_action "Configuring passwordless sudo"
-    echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)" > "$LOG_DIR/sudo-setup.log" 2>&1
-    show_success "Passwordless sudo enabled"
-fi
+# Define preflight checks in order
+PREFLIGHT_CHECKS=(
+  "check-system-requirements.sh|System requirements validation"
+  "setup-passwordless-sudo.sh|Passwordless sudo setup"
+  "install-keyring-manager.sh|Keyring manager installation"
+  "start-keyring-daemon.sh|Keyring daemon startup"
+  "prompt-keyring-creation.sh|Keyring creation prompt"
+  "check-1password-ssh-agent.sh|1Password SSH agent validation"
+)
 
-if command -v seahorse &> /dev/null; then
-    show_skip "Keyring manager already installed"
-else
-    show_action "Installing keyring manager"
-    log_command "yay -S --noconfirm seahorse" "seahorse-install" "Keyring manager installed" "Keyring manager installation failed"
-fi
+# Function to run a preflight check
+run_check() {
+  local script_file="$1"
+  local description="$2"
+  local script_path="$PREFLIGHT_DIR/$script_file"
+  
+  if [ -f "$script_path" ]; then
+    show_action "Running: $description"
+    source "$script_path"
+    show_success "✓ $description complete"
+  else
+    show_error "Preflight check not found: $script_path"
+  fi
+}
 
-if pgrep -x gnome-keyring-d >/dev/null; then
-    show_skip "Keyring daemon already running"
-else
-    show_action "Starting keyring daemon"
-    eval $(gnome-keyring-daemon --start --components=secrets,ssh) > "$LOG_DIR/keyring-daemon.log" 2>&1
-fi
+# Run all preflight checks
+for check in "${PREFLIGHT_CHECKS[@]}"; do
+  IFS="|" read -r script_file description <<< "$check"
+  run_check "$script_file" "$description"
+done
 
-if [ -d "$HOME/.local/share/keyrings" ] && [ -n "$(ls -A "$HOME/.local/share/keyrings" 2>/dev/null)" ]; then
-    show_skip "Keyring already configured"
-else
-    echo
-    show_header "=== Keyring Setup Required ==="
-    echo "Create a keyring for secure credential storage:"
-    echo -e "${YELLOW}1.${NC} Right-click → New → Password Keyring"
-    echo -e "${YELLOW}2.${NC} Name it 'Default' with a secure password"
-    echo -e "${YELLOW}3.${NC} Right-click keyring → Set as Default"
-    echo -e "${YELLOW}4.${NC} Close when complete"
-    echo
-    read -p "Press Enter to open keyring manager..."
-    
-    seahorse > "$LOG_DIR/seahorse-gui.log" 2>&1 &
-    wait $! 2>/dev/null || true
-fi
-
-if [[ "$SSH_AUTH_SOCK" == *"1password"* ]] || [ -S "$HOME/.1password/agent.sock" ]; then
-    show_skip "1Password SSH agent already configured"
-else
-    show_error "1Password SSH agent not configured - enable in 1Password Settings → Developer → SSH Agent"
-fi
-
+# Mark preflight as complete
 touch "$HOME/.omarchy-preflight-complete"
 
 echo
