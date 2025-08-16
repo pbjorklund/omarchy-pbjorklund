@@ -6,6 +6,7 @@
 - No interactive prompts
 - Test on fresh Arch VM before committing
 - NEVER run interactive commands (pacman without --noconfirm, etc.)
+- **ALWAYS consult Arch Wiki first** - Before writing any installation script, especially for hardware drivers or system components, check the official Arch Wiki documentation to understand the proper installation method and avoid unnecessary complexity
 
 ## Output Style Guidelines (Match Omarchy)
 - **NO EMOJIS** - omarchy uses clean text only

@@ -137,6 +137,7 @@ declare -a INSTALL_STEPS=(
   "install-node-lts.sh|Node.js LTS installation"
   "install-terminal-tools.sh|Terminal tools installation"
   "install-amd-drivers.sh|AMD graphics drivers setup"
+  "install-displaylink.sh|DisplayLink drivers setup"
   "install-zen-browser.sh|Zen browser setup"
   "install-screen-recorder.sh|Screen recorder setup"
   "install-opencode.sh|OpenCode setup"
