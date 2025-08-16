@@ -1,1 +1,1 @@
-../../templates/GLOBAL_LLM_INSTRUCTIONS.md
+../../../templates/GLOBAL_LLM_INSTRUCTIONS.md
