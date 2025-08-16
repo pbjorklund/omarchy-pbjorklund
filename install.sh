@@ -28,13 +28,13 @@ run_step() {
   local script_name="$1"
   local description="$2"
   local script_path="$OVERRIDES_DIR/$script_name"
-  
+
   echo "Running: $description"
-  
+
   # Capture output and errors, but show errors if script fails
   local temp_output=$(mktemp)
   local temp_error=$(mktemp)
-  
+
   # Source script instead of executing in subshell, capture output
   if (source "$script_path") >"$temp_output" 2>"$temp_error"; then
     # Show any output from the script (allows scripts to control their own messaging)
@@ -66,9 +66,9 @@ run_inline_step() {
   local description="$1"
   shift
   local commands=("$@")
-  
+
   echo "Running: $description"
-  
+
   if "${commands[@]}"; then
     echo "✓ $description complete"
     return 0
@@ -147,46 +147,34 @@ declare -a INSTALL_STEPS=(
   "setup-directories.sh|Development directories setup"
   "install-bin-scripts.sh|Custom scripts installation"
   "install-stow.sh|Package managers installation"
+  "link-dotfiles.sh|Personal dotfiles deployment"
   "install-node-lts.sh|Node.js LTS installation"
   "install-terminal-tools.sh|Terminal tools installation"
-  "install-iac-tools.sh|Infrastructure as Code tools installation"
-  "link-dotfiles.sh|Personal dotfiles deployment"
-  "HYPRLAND_RELOAD|Hyprland configuration reload"
   "install-amd-drivers.sh|AMD graphics drivers setup"
   "install-zen-browser.sh|Zen browser setup"
   "install-screen-recorder.sh|Screen recorder setup"
   "install-opencode.sh|OpenCode setup"
   "install-claude-code.sh|Claude Code setup"
-  "install-1password-cli.sh|1Password CLI setup"
-  "setup-mouse.sh|Gaming mouse configuration"
-  "copy-desktop-files.sh|Desktop files copying"
   "install-zotero.sh|Zotero installation"
   "install-plexamp.sh|Plexamp installation"
   "install-tailscale.sh|Tailscale installation"
-  "configure-audio.sh|USB Audio configuration"
   "install-pbp.sh|Personal project setup"
+  "copy-desktop-files.sh|Desktop files copying"
   "setup-desktop-suspend.sh|Desktop suspend and hypridle setup"
   "setup-ssh-server.sh|SSH server setup"
+  "install-iac-tools.sh|Infrastructure as Code tools installation"
   "uninstall-typora.sh|Typora removal"
   "uninstall-spotify.sh|Spotify removal"
+  "configure-audio.sh|USB Audio configuration"
+  "setup-mouse.sh|Gaming mouse configuration"
 )
 
 # Execute all steps
 for step in "${INSTALL_STEPS[@]}"; do
   IFS='|' read -r script_name description <<< "$step"
-  
-  if [[ "$script_name" == "HYPRLAND_RELOAD" ]]; then
-    # Special handling for Hyprland reload
-    echo "Running: $description"
-    if hyprctl reload; then
-      echo "✓ $description complete"
-    else
-      echo "⚠ Warning: $description failed (you may need to restart manually)"
-    fi
-  else
-    # Regular script execution
-    run_step "$script_name" "$description"
-  fi
+
+  # Regular script execution
+  run_step "$script_name" "$description"
 done
 
 echo
@@ -194,8 +182,12 @@ echo "========================================="
 echo "Personal omarchy configuration complete!"
 echo "========================================="
 echo
-echo "IMPORTANT POST-SETUP STEPS:"
-echo "  1. Connect to Headscale:"
+echo "OPTIONAL POST-SETUP STEPS:"
+echo "  1. Setup NAS storage:"
+echo "     ./bin/setup-nas-storage.sh"
+echo "     This will mount your NAS shares and configure auto-mounting"
+echo
+echo "  2. Connect to Headscale:"
 echo "     sudo tailscale up --login-server=$HEADSCALE_SERVER --accept-routes"
 echo "     Visit the authentication URL provided"
 echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)"

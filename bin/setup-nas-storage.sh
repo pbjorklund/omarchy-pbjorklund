@@ -14,16 +14,9 @@ else
 fi
 
 # Check required variables
-if [ -z "$OP_NAS_ITEM_NAME" ] || [ -z "$NAS_IP" ] || [ ${#NAS_SHARES[@]} -eq 0 ]; then
+if [ -z "$NAS_USERNAME" ] || [ -z "$NAS_PASSWORD" ] || [ -z "$NAS_IP" ] || [ ${#NAS_SHARES[@]} -eq 0 ]; then
     echo "Error: Missing required config variables in config.env"
-    echo "Required: OP_NAS_ITEM_NAME, NAS_IP, NAS_SHARES"
-    exit 1
-fi
-
-# Check 1Password CLI availability first
-if ! command -v op &> /dev/null || ! op account list &> /dev/null 2>&1; then
-    echo "Error: 1Password CLI not available or not signed in"
-    echo "Please run: op signin or eval \$(op signin)"
+    echo "Required: NAS_USERNAME, NAS_PASSWORD, NAS_IP, NAS_SHARES"
     exit 1
 fi
 
@@ -39,9 +32,7 @@ for share in "${NAS_SHARES[@]}"; do
     sudo rmdir "/mnt/$share" 2>/dev/null || true
 done
 
-# Get credentials from 1Password using configured item name
-NAS_USERNAME=$(op item get "$OP_NAS_ITEM_NAME" --fields username --reveal)
-NAS_PASSWORD=$(op item get "$OP_NAS_ITEM_NAME" --fields password --reveal)
+# Use credentials from config.env
 
 # Create CIFS credentials file
 sudo tee /etc/cifs-nas-credentials > /dev/null << EOF
