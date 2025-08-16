@@ -3,11 +3,17 @@
 # Install AMD Radeon drivers for RX 9700 XT
 set -e
 
-echo "Installing AMD graphics drivers..."
+# Check if AMD GPU is present
+if ! lspci | grep -E '(VGA|Display|3D).*AMD|Advanced Micro Devices' >/dev/null 2>&1; then
+    echo "No AMD GPU detected, skipping AMD driver installation"
+    return 0
+fi
+
+echo "AMD GPU detected - checking driver installation..."
 
 # Check if AMD drivers are already properly installed
 if pacman -Q mesa xf86-video-amdgpu vulkan-radeon radeontop >/dev/null 2>&1; then
-    echo "AMD drivers already installed, skipping"
+    echo "✓ AMD drivers already installed"
     return 0
 fi
 
