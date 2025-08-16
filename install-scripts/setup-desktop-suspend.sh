@@ -18,6 +18,16 @@ echo "Configuring hypridle service..."
 systemctl --user enable hypridle.service >/dev/null 2>&1 || true
 systemctl --user restart hypridle.service >/dev/null 2>&1 || true
 
+# Create symlink for omarchy-menu compatibility
+echo "Creating omarchy-menu symlink..."
+mkdir -p "$HOME/.local/share/omarchy/bin"
+if [ -f "$HOME/.local/bin/suspend-desktop" ]; then
+    ln -sf "$HOME/.local/bin/suspend-desktop" "$HOME/.local/share/omarchy/bin/suspend-desktop"
+    echo "✓ suspend-desktop symlink created in omarchy bin directory"
+else
+    echo "✗ Warning: suspend-desktop script not found in ~/.local/bin/"
+fi
+
 # Verify hypridle is running
 if systemctl --user is-active --quiet hypridle.service; then
     echo "✓ hypridle service is running"
