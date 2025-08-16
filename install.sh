@@ -62,8 +62,13 @@ run_installation_step() {
   if (source "$script_path") >"$temp_output" 2>"$temp_error"; then
     if [ -s "$temp_output" ]; then
       cat "$temp_output" | tee -a "$MAIN_LOG"
+      # Don't show "complete" if script already indicated it was skipped
+      if ! grep -q "(already done)" "$temp_output"; then
+        show_success "$description complete"
+      fi
+    else
+      show_success "$description complete"
     fi
-    show_success "$description complete"
     [ ! -s "$temp_error" ] && rm -f "$temp_error"
     return 0
   else
