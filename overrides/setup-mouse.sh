@@ -21,6 +21,13 @@ fi
 
 show_action "Configuring gaming mouse DPI settings"
 
+# Quick check if any gaming mouse is detected before sleeping
+if ! ratbagctl list 2>/dev/null | grep -q "Logitech G Pro"; then
+    echo "No supported gaming mouse detected - skipping DPI configuration"
+    show_success "Mouse setup complete"
+    exit 0
+fi
+
 # Wait a moment for ratbag to detect devices
 sleep 2
 
