@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
+
 # Configure USB Audio for analog line out
 # Fixes issue where PipeWire defaults to S/PDIF instead of analog speakers
 #
@@ -10,16 +12,21 @@ set -e
 #
 # Solution: Explicitly set USB Audio analog speakers as the default sink
 
-echo "Configuring USB Audio for analog line out"
+show_action "Configuring USB Audio for analog line out"
 
 # Ensure PipeWire services are running
 if ! systemctl --user is-active --quiet pipewire; then
-    echo "Starting PipeWire services"
+    show_action "Starting PipeWire services"
     systemctl --user start pipewire pipewire-pulse wireplumber
     sleep 3
 fi
 
-# Function to wait for USB Audio device
+# Quick check for USB audio device before waiting
+if ! pactl list sinks short | grep -q "usb-Generic_USB_Audio"; then
+    echo "No USB Audio device detected - audio will use system defaults"
+    echo "This is normal if you don't have a USB audio interface"
+    exit 0
+fi
 wait_for_usb_audio() {
     local timeout=15
     local count=0
@@ -44,12 +51,12 @@ wait_for_usb_audio() {
 if wait_for_usb_audio; then
     # Set analog speakers as default sink
     if pactl set-default-sink alsa_output.usb-Generic_USB_Audio-00.HiFi__Speaker__sink; then
-        echo "Set USB Audio analog speakers as default output"
+        show_success "Set USB Audio analog speakers as default output"
         
         # Verify the setting
         sleep 1
         if pactl info | grep -q "usb-Generic_USB_Audio.*Speaker"; then
-            echo "USB Audio configuration successful - analog speakers are now default"
+            show_success "USB Audio configuration successful - analog speakers are now default"
         else
             echo "Warning: Default sink verification failed"
         fi

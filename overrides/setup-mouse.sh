@@ -1,15 +1,25 @@
 #!/bin/bash
 set -e
 
-echo "Installing mouse configuration tools"
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
+
+show_action "Installing mouse configuration tools"
 
 # Install piper (GUI for configuring gaming mice)
-yay -S --noconfirm piper
+if ! command -v piper >/dev/null 2>&1; then
+    log_command "yay -S --noconfirm piper" "piper-install" "Piper installed" "Piper installation failed"
+else
+    show_skip "Piper already installed"
+fi
 
 # libratbag should already be installed, but ensure it's there
-yay -S --noconfirm --needed libratbag < /dev/null
+if ! pacman -Q libratbag >/dev/null 2>&1; then
+    log_command "yay -S --noconfirm libratbag" "libratbag-install" "libratbag installed" "libratbag installation failed"
+else
+    show_skip "libratbag already installed"  
+fi
 
-echo "Configuring gaming mouse DPI settings"
+show_action "Configuring gaming mouse DPI settings"
 
 # Wait a moment for ratbag to detect devices
 sleep 2
@@ -24,9 +34,9 @@ if ratbagctl list | grep -q "Logitech G Pro"; then
     ratbagctl "$DEVICE_NAME" profile 0 resolution 0 dpi set 400
     ratbagctl "$DEVICE_NAME" profile 0 resolution active set 0
     
-    echo "Gaming mouse configured to 400 DPI"
+    show_success "Gaming mouse configured to 400 DPI"
 else
     echo "No supported gaming mouse detected - skipping DPI configuration"
 fi
 
-echo "Mouse setup complete"
+show_success "Mouse setup complete"
