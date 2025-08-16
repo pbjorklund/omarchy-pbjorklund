@@ -18,6 +18,11 @@ if [ -d "$DOTFILES_DIR" ]; then
         rm -f "$HOME/.config/Code/User/settings.json"
     fi
     
+    # Clean up any manually created symlinks that might conflict with stow
+    # Remove LLM instruction symlinks if they exist (stow will recreate them)
+    [ -L "$HOME/.claude/CLAUDE.md" ] && rm -f "$HOME/.claude/CLAUDE.md"
+    [ -L "$HOME/.opencode/AGENTS.md" ] && rm -f "$HOME/.opencode/AGENTS.md"
+    
     # Use stow restow for everything else
     # --no-folding prevents stow from creating directory symlinks
     stow -R --no-folding -t "$HOME" dotfiles-overrides

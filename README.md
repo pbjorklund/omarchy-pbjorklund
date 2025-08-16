@@ -35,7 +35,7 @@ This setup adds development tools, applications, and personal dotfiles to omarch
    # Edit config.env with your values
    ./preflight.sh
    ```
-   
+
    The preflight script will:
    - Install and configure seahorse (keyring manager)
    - Guide you through creating a default keyring
@@ -69,8 +69,9 @@ Run `./bin/setup-nas-storage.sh` to mount network storage shares. Requires:
    - Turn off "save passwords" in browser settings
    - Re-enable 1Password extension
    - This prevents browser from saving passwords/form data (1Password handles this)
+3. Add https://leta.mullvad.net/search?q=%s as default search-engine
 
 ---
 
-*Based on omarchy by DHH and 37signals*  
+*Based on omarchy by DHH and 37signals*
 See https://omarchy.org for the base system
