@@ -20,3 +20,9 @@ fi
 
 echo "Tailscale and tsui installation complete"
 echo "Note: Use 'tsui' command to manage Tailscale connections interactively"
+
+# Configure Tailscale settings if service is running
+if systemctl is-active --quiet tailscaled; then
+    echo "Configuring Tailscale LAN access..."
+    sudo tailscale set --exit-node-allow-lan-access=true || echo "Note: Configure LAN access after connecting to tailnet"
+fi
