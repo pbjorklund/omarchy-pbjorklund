@@ -1,1 +1,0 @@
-../../templates/GLOBAL_LLM_INSTRUCTIONS.md
