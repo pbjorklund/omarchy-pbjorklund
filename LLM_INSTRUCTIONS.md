@@ -29,7 +29,7 @@
 
 ## Key Paths
 - Add software to `overrides/apps.sh`
-- Config overrides in `overrides/dotfiles.sh`  
+- Config overrides in `overrides/dotfiles.sh`
 - Desktop integration in `overrides/desktop.sh`
 - Source new scripts from `install.sh`
 
@@ -42,6 +42,14 @@
 - AUR packages may fail if mirrors are down
 - Single-user system focus
 - Error trap catches failures and shows retry instructions
+- **CRITICAL FILE DISTINCTION**: 
+  - **ROOT DIRECTORY FILES** (`LLM_INSTRUCTIONS.md`, `AGENTS.md`, `CLAUDE.md`): These are ONLY for working on the omarchy project itself. NEVER reference these when creating user-deployed files.
+  - **DOTFILES-OVERRIDES DIRECTORY** (`dotfiles-overrides/`): Contains files that get deployed to users via stow. Any config files users need must be created HERE, not in root.
+  - **LLM INSTRUCTION SYMLINKS**: All LLM instruction files in dotfiles-overrides should be symlinks to `../../templates/GLOBAL_LLM_INSTRUCTIONS.md`:
+    - `dotfiles-overrides/.claude/CLAUDE.md` → `../../templates/GLOBAL_LLM_INSTRUCTIONS.md`
+    - `dotfiles-overrides/.config/opencode/AGENTS.md` → `../../templates/GLOBAL_LLM_INSTRUCTIONS.md`
+    - This ensures all AI tools get the same unified global instructions
+  - **Never create separate LLM instruction files** - they should all point to the same global template
 
 ## Configuration Management
 - All sensitive values (URLs, keys) go in `config.env` - never hardcode in scripts
@@ -62,7 +70,7 @@
 - **Hyprland pattern**: omarchy's `hyprland.conf` sources both defaults AND our personal overrides
   - Keep omarchy's main `hyprland.conf` (orchestrates includes)
   - Our dotfiles provide individual `.conf` files that get symlinked and sourced
-- **VS Code special handling**: 
+- **VS Code special handling**:
   - Create `~/.config/Code/User/` directory structure before stowing
   - Only symlink `settings.json`, never the entire `Code/` directory
   - VS Code needs to write additional files/dirs without conflicts
