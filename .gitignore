@@ -1,6 +1,9 @@
 # Machine-specific configuration
 config.env
 
+# Installation logs
+logs/
+
 # Temporary files
 *.tmp
 .DS_Store

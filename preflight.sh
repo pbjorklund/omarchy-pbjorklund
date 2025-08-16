@@ -1,76 +1,64 @@
 #!/bin/bash
 set -e
 
-echo "=== Omarchy Desktop Preflight Setup ==="
-echo "Setting up prerequisites for installation"
+source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+init_logging "preflight"
+
+show_header "=== Preflight Setup ==="
+echo -e "${CYAN}Configuring prerequisites for installation${NC}"
 echo
 
-# Check requirements
-if ! command -v pacman &> /dev/null; then
-    echo "Error: This script requires Arch Linux"
-    exit 1
-fi
+command -v pacman &> /dev/null || show_error "Requires Arch Linux"
+command -v yay &> /dev/null || show_error "yay not found (should be installed by omarchy)"
 
-if ! command -v yay &> /dev/null; then
-    echo "Error: yay (AUR helper) not found"
-    echo "Omarchy should have installed yay during setup"
-    exit 1
-fi
-
-# Setup passwordless sudo
-echo "Setting up passwordless sudo..."
-if ! sudo -n true 2>/dev/null; then
-    echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)" > /dev/null
-    echo "✅ Passwordless sudo configured"
+if sudo -n true 2>/dev/null; then
+    show_skip "Passwordless sudo already enabled"
 else
-    echo "✅ Passwordless sudo already configured"
+    show_action "Configuring passwordless sudo"
+    echo "$(whoami) ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)" > "$LOG_DIR/sudo-setup.log" 2>&1
+    show_success "Passwordless sudo enabled"
 fi
 
-# Install and setup keyring
-if ! command -v seahorse &> /dev/null; then
-    echo "Installing keyring tools..."
-    yay -S --noconfirm seahorse < /dev/null
+if command -v seahorse &> /dev/null; then
+    show_skip "Keyring manager already installed"
 else
-    echo "✅ Seahorse already installed"
+    show_action "Installing keyring manager"
+    log_command "yay -S --noconfirm seahorse" "seahorse-install" "Keyring manager installed" "Keyring manager installation failed"
 fi
 
-echo "Starting keyring daemon..."
-if ! pgrep -x gnome-keyring-d >/dev/null; then
-    eval $(gnome-keyring-daemon --start --components=secrets,ssh)
+if pgrep -x gnome-keyring-d >/dev/null; then
+    show_skip "Keyring daemon already running"
+else
+    show_action "Starting keyring daemon"
+    eval $(gnome-keyring-daemon --start --components=secrets,ssh) > "$LOG_DIR/keyring-daemon.log" 2>&1
 fi
 
-# Check for existing keyring or prompt to create one
-if [ ! -d "$HOME/.local/share/keyrings" ] || [ -z "$(ls -A "$HOME/.local/share/keyrings" 2>/dev/null)" ]; then
+if [ -d "$HOME/.local/share/keyrings" ] && [ -n "$(ls -A "$HOME/.local/share/keyrings" 2>/dev/null)" ]; then
+    show_skip "Keyring already configured"
+else
     echo
-    echo "=== Keyring Setup Required ==="
-    echo "Opening Seahorse to create your keyring:"
-    echo "1. Right-click in the main area"
-    echo "2. Select 'New' > 'Password Keyring'"
-    echo "3. Name it 'Default' and set a password"
-    echo "4. Right-click the new keyring and 'Set as Default'"
-    echo "5. Close Seahorse when done"
+    show_header "=== Keyring Setup Required ==="
+    echo "Create a keyring for secure credential storage:"
+    echo -e "${YELLOW}1.${NC} Right-click → New → Password Keyring"
+    echo -e "${YELLOW}2.${NC} Name it 'Default' with a secure password"
+    echo -e "${YELLOW}3.${NC} Right-click keyring → Set as Default"
+    echo -e "${YELLOW}4.${NC} Close when complete"
     echo
-    read -p "Press Enter to open Seahorse..."
+    read -p "Press Enter to open keyring manager..."
     
-    seahorse &
+    seahorse > "$LOG_DIR/seahorse-gui.log" 2>&1 &
     wait $! 2>/dev/null || true
 fi
 
-# Check 1Password SSH agent
-if [ -n "$SSH_AUTH_SOCK" ] && [[ "$SSH_AUTH_SOCK" == *"1password"* ]]; then
-    echo "✅ 1Password SSH agent active"
-elif [ -S "$HOME/.1password/agent.sock" ]; then
-    echo "✅ 1Password SSH agent found"
+if [[ "$SSH_AUTH_SOCK" == *"1password"* ]] || [ -S "$HOME/.1password/agent.sock" ]; then
+    show_skip "1Password SSH agent already configured"
 else
-    echo "❌ 1Password SSH agent not configured"
-    echo "Please enable SSH agent in 1Password Settings → Developer"
-    exit 1
+    show_error "1Password SSH agent not configured - enable in 1Password Settings → Developer → SSH Agent"
 fi
 
-# Mark completion
 touch "$HOME/.omarchy-preflight-complete"
 
 echo
-echo "=== Preflight Complete ==="
-echo "✅ Prerequisites ready"
-echo "✅ Run install.sh to continue"
+show_success "Prerequisites complete"
+echo -e "${CYAN}Run install.sh to continue${NC}"
+echo -e "${BLUE}Logs saved to: $LOG_DIR${NC}"

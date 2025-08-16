@@ -1,148 +1,7 @@
 #!/bin/bash
 
-# Personal omarchy configuration script
-# Applies custom overrides to an existing omarchy installation
 set -e
 
-catch_errors() {
-  local exit_code=$?
-  local line_number=$1
-  echo
-  echo "ERROR: Personal omarchy configuration failed at line $line_number (exit code: $exit_code)"
-  echo "You can retry by running: bash install.sh"
-  exit $exit_code
-}
-
-cleanup() {
-  # Kill any background jobs
-  jobs -p | xargs -r kill 2>/dev/null || true
-  # Ensure we exit
-  exit 0
-}
-
-trap 'catch_errors $LINENO' ERR
-trap cleanup EXIT
-
-# Function to run a script step with proper isolation and error handling
-run_step() {
-  local script_name="$1"
-  local description="$2"
-  local script_path="$OVERRIDES_DIR/$script_name"
-
-  echo "Running: $description"
-
-  # Capture output and errors, but show errors if script fails
-  local temp_output=$(mktemp)
-  local temp_error=$(mktemp)
-
-  # Source script instead of executing in subshell, capture output
-  if (source "$script_path") >"$temp_output" 2>"$temp_error"; then
-    # Show any output from the script (allows scripts to control their own messaging)
-    if [ -s "$temp_output" ]; then
-      cat "$temp_output"
-    fi
-    echo "✓ $description complete"
-    rm -f "$temp_output" "$temp_error"
-    return 0
-  else
-    local exit_code=$?
-    # Show errors when script fails
-    if [ -s "$temp_error" ]; then
-      echo "Error output:"
-      cat "$temp_error" >&2
-    fi
-    if [ -s "$temp_output" ]; then
-      echo "Script output:"
-      cat "$temp_output"
-    fi
-    echo "✗ $description failed (exit code: $exit_code)"
-    rm -f "$temp_output" "$temp_error"
-    return $exit_code
-  fi
-}
-
-# Function for special cases that need specific handling
-run_inline_step() {
-  local description="$1"
-  shift
-  local commands=("$@")
-
-  echo "Running: $description"
-
-  if "${commands[@]}"; then
-    echo "✓ $description complete"
-    return 0
-  else
-    local exit_code=$?
-    echo "✗ $description failed (exit code: $exit_code)"
-    return $exit_code
-  fi
-}
-
-# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ -f "$SCRIPT_DIR/config.env" ]; then
-    source "$SCRIPT_DIR/config.env"
-else
-    echo "Error: config.env not found at $SCRIPT_DIR/config.env"
-    echo "Please create config.env from config.env.example"
-    exit 1
-fi
-
-echo "Personal Omarchy Configuration"
-echo
-
-# Check preflight completion
-if [ ! -f "$HOME/.omarchy-preflight-complete" ]; then
-    echo "ERROR: Preflight setup not completed"
-    echo
-    echo "Please run the preflight script first:"
-    echo "  bash preflight.sh"
-    echo
-    echo "This ensures:"
-    echo "- 1Password is installed and configured"
-    echo "- SSH key '$SSH_KEY_NAME' is imported into 1Password"
-    echo "- SSH agent is enabled in 1Password Settings → Developer"
-    echo "- Keyring (seahorse) is properly configured"
-    echo "- System has been rebooted after keyring setup"
-    echo
-    exit 1
-fi
-
-echo "✅ Preflight checks passed"
-echo
-
-# Prerequisites check
-if ! command -v pacman &> /dev/null; then
-    echo "This script requires Arch Linux"
-    exit 1
-fi
-
-if [ "$EUID" -eq 0 ]; then
-    echo "Do not run this script as root"
-    exit 1
-fi
-
-if [ ! -f "$HOME/.local/share/omarchy/install.sh" ]; then
-    echo "Omarchy not found!"
-    echo
-    echo "Please install omarchy first:"
-    echo "1. Download Arch Linux ISO and create bootable USB"
-    echo "2. Follow installation instructions at https://omarchy.org"
-    echo "3. Reboot into your omarchy system"
-    echo "4. Then run this script to apply personal customizations"
-    echo
-    exit 1
-fi
-
-if ! command -v hyprctl &> /dev/null; then
-    echo "Hyprland not found! Please ensure omarchy installation is complete."
-    exit 1
-fi
-
-OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/overrides"
-
-# Define installation steps as an array for easy management
 declare -a INSTALL_STEPS=(
   "setup-directories.sh|Development directories setup"
   "install-bin-scripts.sh|Custom scripts installation"
@@ -169,41 +28,120 @@ declare -a INSTALL_STEPS=(
   "setup-mouse.sh|Gaming mouse configuration"
 )
 
-# Execute all steps
+source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+init_logging "install"
+
+handle_errors() {
+  local exit_code=$?
+  local line_number=$1
+  echo
+  echo -e "${RED}ERROR: Personal omarchy configuration failed at line $line_number (exit code: $exit_code)${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${CYAN}You can retry by running: bash install.sh${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${BLUE}Logs saved to: $LOG_DIR${NC}" | tee -a "$MAIN_LOG"
+  exit $exit_code
+}
+
+cleanup_background_jobs() {
+  jobs -p | xargs -r kill 2>/dev/null || true
+  exit 0
+}
+
+trap 'handle_errors $LINENO' ERR
+trap cleanup_background_jobs EXIT
+
+run_installation_step() {
+  local script_name="$1"
+  local description="$2"
+  local script_path="$OVERRIDES_DIR/$script_name"
+
+  echo -e "${CYAN}Running:${NC} $description" | tee -a "$MAIN_LOG"
+
+  local log_name="${script_name%.sh}"
+  local temp_output="$LOG_DIR/${log_name}.log"
+  local temp_error="$LOG_DIR/${log_name}.error.log"
+
+  if (source "$script_path") >"$temp_output" 2>"$temp_error"; then
+    if [ -s "$temp_output" ]; then
+      cat "$temp_output" | tee -a "$MAIN_LOG"
+    fi
+    show_success "$description complete"
+    [ ! -s "$temp_error" ] && rm -f "$temp_error"
+    return 0
+  else
+    local exit_code=$?
+    if [ -s "$temp_error" ]; then
+      echo -e "${RED}Error output:${NC}" | tee -a "$MAIN_LOG"
+      cat "$temp_error" | tee -a "$MAIN_LOG" >&2
+    fi
+    if [ -s "$temp_output" ]; then
+      echo -e "${YELLOW}Script output:${NC}" | tee -a "$MAIN_LOG"
+      cat "$temp_output" | tee -a "$MAIN_LOG"
+    fi
+    show_error "$description failed (exit code: $exit_code) - check logs: $temp_output"
+  fi
+}
+
+load_configuration() {
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -f "$SCRIPT_DIR/config.env" ]; then
+      source "$SCRIPT_DIR/config.env"
+  else
+      show_error "config.env not found at $SCRIPT_DIR/config.env - create from config.env.example"
+  fi
+}
+
+validate_prerequisites() {
+  [ -f "$HOME/.omarchy-preflight-complete" ] || show_error "Preflight setup not completed - run: bash preflight.sh"
+  show_skip "Preflight checks passed"
+  echo
+
+  command -v pacman &> /dev/null || show_error "This script requires Arch Linux"
+  [ "$EUID" -eq 0 ] && show_error "Do not run this script as root"
+  [ -f "$HOME/.local/share/omarchy/install.sh" ] || show_error "Omarchy not found - please install omarchy first"
+  command -v hyprctl &> /dev/null || show_error "Hyprland not found - ensure omarchy installation is complete"
+
+  OVERRIDES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/overrides"
+}
+
+show_completion_message() {
+  echo | tee -a "$MAIN_LOG"
+  echo -e "${BOLD}${GREEN}=========================================${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${BOLD}${GREEN}Personal omarchy configuration complete!${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${BOLD}${GREEN}=========================================${NC}" | tee -a "$MAIN_LOG"
+  echo | tee -a "$MAIN_LOG"
+  echo -e "${BOLD}${CYAN}OPTIONAL POST-SETUP STEPS:${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${YELLOW}  1. Setup NAS storage:${NC}" | tee -a "$MAIN_LOG"
+  echo "     ./bin/setup-nas-storage.sh" | tee -a "$MAIN_LOG"
+  echo "     This will mount your NAS shares and configure auto-mounting" | tee -a "$MAIN_LOG"
+  echo | tee -a "$MAIN_LOG"
+  echo -e "${YELLOW}  2. Connect to Headscale:${NC}" | tee -a "$MAIN_LOG"
+  echo "     sudo tailscale up --login-server=$HEADSCALE_SERVER --accept-routes" | tee -a "$MAIN_LOG"
+  echo "     Visit the authentication URL provided" | tee -a "$MAIN_LOG"
+  echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)" | tee -a "$MAIN_LOG"
+  echo "     Then use: tsui (TUI for managing Tailscale connections)" | tee -a "$MAIN_LOG"
+  echo | tee -a "$MAIN_LOG"
+  echo -e "${BOLD}${CYAN}MANAGEMENT COMMANDS:${NC}" | tee -a "$MAIN_LOG"
+  echo "  Reset to omarchy defaults: omarchy-refresh-hyprland" | tee -a "$MAIN_LOG"
+  echo "  Compare configs: omarchy-compare-config ~/.config/hypr/bindings.conf" | tee -a "$MAIN_LOG"
+  echo "  Reapply configs: cd dotfiles-overrides && stow -t \$HOME ." | tee -a "$MAIN_LOG"
+
+  echo -e "${CYAN}Script execution finished at $(date)${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${BLUE}Logs saved to: $LOG_DIR${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${GREEN}Exit status: 0${NC}" | tee -a "$MAIN_LOG"
+
+  exec 1>&1 2>&2
+  exit 0
+}
+
+show_header "Personal Omarchy Configuration"
+echo | tee -a "$MAIN_LOG"
+
+load_configuration
+validate_prerequisites
+
 for step in "${INSTALL_STEPS[@]}"; do
   IFS='|' read -r script_name description <<< "$step"
-
-  # Regular script execution
-  run_step "$script_name" "$description"
+  run_installation_step "$script_name" "$description"
 done
 
-echo
-echo "========================================="
-echo "Personal omarchy configuration complete!"
-echo "========================================="
-echo
-echo "OPTIONAL POST-SETUP STEPS:"
-echo "  1. Setup NAS storage:"
-echo "     ./bin/setup-nas-storage.sh"
-echo "     This will mount your NAS shares and configure auto-mounting"
-echo
-echo "  2. Connect to Headscale:"
-echo "     sudo tailscale up --login-server=$HEADSCALE_SERVER --accept-routes"
-echo "     Visit the authentication URL provided"
-echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)"
-echo "     Then use: tsui (TUI for managing Tailscale connections)"
-echo
-echo "MANAGEMENT COMMANDS:"
-echo "  Reset to omarchy defaults: omarchy-refresh-hyprland"
-echo "  Compare configs: omarchy-compare-config ~/.config/hypr/bindings.conf"
-echo "  Reapply configs: cd dotfiles-overrides && stow -t \$HOME ."
-
-# Ensure clean exit
-echo "Script execution finished at $(date)"
-echo "Exit status: 0"
-
-# Force flush any remaining output
-exec 1>&1 2>&2
-
-# Explicit exit
-exit 0
+show_completion_message

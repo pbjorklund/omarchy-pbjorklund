@@ -17,10 +17,75 @@
 - **No explanatory text** - avoid verbose descriptions during installation
 - **Management commands**: List simply at end, no bullet styling
 
+## User Messaging Standards
+Scripts must inform users about what's being done using consistent patterns:
+
+### Status Messages
+- **Action in progress**: `echo "Installing package..."` (present progressive, lowercase, end with ...)
+- **Success**: `echo "✓ Package installed"` or `echo "✓ Package already installed"`
+- **Error**: `echo "✗ Package installation failed"` or `echo "Error: Description"`
+- **Skipping**: `echo "Package already installed, skipping"`
+
+### Message Timing
+- **Before action**: Show what's about to happen only when the action will actually be performed
+- **After success**: Confirm completion with ✓ 
+- **Skip messages**: Only show when actually skipping, not on every run
+
+### Examples
+```bash
+# Good - only shows when actually installing
+if ! command -v package &> /dev/null; then
+    echo "Installing package..."
+    yay -S --noconfirm package < /dev/null
+    echo "✓ Package installed"
+else
+    echo "✓ Package already installed"
+fi
+
+# Bad - shows message every run
+echo "Installing package..."
+if ! command -v package &> /dev/null; then
+    yay -S --noconfirm package < /dev/null
+fi
+```
+
+### Script Output Control
+- Scripts sourced by `install.sh` should be mostly silent - let the parent script handle messaging
+- Use `echo` sparingly in sourced scripts, only for critical user feedback
+- The `run_step()` function in `install.sh` handles "Running:" and "✓ complete" messages
+
 ## Package Rules
 - Use `yay -S --noconfirm` for all packages (handles both official repos and AUR)
-- Add `< /dev/null` to prevent hanging on prompts
+- Log package installs to `./logs/` directory instead of `/dev/null` for debugging
+- Add `> ./logs/package-install.log 2>&1` to capture both stdout and stderr
 - Flatpak for GUI apps
+
+## Logging Standards
+- **Create logs directory**: All scripts should ensure `mkdir -p ./logs` exists
+- **Package installs**: `yay -S --noconfirm package > ./logs/package-name.log 2>&1`
+- **Command output**: Redirect verbose commands to logs instead of /dev/null
+- **Log rotation**: Don't implement - keep it simple, logs folder is gitignored
+- **Error visibility**: Still show errors to user, but also capture in logs for debugging
+
+### Logging Examples
+```bash
+# Good - capture logs for debugging
+mkdir -p ./logs
+if ! command -v package &> /dev/null; then
+    echo "Installing package..."
+    if yay -S --noconfirm package > ./logs/package.log 2>&1; then
+        echo "✓ Package installed"
+    else
+        echo "✗ Package installation failed (see ./logs/package.log)"
+        return 1
+    fi
+else
+    echo "✓ Package already installed"
+fi
+
+# Bad - information lost to /dev/null
+yay -S --noconfirm package < /dev/null
+```
 
 ## Don't Break
 - Desktop-only (no laptop features)
@@ -63,6 +128,8 @@
 - Shell scripts use bash with `set -e` for strict error handling
 - No sudo prompts - user runs install.sh as regular user
 - Preserve omarchy's update compatibility - use overrides, not replacements
+- **Use shared utilities**: Source `utils.sh` for common functions like `install_package()`, `show_success()`, etc.
+- **Consistent messaging**: Use utility functions (`show_action()`, `show_success()`, `show_error()`) for consistent output formatting
 
 ## Dotfiles & Stow Configuration
 - **Dotfiles managed via GNU Stow** from `dotfiles-overrides/` directory
