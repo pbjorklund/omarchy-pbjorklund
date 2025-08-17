@@ -84,6 +84,16 @@ if [[ $(whoami) != "vscode" ]]; then
   # Application shortcuts
   alias c='claude --dangerously-skip-permissions'
   alias zel='zellij a -c'
+  bs() {
+    if [ $# -eq 0 ]; then
+      echo -n "Enter message: "
+      read -r message
+      bsky post "$message"
+    else
+      # Pass all arguments as-is to bsky post
+      bsky post "$*"
+    fi
+  }
 fi
 
 # =============================================================================
