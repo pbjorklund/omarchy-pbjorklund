@@ -18,7 +18,13 @@ Hyprland window manager configuration for development environments.
 
 ### Idle Management
 
-Handled by hypridle with different timeouts for battery vs AC power.
+Handled by hypridle with the following timeout sequence:
+- **5 minutes**: Start screensaver
+- **15 minutes**: Lock screen
+- **30 minutes**: Turn off display
+- **60 minutes**: Suspend system
+
+**Wake devices**: Only keyboard is enabled as a wake device for system resume.
 
 ## Files
 
