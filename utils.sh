@@ -63,7 +63,7 @@ show_error() {
 }
 
 show_skip() {
-    echo -e "${YELLOW}✓${NC} $1" | tee -a "$MAIN_LOG"
+    echo -e "${YELLOW}⊝${NC} $1" | tee -a "$MAIN_LOG"
 }
 
 show_header() {
