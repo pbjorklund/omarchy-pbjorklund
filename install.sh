@@ -171,7 +171,7 @@ for step in "${INSTALL_STEPS[@]}"; do
   if [[ "$system" == "$SYSTEM_TYPE" || "$system" == "ALL" ]]; then
     run_installation_step "$script_name" "$description"
   else
-    show_skip "$description (${SYSTEM_TYPE,,} detected)"
+    show_skip "$description (skipped - ${SYSTEM_TYPE,,} detected)"
   fi
 done
 
