@@ -165,6 +165,6 @@ fi
 # STARTUP
 # =============================================================================
 
-if [[ $- == *i* ]] && [[ "$USER" != "vscode" ]] >/dev/null 2>&1; then
+if [[ $- == *i* ]] && [[ "$USER" != "vscode" ]] && [[ -z "$SKIP_FASTFETCH" ]] >/dev/null 2>&1; then
   fastfetch
 fi
