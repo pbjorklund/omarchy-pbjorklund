@@ -30,7 +30,6 @@ declare -a INSTALL_STEPS=(
   "install-displaylink.sh|DisplayLink drivers setup|THINKPAD"
   "setup-ssh-server.sh|SSH server setup|DESKTOP"
   "install-zen-browser.sh|Zen browser setup|ALL"
-  ""
   "install-opencode.sh|OpenCode setup|ALL"
   "install-claude-code.sh|Claude Code setup|ALL"
   "install-zotero.sh|Zotero installation|ALL"
