@@ -33,8 +33,6 @@ set -e
 # - Arch Wiki: https://wiki.archlinux.org/title/DisplayLink
 # - EVDI GitHub: https://github.com/DisplayLink/evdi
 # - DisplayLink support: https://support.displaylink.com/
-#
-# NOTE: Desktop systems don't need DisplayLink as they have sufficient native outputs
 
 source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
@@ -43,20 +41,10 @@ if [ -z "$LOG_DIR" ]; then
     init_logging "displaylink"
 fi
 
-# Check if we're on a laptop (has battery)
-is_laptop() {
-    [ -d "/sys/class/power_supply" ] && ls /sys/class/power_supply/ | grep -q "BAT"
-}
-
 install_displaylink_drivers() {
     mkdir -p "$LOG_DIR"
     
-    if ! is_laptop; then
-        show_skip "Desktop system detected - DisplayLink drivers not needed"
-        return 0
-    fi
-    
-    show_action "Installing DisplayLink drivers for laptop"
+    show_action "Installing DisplayLink drivers for ThinkPad"
     
     # Install kernel headers (required for DKMS module compilation)
     if ! yay -Q linux-headers &>/dev/null; then

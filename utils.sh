@@ -63,9 +63,27 @@ show_error() {
 }
 
 show_skip() {
-    echo -e "${YELLOW}✓${NC} $1 ${YELLOW}(already done)${NC}" | tee -a "$MAIN_LOG"
+    echo -e "${YELLOW}✓${NC} $1" | tee -a "$MAIN_LOG"
 }
 
 show_header() {
     echo -e "${BOLD}${BLUE}$1${NC}" | tee -a "$MAIN_LOG"
+}
+
+# System detection functions
+get_system_type() {
+    # Check for ThinkPad (has battery)
+    if ls /sys/class/power_supply/BAT* &>/dev/null; then
+        echo "THINKPAD"
+        return
+    fi
+    
+    # Check for desktop indicators (discrete GPU, multiple PCIe slots, etc.)
+    if lspci | grep -E '(VGA|Display|3D).*AMD|Advanced Micro Devices|NVIDIA' &>/dev/null; then
+        echo "DESKTOP"
+        return
+    fi
+    
+    # Fallback to desktop if unsure
+    echo "DESKTOP"
 }

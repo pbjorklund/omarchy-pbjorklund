@@ -12,6 +12,44 @@ set -e
 source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 init_logging "install"
 
+# =============================================================================
+# INSTALLATION STEPS - PRIMARY CONFIGURATION
+# =============================================================================
+# Format: "script-name.sh|Human readable description|SYSTEM_TYPE"
+# SYSTEM_TYPE: ALL (both), THINKPAD (laptop only), DESKTOP (desktop only)
+
+declare -a INSTALL_STEPS=(
+  "setup-directories.sh|Development directories setup|ALL"
+  "install-bin-scripts.sh|Custom scripts installation|ALL"
+  "install-stow.sh|Package managers installation|ALL"
+  "link-dotfiles.sh|Personal dotfiles deployment|ALL"
+  "install-node-lts.sh|Node.js LTS installation|ALL"
+  "install-terminal-tools.sh|Terminal tools installation|ALL"
+  "install-intel-vaapi.sh|Intel VAAPI for screen recording|THINKPAD"
+  "install-amd-drivers.sh|AMD graphics drivers setup|DESKTOP"
+  "install-displaylink.sh|DisplayLink drivers setup|THINKPAD"
+  "setup-ssh-server.sh|SSH server setup|DESKTOP"
+  "install-zen-browser.sh|Zen browser setup|ALL"
+  ""
+  "install-opencode.sh|OpenCode setup|ALL"
+  "install-claude-code.sh|Claude Code setup|ALL"
+  "install-zotero.sh|Zotero installation|ALL"
+  "install-plexamp.sh|Plexamp installation|ALL"
+  "install-tailscale.sh|Tailscale installation|ALL"
+  "install-pbp.sh|Personal project setup|ALL"
+  "copy-desktop-files.sh|Desktop files copying|ALL"
+  "setup-desktop-suspend.sh|Desktop suspend and hypridle setup|ALL"
+  "install-iac-tools.sh|Infrastructure as Code tools installation|ALL"
+  "uninstall-typora.sh|Typora removal|ALL"
+  "uninstall-spotify.sh|Spotify removal|ALL"
+  "configure-audio.sh|USB Audio configuration|DESKTOP"
+  "setup-mouse.sh|Gaming mouse configuration|DESKTOP"
+)
+
+# =============================================================================
+# IMPLEMENTATION - ERROR HANDLING AND UTILITIES
+# =============================================================================
+
 handle_errors() {
   local exit_code=$?
   local line_number=$1
@@ -78,7 +116,7 @@ load_configuration() {
 
 validate_prerequisites() {
   [ -f "$HOME/.omarchy-preflight-complete" ] || show_error "Preflight setup not completed - run: bash preflight.sh"
-  show_skip "Preflight checks passed"
+  show_skip "Preflight checks passed (already done)"
   echo
 
   command -v pacman &> /dev/null || show_error "This script requires Arch Linux"
@@ -100,11 +138,7 @@ show_completion_message() {
   echo "     ./bin/setup-nas-storage.sh" | tee -a "$MAIN_LOG"
   echo "     This will mount your NAS shares and configure auto-mounting" | tee -a "$MAIN_LOG"
   echo | tee -a "$MAIN_LOG"
-  echo -e "${YELLOW}  2. Setup SSH server (desktop only):${NC}" | tee -a "$MAIN_LOG"
-  echo "     ./setup-ssh-server.sh" | tee -a "$MAIN_LOG"
-  echo "     This will configure SSH server for remote access" | tee -a "$MAIN_LOG"
-  echo | tee -a "$MAIN_LOG"
-  echo -e "${YELLOW}  3. Connect to Headscale:${NC}" | tee -a "$MAIN_LOG"
+  echo -e "${YELLOW}  2. Connect to Headscale:${NC}" | tee -a "$MAIN_LOG"
   echo "     sudo tailscale up --login-server=$HEADSCALE_SERVER --accept-routes" | tee -a "$MAIN_LOG"
   echo "     Visit the authentication URL provided" | tee -a "$MAIN_LOG"
   echo "     Run: ./register-headscale-device.sh <token> (from homelab-iac repo)" | tee -a "$MAIN_LOG"
@@ -129,35 +163,16 @@ echo | tee -a "$MAIN_LOG"
 load_configuration
 validate_prerequisites
 
-declare -a INSTALL_STEPS=(
-  "setup-directories.sh|Development directories setup"
-  "install-bin-scripts.sh|Custom scripts installation"
-  "install-stow.sh|Package managers installation"
-  "link-dotfiles.sh|Personal dotfiles deployment"
-  "install-node-lts.sh|Node.js LTS installation"
-  "install-terminal-tools.sh|Terminal tools installation"
-  "install-amd-drivers.sh|AMD graphics drivers setup"
-  "install-displaylink.sh|DisplayLink drivers setup"
-  "install-zen-browser.sh|Zen browser setup"
-  "install-screen-recorder.sh|Screen recorder setup"
-  "install-opencode.sh|OpenCode setup"
-  "install-claude-code.sh|Claude Code setup"
-  "install-zotero.sh|Zotero installation"
-  "install-plexamp.sh|Plexamp installation"
-  "install-tailscale.sh|Tailscale installation"
-  "install-pbp.sh|Personal project setup"
-  "copy-desktop-files.sh|Desktop files copying"
-  "setup-desktop-suspend.sh|Desktop suspend and hypridle setup"
-  "install-iac-tools.sh|Infrastructure as Code tools installation"
-  "uninstall-typora.sh|Typora removal"
-  "uninstall-spotify.sh|Spotify removal"
-  "configure-audio.sh|USB Audio configuration"
-  "setup-mouse.sh|Gaming mouse configuration"
-)
+SYSTEM_TYPE=$(get_system_type)
 
 for step in "${INSTALL_STEPS[@]}"; do
-  IFS='|' read -r script_name description <<< "$step"
-  run_installation_step "$script_name" "$description"
+  IFS='|' read -r script_name description system <<< "$step"
+
+  if [[ "$system" == "$SYSTEM_TYPE" || "$system" == "ALL" ]]; then
+    run_installation_step "$script_name" "$description"
+  else
+    show_skip "$description (${SYSTEM_TYPE,,} detected)"
+  fi
 done
 
 show_completion_message
