@@ -5,6 +5,6 @@ Comment=Tailscale TUI Manager
 Exec=alacritty --title "Tailscale Manager" --class "Tailscale-TUI" -e sudo tsui
 Terminal=false
 Type=Application
-Icon=/home/pbjorklund/.local/share/applications/icons/Tailscale.png
+Icon=/usr/share/icons/AdwaitaLegacy/48x48/legacy/network-vpn.png
 StartupNotify=true
 Categories=Network;
