@@ -10,13 +10,13 @@ DefaultIM=keyboard-us
 # Name
 Name=keyboard-us
 # Layout
-Layout=us:caps:ctrl_modifier
+Layout=
 
 [Groups/0/Items/1]
 # Name
 Name=keyboard-se
 # Layout
-Layout=se:caps:ctrl_modifier
+Layout=
 
 [GroupOrder]
 0=Default
