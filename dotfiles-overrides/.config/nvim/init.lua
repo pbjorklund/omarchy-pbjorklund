@@ -150,8 +150,21 @@ require("lazy").setup({
             i = {
               ["<C-h>"] = "which_key"
             }
-          }
+          },
+          vimgrep_arguments = {
+            "rg",
+            "--color=never",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
+            "--smart-case",
+            "--hidden",  -- This enables searching in hidden directories
+            "--glob=!.git/*",     -- Exclude .git directory
+            "--glob=!node_modules/*", -- Exclude node_modules directory
+          },
         },
+        -- Add ripgrep arguments to search hidden files/directories
         pickers = {
           find_files = {
             hidden = true
