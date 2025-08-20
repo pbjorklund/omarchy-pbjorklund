@@ -34,7 +34,7 @@ declare -a INSTALL_STEPS=(
   "install-claude-code.sh|Claude Code setup|ALL"
   "install-onlyoffice.sh|ONLYOFFICE installation|ALL"
   "install-teams-for-linux.sh|Teams for Linux installation|ALL"
-  "install-elgato-camlink4k.sh|Elgato CamLink 4K drivers setup|DESKTOP"
+
   "install-zotero.sh|Zotero installation|ALL"
   "install-plexamp.sh|Plexamp installation|ALL"
   "install-tailscale.sh|Tailscale installation|ALL"
