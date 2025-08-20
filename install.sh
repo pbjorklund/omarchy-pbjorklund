@@ -46,6 +46,7 @@ declare -a INSTALL_STEPS=(
   "uninstall-spotify.sh|Spotify removal|ALL"
   "configure-audio.sh|USB Audio configuration|DESKTOP"
   "setup-mouse.sh|Gaming mouse configuration|DESKTOP"
+  "setup-wake-on-lan.sh|Wake-on-LAN setup|DESKTOP"
 )
 
 # =============================================================================
