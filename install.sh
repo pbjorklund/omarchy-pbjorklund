@@ -41,6 +41,7 @@ declare -a INSTALL_STEPS=(
   "install-pbp.sh|Personal project setup|ALL"
   "copy-desktop-files.sh|Desktop files copying|ALL"
   "setup-desktop-suspend.sh|Desktop suspend and hypridle setup|ALL"
+  "setup-network-resume.sh|Network resume after suspend setup|DESKTOP"
   "install-iac-tools.sh|Infrastructure as Code tools installation|ALL"
   "uninstall-typora.sh|Typora removal|ALL"
   "uninstall-spotify.sh|Spotify removal|ALL"
