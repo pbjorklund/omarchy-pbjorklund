@@ -7,6 +7,7 @@ return {
   -- Movement and habits
   require("plugins.hardtime"),
   require("plugins.precognition"),
+  require("plugins.window-picker"),
   
   -- Colorscheme
   {
@@ -193,6 +194,7 @@ return {
         { "<leader>gg", desc = "LazyGit" },
         { "<leader>gp", desc = "Preview git hunk" },
         { "<leader>gr", desc = "Reset git hunk" },
+        { "<leader>w", desc = "Pick a window" },
         { "<leader>m", group = "Markdown" },
         { "<leader>mp", desc = "Markdown Preview Start" },
         { "<leader>ms", desc = "Markdown Preview Stop" },
