@@ -91,7 +91,7 @@ return {
           separator_style = "slant",
           offsets = {
             {
-              filetype = "NvimTree",
+              filetype = "neo-tree",
               text = "File Explorer",
               highlight = "Directory",
               text_align = "left"
@@ -119,22 +119,16 @@ return {
 
   -- File tree
   {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
     config = function()
-      require("nvim-tree").setup({
-        view = {
-          width = 30,
-        },
-        renderer = {
-          group_empty = true,
-        },
-        update_focused_file = {
-          enable = true,
-          update_root = false,
-        },
-      })
-      vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
+      require("neo-tree").setup()
+      vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Toggle file tree" })
     end,
   },
 
@@ -153,38 +147,14 @@ return {
 
   -- GitHub Copilot
   {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "main",
-    dependencies = {
-      { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim" },
-    },
+    "github/copilot.vim",
     config = function()
-      require("CopilotChat").setup({
-        debug = false,
-        model = "claude-sonnet-4"
+      vim.g.copilot_no_tab_map = true
+      vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false,
+        silent = true
       })
-
-      vim.api.nvim_create_autocmd('BufEnter', {
-        pattern = 'copilot-*',
-        callback = function()
-          vim.b.copilot_enabled = true
-          vim.keymap.set('i', '<Tab>', 'copilot#Accept("\\<Tab>")', {
-            buffer = true,
-            expr = true,
-            replace_keycodes = false,
-            silent = true
-          })
-        end,
-      })
-
-      -- Key mappings
-      vim.keymap.set("n", "<leader>cc", ":CopilotChat<CR>", { desc = "Open Copilot Chat" })
-      vim.keymap.set("v", "<leader>cc", ":CopilotChat<CR>", { desc = "Copilot Chat with selection" })
-      vim.keymap.set("n", "<leader>ce", ":CopilotChatExplain<CR>", { desc = "Explain code" })
-      vim.keymap.set("n", "<leader>cf", ":CopilotChatFix<CR>", { desc = "Fix code" })
-      vim.keymap.set("n", "<leader>co", ":CopilotChatOptimize<CR>", { desc = "Optimize code" })
-      vim.keymap.set("n", "<leader>ct", ":CopilotChatTests<CR>", { desc = "Generate tests" })
     end,
   },
 
@@ -204,7 +174,7 @@ return {
         { "<leader>fb", desc = "Buffers" },
         { "<leader>fh", desc = "Help Tags" },
         { "<leader>fd", desc = "Diagnostics" },
-        { "<leader>e", desc = "Toggle File Tree" },
+        { "<leader>e", desc = "Toggle file tree" },
         { "<leader>v", desc = "Edit config" },
         { "<leader>b", group = "Buffer" },
         { "<leader>bn", desc = "Next buffer" },
@@ -215,13 +185,8 @@ return {
         { "<leader>bb", desc = "Pick buffer" },
         { "<leader>b<", desc = "Move buffer left" },
         { "<leader>b>", desc = "Move buffer right" },
-        { "<leader>c", group = "Code/Copilot" },
+        { "<leader>c", group = "Code" },
         { "<leader>ca", desc = "Code Action" },
-        { "<leader>cc", desc = "Copilot Chat" },
-        { "<leader>ce", desc = "Explain code" },
-        { "<leader>cf", desc = "Fix code" },
-        { "<leader>co", desc = "Optimize code" },
-        { "<leader>ct", desc = "Generate tests" },
         { "<leader>r", group = "LSP" },
         { "<leader>rn", desc = "Rename" },
         { "<leader>g", group = "Git" },
