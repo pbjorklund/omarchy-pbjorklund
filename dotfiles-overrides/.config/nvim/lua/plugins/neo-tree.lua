@@ -21,8 +21,16 @@ return {
         use_libuv_file_watcher = true,
         filtered_items = {
           visible = false,
-          hide_dotfiles = true,
-          hide_gitignored = true,
+          hide_dotfiles = false,
+          hide_gitignored = false,
+          hide_by_name = {
+            ".git",
+            ".DS_Store",
+            "thumbs.db",
+          },
+          never_show = {
+            ".git",
+          },
         },
       },
       buffers = {
