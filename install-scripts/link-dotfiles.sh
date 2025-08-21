@@ -18,11 +18,12 @@ if [ -d "$DOTFILES_DIR" ]; then
         rm -f "$HOME/.config/Code/User/settings.json"
     fi
     
-    # Handle Neovim lua directory to enable full config override
-    # Remove omarchy's default nvim lua files so we can deploy our complete config
-    if [ -d "$HOME/.config/nvim/lua" ] && [ ! -L "$HOME/.config/nvim/lua" ]; then
-        echo "Removing omarchy default nvim lua config for full override..."
-        rm -rf "$HOME/.config/nvim/lua"
+    # Handle Neovim directory to enable full config override
+    # Remove omarchy's default nvim config if it hasn't been replaced by our symlinks yet
+    if [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim/init.lua" ]; then
+        echo "Removing omarchy default nvim config for full override..."
+        rm -rf "$HOME/.config/nvim"
+        mkdir -p "$HOME/.config/nvim"
     fi
     
     # Clean up any manually created symlinks that might conflict with stow
