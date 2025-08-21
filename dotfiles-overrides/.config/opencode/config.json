@@ -2,12 +2,11 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "material",
   "autoupdate": true,
-  "model": "github-copilot/claude-sonnet-4",
+  "model": "anthropic/claude-sonnet-4-20250514",
   "agent": {
     "teach": {
       "description": "Educational agent that explains concepts, creates learning materials, and prepares presentations",
       "mode": "primary",
-      "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.3,
       "tools": {
         "write": true,
@@ -23,7 +22,6 @@
     "guide": {
       "description": "Step-by-step guidance agent that provides incremental instructions and conducts web research when needed",
       "mode": "primary",
-      "model": "github-copilot/claude-sonnet-4", 
       "temperature": 0.2,
       "tools": {
         "write": false,
@@ -39,8 +37,7 @@
     },
     "spec": {
       "description": "Technical specification writer focused on creating comprehensive, implementable specs using Gherkin syntax",
-      "mode": "primary", 
-      "model": "github-copilot/claude-sonnet-4",
+      "mode": "primary",
       "temperature": 0.1,
       "tools": {
         "write": true,
