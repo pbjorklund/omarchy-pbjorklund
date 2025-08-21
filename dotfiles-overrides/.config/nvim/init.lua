@@ -507,8 +507,9 @@ require("lazy").setup({
         { "[c", desc = "Previous git change" },
         { "<leader>h", function() wk.show({ global = true }) end, desc = "Show All Keybindings" },
         { "<C-g>", desc = "Git Status" },
-        { "<F1>", desc = "Location List" },
+        { "<F1>", desc = "Toggle Precognition" },
         { "<F2>", desc = "Toggle Paste Mode" },
+        { "<F3>", desc = "Toggle Hardtime" },
         { "<Space>", desc = "Toggle Fold" },
         { "K", desc = "Hover Documentation" },
         { "gd", desc = "Go to Definition" },
@@ -585,6 +586,67 @@ require("lazy").setup({
       -- Key mappings
       vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreview<cr>", { desc = "Markdown Preview Start" })
       vim.keymap.set("n", "<leader>ms", "<cmd>MarkdownPreviewStop<cr>", { desc = "Markdown Preview Stop" })
+    end,
+  },
+
+  -- Precognition.nvim for movement hints
+  {
+    "tris203/precognition.nvim",
+    config = function()
+      require("precognition").setup({
+        disabled_fts = {
+          "NvimTree",
+          "startify",
+          "help",
+          "TelescopePrompt",
+        },
+      })
+      vim.keymap.set("n", "<F1>", function()
+        require("precognition").toggle()
+      end, { desc = "Toggle Precognition" })
+    end,
+  },
+
+  -- Hardtime.nvim to break bad habits
+  {
+    "m4xshen/hardtime.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    config = function()
+      require("hardtime").setup({
+        hint = true,
+        notification = true,
+        timeout = 3000,
+        disabled_filetypes = {
+          "qf",
+          "netrw",
+          "NvimTree",
+          "lazy",
+          "mason",
+          "oil",
+          "TelescopePrompt",
+          "help",
+        },
+        restricted_keys = {
+          ["h"] = { "n", "x" },
+          ["j"] = { "n", "x" },
+          ["k"] = { "n", "x" },
+          ["l"] = { "n", "x" },
+        },
+        disabled_keys = {
+          ["<Up>"] = { "n", "i", "v" },
+          ["<Down>"] = { "n", "i", "v" },
+          ["<Left>"] = { "n", "i", "v" },
+          ["<Right>"] = { "n", "i", "v" },
+        },
+        max_count = 3,
+        max_time = 1000,
+        callback = function(msg)
+          vim.notify(msg, vim.log.levels.WARN, { title = "Hardtime" })
+        end,
+      })
+      vim.keymap.set("n", "<F3>", function()
+        vim.cmd("Hardtime toggle")
+      end, { desc = "Toggle Hardtime" })
     end,
   },
 })
