@@ -1,3 +1,4 @@
+    -- Neo-tree will detect window-picker and enable the 'open_with_window_picker' command
 #!/bin/bash
 
 # Color definitions (only for terminal output, not logs)
@@ -36,9 +37,9 @@ log_command() {
     local script_name="$2"
     local success_msg="$3"
     local error_msg="$4"
-    
+
     local script_log="$LOG_DIR/$script_name.log"
-    
+
     if eval "$command" > "$script_log" 2>&1; then
         echo -e "${GREEN}✓${NC} $success_msg" | tee -a "$MAIN_LOG"
         return 0
@@ -77,13 +78,13 @@ get_system_type() {
         echo "THINKPAD"
         return
     fi
-    
+
     # Check for desktop indicators (discrete GPU, multiple PCIe slots, etc.)
     if lspci | grep -E '(VGA|Display|3D).*AMD|Advanced Micro Devices|NVIDIA' &>/dev/null; then
         echo "DESKTOP"
         return
     fi
-    
+
     # Fallback to desktop if unsure
     echo "DESKTOP"
 }
