@@ -11,45 +11,6 @@ return {
           buftype = { "terminal", "quickfix" },
         },
       },
-      picker_config = {
-        statusline_winbar_picker = {
-          selection_display = function(char, windowid)
-            return "%=" .. char .. "%="
-          end,
-          use_winbar = "never", -- "always" | "never" | "smart"
-        },
-      },
-      highlights = {
-        statusline = {
-          focused = {
-            fg = "#ededed",
-            bg = "#e35e4f",
-            bold = true,
-          },
-          unfocused = {
-            fg = "#ededed",
-            bg = "#44cc41",
-            bold = true,
-          },
-        },
-        winbar = {
-          focused = {
-            fg = "#ededed",
-            bg = "#e35e4f",
-            bold = true,
-          },
-          unfocused = {
-            fg = "#ededed",
-            bg = "#44cc41",
-            bold = true,
-          },
-        },
-      },
     })
-
-
-
-    -- Neo-tree integration happens automatically when this plugin is loaded
-    -- Neo-tree will detect window-picker and enable the 'open_with_window_picker' command
   end,
 }

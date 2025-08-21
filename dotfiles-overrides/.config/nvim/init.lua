@@ -1,9 +1,3 @@
--- Add plugins directory to lua path for modular config
-local config_path = vim.fn.stdpath("config")
-package.path = package.path .. ";" .. config_path .. "/lua/?.lua"
-package.path = package.path .. ";" .. config_path .. "/lua/?/init.lua"
---
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -272,3 +266,7 @@ vim.keymap.set("n", "<F3>", function()
     vim.notify("Hardtime disabled")
   end
 end, { desc = "Toggle Hardtime" })
+
+vim.keymap.set("n", "<F4>", function()
+  require("notify").dismiss({ silent = true, pending = true })
+end, { desc = "Clear all notifications" })
