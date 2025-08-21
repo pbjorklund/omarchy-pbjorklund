@@ -21,7 +21,6 @@ require("lazy").setup({
   require("plugins.treesitter"),         -- Syntax highlighting
   require("plugins.bufferline"),         -- Buffer management
   require("plugins.neo-tree"),           -- File browser
-  require("plugins.lualine"),            -- Status line
   require("plugins.copilot"),            -- AI completion
   require("plugins.which-key"),          -- Keybind discovery
   require("plugins.neoscroll"),          -- Smooth scrolling
