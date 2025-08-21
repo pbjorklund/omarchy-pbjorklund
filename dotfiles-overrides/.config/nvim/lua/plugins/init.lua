@@ -132,11 +132,23 @@ return {
       require("neo-tree").setup({
         window = {
           mappings = {
-            ["w"] = "open_with_window_picker",
+            ["w"] = {
+              "open_with_window_picker",
+              config = {
+                -- Add any config for window picker here if needed
+              }
+            },
             ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
             ["l"] = "focus_preview",
             ["S"] = "open_split",
             ["s"] = "open_vsplit",
+          },
+        },
+        filesystem = {
+          window = {
+            mappings = {
+              ["w"] = "open_with_window_picker",
+            },
           },
         },
       })

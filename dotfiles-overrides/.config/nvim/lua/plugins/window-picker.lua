@@ -11,6 +11,14 @@ return {
           buftype = { "terminal", "quickfix" },
         },
       },
+      picker_config = {
+        statusline_winbar_picker = {
+          selection_display = function(char, windowid)
+            return "%=" .. char .. "%="
+          end,
+          use_winbar = "never", -- "always" | "never" | "smart"
+        },
+      },
       highlights = {
         statusline = {
           focused = {
