@@ -20,6 +20,7 @@ init_logging "install"
 
 declare -a INSTALL_STEPS=(
   "setup-directories.sh|Development directories setup|ALL"
+  "setup-passwordless-sudo.sh|Passwordless sudo setup|ALL"
   "install-bin-scripts.sh|Custom scripts installation|ALL"
   "install-stow.sh|Package managers installation|ALL"
   "link-dotfiles.sh|Personal dotfiles deployment|ALL"
@@ -37,6 +38,8 @@ declare -a INSTALL_STEPS=(
 
   "install-zotero.sh|Zotero installation|ALL"
   "install-plexamp.sh|Plexamp installation|ALL"
+  "install-tidal-hifi.sh|Tidal HiFi installation|ALL"
+  "install-bsky.sh|Bluesky installation|ALL"
   "install-tailscale.sh|Tailscale installation|ALL"
   "install-pbp.sh|Personal project setup|ALL"
   "copy-desktop-files.sh|Desktop files copying|ALL"
@@ -48,6 +51,7 @@ declare -a INSTALL_STEPS=(
   "configure-audio.sh|USB Audio configuration|DESKTOP"
   "setup-mouse.sh|Gaming mouse configuration|DESKTOP"
   "setup-wake-on-lan.sh|Wake-on-LAN setup|DESKTOP"
+  "setup-wake-sources.sh|Wake sources setup|ALL"
 )
 
 # =============================================================================

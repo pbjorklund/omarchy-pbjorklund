@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Configuring wake sources for desktop suspend..."
+echo "Configuring wake sources for suspend..."
 
 # Disable all USB device wake sources first
 echo "Disabling all USB device wake sources..."
