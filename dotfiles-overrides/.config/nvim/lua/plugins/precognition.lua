@@ -9,8 +9,6 @@ return {
         "TelescopePrompt",
       },
     })
-    vim.keymap.set("n", "<F1>", function()
-      require("precognition").toggle()
-    end, { desc = "Toggle Precognition" })
+
   end,
 }

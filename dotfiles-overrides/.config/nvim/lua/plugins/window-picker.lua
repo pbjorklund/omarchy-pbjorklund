@@ -47,11 +47,7 @@ return {
       },
     })
 
-    -- Key mapping for window picker
-    vim.keymap.set("n", "<leader>w", function()
-      local picked_window_id = require("window-picker").pick_window() or vim.api.nvim_get_current_win()
-      vim.api.nvim_set_current_win(picked_window_id)
-    end, { desc = "Pick a window" })
+
 
     -- Neo-tree integration happens automatically when this plugin is loaded
     -- Neo-tree will detect window-picker and enable the 'open_with_window_picker' command
