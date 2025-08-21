@@ -8,7 +8,20 @@ return {
     -- Mason setup
     require("mason").setup()
     require("mason-lspconfig").setup({
-      ensure_installed = { "lua_ls", "ts_ls", "pyright" },
+      ensure_installed = { 
+        "lua_ls", 
+        "ts_ls", 
+        "pyright",
+        "omnisharp",
+        "html",
+        "cssls",
+        "jsonls",
+        "yamlls",
+        "dockerls",
+        "terraformls",
+        "marksman",
+        "ansiblels"
+      },
     })
 
     -- LSP configuration
@@ -39,6 +52,33 @@ return {
 
     -- Python LSP
     lspconfig.pyright.setup({})
+
+    -- C# LSP
+    lspconfig.omnisharp.setup({})
+
+    -- HTML LSP
+    lspconfig.html.setup({})
+
+    -- CSS LSP
+    lspconfig.cssls.setup({})
+
+    -- JSON LSP
+    lspconfig.jsonls.setup({})
+
+    -- YAML LSP
+    lspconfig.yamlls.setup({})
+
+    -- Docker LSP
+    lspconfig.dockerls.setup({})
+
+    -- Terraform LSP
+    lspconfig.terraformls.setup({})
+
+    -- Markdown LSP
+    lspconfig.marksman.setup({})
+
+    -- Ansible LSP
+    lspconfig.ansiblels.setup({})
 
     -- LSP key mappings
     vim.api.nvim_create_autocmd("LspAttach", {

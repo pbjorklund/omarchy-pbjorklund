@@ -1,4 +1,3 @@
--- VSCode theme
 return {
   "Mofiqul/vscode.nvim",
   priority = 1000,
