@@ -1,4 +1,3 @@
-    -- Neo-tree will detect window-picker and enable the 'open_with_window_picker' command
 #!/bin/bash
 
 # Color definitions (only for terminal output, not logs)

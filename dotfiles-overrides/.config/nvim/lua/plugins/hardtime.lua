@@ -3,6 +3,7 @@ return {
   dependencies = { "MunifTanjim/nui.nvim" },
   config = function()
     require("hardtime").setup({
+      enabled = false,
       max_time = 1000,
       max_count = 3,
       hint = true,

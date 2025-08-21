@@ -84,7 +84,8 @@ return {
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(ev)
-        local opts = { buffer = ev.buf }
+        -- Setup LSP keybinds for this buffer
+        require("keybinds").setup_lsp(ev.buf)
       end,
     })
   end,
