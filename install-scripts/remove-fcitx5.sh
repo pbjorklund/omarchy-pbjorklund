@@ -64,6 +64,18 @@ for file in ~/.bashrc ~/.zshrc ~/.profile ~/.bash_profile; do
     fi
 done
 
+# Disable fcitx environment variables (overrides omarchy defaults)
+echo "Disabling fcitx environment variables..."
+rm -f ~/.config/environment.d/fcitx.conf
+mkdir -p ~/.config/environment.d
+cat > ~/.config/environment.d/no-fcitx.conf << 'ENVEOF'
+# Disable fcitx input method - override omarchy defaults
+INPUT_METHOD=
+QT_IM_MODULE=
+XMODIFIERS=
+SDL_IM_MODULE=
+ENVEOF
+
 # Verify removal
 echo "Verifying fcitx5 removal..."
 remaining_packages=$(pacman -Qs fcitx | wc -l)
