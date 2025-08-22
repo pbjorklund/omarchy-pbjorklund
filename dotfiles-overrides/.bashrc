@@ -48,7 +48,7 @@ chmod 700 "$TMPDIR"
 
 # 1Password integration
 export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
-export OP_BIOMETRIC_UNLOCK_ENABLED=false
+export OP_BIOMETRIC_UNLOCK_ENABLED=true
 
 # =============================================================================
 # PATH CONFIGURATION

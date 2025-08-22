@@ -49,6 +49,8 @@ declare -a INSTALL_STEPS=(
   "install-iac-tools.sh|Infrastructure as Code tools installation|ALL"
   "uninstall-typora.sh|Typora removal|ALL"
   "uninstall-spotify.sh|Spotify removal|ALL"
+  "remove-polkit-gnome.sh|GNOME polkit agent removal|ALL"
+  "install-hyprpolkitagent.sh|Hyprland polkit agent installation|ALL"
   "configure-audio.sh|USB Audio configuration|DESKTOP"
   "setup-mouse.sh|Gaming mouse configuration|DESKTOP"
   "setup-wake-on-lan.sh|Wake-on-LAN setup|DESKTOP"

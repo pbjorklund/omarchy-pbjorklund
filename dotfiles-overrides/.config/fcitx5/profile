@@ -12,11 +12,7 @@ Name=keyboard-us
 # Layout
 Layout=
 
-[Groups/0/Items/1]
-# Name
-Name=keyboard-se
-# Layout
-Layout=
+
 
 [GroupOrder]
 0=Default
