@@ -85,13 +85,36 @@ if [[ $(whoami) != "vscode" ]]; then
   alias c='claude --dangerously-skip-permissions'
   alias zel='zellij a -c'
   bs() {
+    # Check if bsky config exists
+    if [ ! -f "$HOME/.config/bsky/config.json" ]; then
+      notify-send "Bluesky Error" "Missing config file at ~/.config/bsky/config.json"
+      echo "Error: Bluesky config not found at ~/.config/bsky/config.json"
+      return 1
+    fi
+
+    local message
     if [ $# -eq 0 ]; then
       echo -n "Enter message: "
       read -r message
-      bsky post "$message"
     else
-      # Pass all arguments as-is to bsky post
-      bsky post "$*"
+      message="$*"
+    fi
+
+    # Post and capture result
+    local result
+    if result=$(bsky post "$message" 2>&1); then
+      if [[ "$result" == at://* ]]; then
+        notify-send "Bluesky" "Posted!"
+        echo "Posted: $result"
+      else
+        notify-send "Bluesky Error" "Unexpected response: $result"
+        echo "Error: $result"
+        return 1
+      fi
+    else
+      notify-send "Bluesky Error" "Failed to post: $result"
+      echo "Error: $result"
+      return 1
     fi
   }
 fi
