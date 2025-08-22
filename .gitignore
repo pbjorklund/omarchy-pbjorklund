@@ -8,5 +8,3 @@ logs/
 *.tmp
 .DS_Store
 
-# Neovim lazy plugin locks
-lazy-lock.json
