@@ -5,13 +5,7 @@ set -e
 
 source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
-# Remove chromium if installed
-if pacman -Q chromium >/dev/null 2>&1; then
-    echo "Removing chromium..."
-    sudo pacman -Rs --noconfirm chromium
-else
-    echo "Chromium not installed, skipping removal"
-fi
+# Keep chromium installed alongside zen browser
 
 # Remove chromium desktop entry if it exists
 if [ -f "applications/chromium.desktop" ]; then
