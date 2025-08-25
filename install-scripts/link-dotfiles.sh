@@ -18,6 +18,14 @@ if [ -d "$DOTFILES_DIR" ]; then
         rm -f "$HOME/.config/Code/User/settings.json"
     fi
     
+    # Remove shell config files that might conflict with stow
+    for shell_config in .bash_profile .bashrc .zshrc; do
+        if [ -f "$HOME/$shell_config" ] && [ ! -L "$HOME/$shell_config" ]; then
+            echo "Removing existing $shell_config (not a symlink)..."
+            rm -f "$HOME/$shell_config"
+        fi
+    done
+    
     # Handle Neovim directory to enable full config override
     # Remove omarchy's default nvim config if it hasn't been replaced by our symlinks yet
     if [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim/init.lua" ]; then

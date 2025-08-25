@@ -22,6 +22,7 @@ declare -a INSTALL_STEPS=(
   "setup-directories.sh|Development directories setup|ALL"
   "setup-passwordless-sudo.sh|Passwordless sudo setup|ALL"
   "remove-fcitx5.sh|fcitx5 input method removal|ALL"
+  "remove-fcitx5-from-omarchy.sh|Remove fcitx5 from omarchy autostart|ALL"
   "install-bin-scripts.sh|Custom scripts installation|ALL"
   "install-stow.sh|Package managers installation|ALL"
   "link-dotfiles.sh|Personal dotfiles deployment|ALL"
