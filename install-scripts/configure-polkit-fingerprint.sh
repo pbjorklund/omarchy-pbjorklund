@@ -11,8 +11,9 @@ fi
 
 # Configure polkit-1 PAM to use sufficient (either/or) not required+optional (both)
 sudo tee /etc/pam.d/polkit-1 > /dev/null << 'EOF'
+auth      sufficient pam_unix.so nullok try_first_pass
 auth      sufficient pam_fprintd.so
-auth      required pam_unix.so
+auth      required pam_deny.so
 
 account   required pam_unix.so
 password  required pam_unix.so

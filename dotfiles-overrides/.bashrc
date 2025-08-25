@@ -95,7 +95,7 @@ if [[ $(whoami) != "vscode" ]]; then
     local message
     if [ $# -eq 0 ]; then
       echo -n "Enter message: "
-      read -r message
+      read -e -r message
     else
       message="$*"
     fi
