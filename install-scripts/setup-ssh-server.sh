@@ -25,10 +25,10 @@ if [ -z "$SSH_KEY_NAME" ]; then
     show_error "SSH_KEY_NAME not set in config.env"
 fi
 
-# Install OpenSSH server
+
 install_package "openssh"
 
-# Create SSH directory
+
 show_action "Setting up SSH directory"
 mkdir -p ~/.ssh > "$LOG_DIR/ssh-mkdir.log" 2>&1
 chmod 700 ~/.ssh

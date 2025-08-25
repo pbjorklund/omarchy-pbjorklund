@@ -9,11 +9,11 @@ if [ -d "$DOTFILES_DIR" ]; then
     cd "$(dirname "$DOTFILES_DIR")"
     echo "Deploying personal dotfiles..."
     
-    # Handle VS Code directory structure to prevent full directory symlinking
-    # Create the directory structure first so stow will only symlink files, not directories
+    # Prevent full directory symlinking
+    # Create directory structure first so stow symlinks files, not directories
     mkdir -p "$HOME/.config/Code/User"
     
-    # Remove any existing VS Code settings that might conflict
+
     if [ -f "$HOME/.config/Code/User/settings.json" ] && [ ! -L "$HOME/.config/Code/User/settings.json" ]; then
         rm -f "$HOME/.config/Code/User/settings.json"
     fi
@@ -26,7 +26,7 @@ if [ -d "$DOTFILES_DIR" ]; then
         fi
     done
     
-    # Handle Neovim directory to enable full config override
+    # Enable full config override
     # Remove omarchy's default nvim config if it hasn't been replaced by our symlinks yet
     if [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim/init.lua" ]; then
         echo "Removing omarchy default nvim config for full override..."
@@ -34,12 +34,12 @@ if [ -d "$DOTFILES_DIR" ]; then
         mkdir -p "$HOME/.config/nvim"
     fi
     
-    # Clean up any manually created symlinks that might conflict with stow
-    # Remove LLM instruction symlinks if they exist (stow will recreate them)
+
+    # Remove LLM instruction symlinks (stow will recreate them)
     [ -L "$HOME/.claude/CLAUDE.md" ] && rm -f "$HOME/.claude/CLAUDE.md"
     [ -L "$HOME/.opencode/AGENTS.md" ] && rm -f "$HOME/.opencode/AGENTS.md"
     
-    # Use stow restow for everything else
+    # Use stow restow
     # --no-folding prevents stow from creating directory symlinks
     stow -R --no-folding -t "$HOME" dotfiles-overrides
     

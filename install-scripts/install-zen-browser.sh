@@ -5,8 +5,6 @@ set -e
 
 source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
-# Install zen browser from AUR with GitHub fallback
-echo "Installing zen browser..."
 install_package "zen-browser-bin"
 
 # Configure zen browser as default browser

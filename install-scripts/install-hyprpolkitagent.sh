@@ -4,9 +4,6 @@ set -e
 
 source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
-echo "Installing hyprpolkitagent..."
-
-# Install hyprpolkitagent with GitHub fallback
 install_package "hyprpolkitagent"
 
 # Kill any running polkit-gnome agents

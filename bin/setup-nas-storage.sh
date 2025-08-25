@@ -5,6 +5,8 @@
 
 # Load configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$SCRIPT_DIR/utils.sh"
+
 if [ -f "$SCRIPT_DIR/config.env" ]; then
     source "$SCRIPT_DIR/config.env"
 else
@@ -22,15 +24,8 @@ fi
 
 echo "Setting up NAS storage..."
 
-# Install required packages
-echo "Installing NAS storage packages..."
-
-# Source utils.sh for install_package function
-source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
-
-# Install required packages
-install_package "cifs-utils" > /dev/null 2>&1
-install_package "autofs" > /dev/null 2>&1
+install_package "cifs-utils"
+install_package "autofs"
 
 # Remove any existing mount directories (autofs direct mounts create them automatically)
 for share in "${NAS_SHARES[@]}"; do

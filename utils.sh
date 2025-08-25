@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Color definitions (only for terminal output, not logs)
-# Only define colors if not already defined to avoid readonly conflicts
+
 if [ -z "${RED+x}" ]; then
     if [ -t 1 ]; then
         readonly RED='\033[0;31m'
@@ -22,7 +22,7 @@ if [ -z "${RED+x}" ]; then
     fi
 fi
 
-# Initialize logging with timestamped run directory
+
 init_logging() {
     if [ -z "$LOG_DIR" ]; then
         local script_name="${1:-install}"
@@ -73,14 +73,14 @@ show_header() {
     echo -e "${BOLD}${BLUE}$1${NC}" | tee -a "$MAIN_LOG"
 }
 
-# Package installation with GitHub fallback
+
 install_package() {
     local package_name="$1"
     local github_repo="$2"  # optional: user/repo format
     local binary_name="${3:-$package_name}"  # optional: different binary name
     local install_method="${4:-release}"     # optional: release, source, or appimage
     
-    # Check if package is already installed or binary already available
+    # Check if already installed
     if ! command -v "$binary_name" &> /dev/null && ! pacman -Q "$package_name" &> /dev/null; then
         show_action "Installing $package_name via package manager"
         
@@ -132,7 +132,7 @@ install_package() {
     fi
 }
 
-# GitHub release installation (for precompiled binaries)
+
 install_from_github_release() {
     local package_name="$1"
     local github_repo="$2"
@@ -173,7 +173,7 @@ install_from_github_release() {
     fi
 }
 
-# AppImage installation from GitHub
+
 install_from_github_appimage() {
     local package_name="$1"
     local github_repo="$2"
@@ -213,7 +213,7 @@ install_from_github_appimage() {
     fi
 }
 
-# Source installation from GitHub
+
 install_from_github_source() {
     local package_name="$1"
     local github_repo="$2"
@@ -260,7 +260,7 @@ install_from_github_source() {
     fi
 }
 
-# Helper to install downloaded binaries
+
 install_github_binary() {
     local package_dir="$1"
     local filename="$2"
@@ -352,7 +352,7 @@ install_github_binary() {
     cd - > /dev/null
 }
 
-# Create a wrapper script for chromium binary
+
 create_chromium_wrapper() {
     local binary_name="$1"
     local install_dir="$2"
@@ -367,6 +367,48 @@ cd "$install_dir"
 exec "$chrome_binary" "\$@"
 EOF
     chmod +x "$HOME/.local/bin/$binary_name"
+}
+
+remove_package() {
+    local package_name="$1"
+    local binary_name="${2:-$package_name}"
+    
+    if pacman -Q "$package_name" &> /dev/null; then
+        show_action "Removing $package_name via package manager"
+        
+        if [ -z "$LOG_DIR" ]; then
+            init_logging "remove-package"
+        fi
+        mkdir -p "$LOG_DIR"
+        
+        if yay -R --noconfirm "$package_name" > "$LOG_DIR/$package_name-remove.log" 2>&1; then
+            show_success "$package_name removed"
+            return 0
+        else
+            show_error "$package_name removal failed (see $LOG_DIR/$package_name-remove.log)"
+            return 1
+        fi
+    elif command -v "$binary_name" &> /dev/null; then
+        local binary_path=$(which "$binary_name" 2>/dev/null)
+        if [[ "$binary_path" == "$HOME/.local/bin/"* ]]; then
+            show_action "Removing manually installed binary $binary_name"
+            rm -f "$binary_path"
+            
+            # Clean up related files if they exist
+            if [[ -d "$HOME/.local/share/$package_name" ]]; then
+                rm -rf "$HOME/.local/share/$package_name"
+            fi
+            
+            show_success "$binary_name removed from ~/.local/bin"
+            return 0
+        else
+            show_error "$binary_name found at $binary_path but not in ~/.local/bin - manual removal required"
+            return 1
+        fi
+    else
+        show_skip "$package_name not installed"
+        return 0
+    fi
 }
 
 # System detection functions

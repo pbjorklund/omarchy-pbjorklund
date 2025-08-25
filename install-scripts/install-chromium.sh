@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Install and configure chromium browser
+
 set -e
 
 source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
-echo "Installing chromium..."
 install_package "chromium"
 
 # Configure 1Password integration
