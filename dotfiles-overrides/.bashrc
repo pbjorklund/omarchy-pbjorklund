@@ -85,13 +85,6 @@ if [[ $(whoami) != "vscode" ]]; then
   alias c='claude --dangerously-skip-permissions'
   alias zel='zellij a -c'
   bs() {
-    # Check if bsky config exists
-    if [ ! -f "$HOME/.config/bsky/config.json" ]; then
-      notify-send "Bluesky Error" "Missing config file at ~/.config/bsky/config.json"
-      echo "Error: Bluesky config not found at ~/.config/bsky/config.json"
-      return 1
-    fi
-
     local message
     if [ $# -eq 0 ]; then
       echo -n "Enter message: "
@@ -100,20 +93,54 @@ if [[ $(whoami) != "vscode" ]]; then
       message="$*"
     fi
 
-    # Post and capture result
-    local result
-    if result=$(bsky post "$message" 2>&1); then
-      if [[ "$result" == at://* ]]; then
-        notify-send "Bluesky" "Posted!"
-        echo "Posted: $result"
+    local bsky_success=false
+    local toot_success=false
+    local errors=""
+
+    # Post to Bluesky
+    if [ -f "$HOME/.config/bsky/config.json" ]; then
+      echo "Posting to Bluesky..."
+      local bsky_result
+      if bsky_result=$(bsky post "$message" 2>&1); then
+        if [[ "$bsky_result" == at://* ]]; then
+          echo "✓ Bluesky: $bsky_result"
+          bsky_success=true
+        else
+          errors+="Bluesky error: $bsky_result\n"
+        fi
       else
-        notify-send "Bluesky Error" "Unexpected response: $result"
-        echo "Error: $result"
-        return 1
+        errors+="Bluesky failed: $bsky_result\n"
       fi
     else
-      notify-send "Bluesky Error" "Failed to post: $result"
-      echo "Error: $result"
+      errors+="Bluesky config not found at ~/.config/bsky/config.json\n"
+    fi
+
+    # Post to Mastodon via toot
+    if command -v toot &>/dev/null; then
+      echo "Posting to Mastodon..."
+      local toot_result
+      if toot_result=$(toot post "$message" 2>&1); then
+        echo "✓ Mastodon: Posted successfully"
+        toot_success=true
+      else
+        errors+="Mastodon error: $toot_result\n"
+      fi
+    else
+      errors+="toot command not found - install with: yay -S toot\n"
+    fi
+
+    # Show results
+    if $bsky_success && $toot_success; then
+      notify-send "Social Media" "Posted to both Bluesky and Mastodon!"
+    elif $bsky_success; then
+      notify-send "Social Media" "Posted to Bluesky only"
+      echo -e "$errors"
+    elif $toot_success; then
+      notify-send "Social Media" "Posted to Mastodon only"
+      echo -e "$errors"
+    else
+      notify-send "Social Media Error" "Failed to post to both platforms"
+      echo -e "$errors"
       return 1
     fi
   }

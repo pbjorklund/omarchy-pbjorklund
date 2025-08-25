@@ -43,6 +43,7 @@ declare -a INSTALL_STEPS=(
   "install-plexamp.sh|Plexamp installation|ALL"
   "install-tidal-hifi.sh|Tidal HiFi installation|ALL"
   "install-bsky.sh|Bluesky installation|ALL"
+  "install-toot.sh|Mastodon CLI client installation|ALL"
   "install-tailscale.sh|Tailscale installation|ALL"
   "install-pbp.sh|Personal project setup|ALL"
   "copy-desktop-files.sh|Desktop files copying|ALL"
