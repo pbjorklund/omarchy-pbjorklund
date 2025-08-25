@@ -24,8 +24,13 @@ echo "Setting up NAS storage..."
 
 # Install required packages
 echo "Installing NAS storage packages..."
-yay -S --noconfirm --needed cifs-utils < /dev/null > /dev/null 2>&1
-yay -S --noconfirm autofs > /dev/null 2>&1
+
+# Source utils.sh for install_package function
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
+
+# Install required packages
+install_package "cifs-utils" > /dev/null 2>&1
+install_package "autofs" > /dev/null 2>&1
 
 # Remove any existing mount directories (autofs direct mounts create them automatically)
 for share in "${NAS_SHARES[@]}"; do

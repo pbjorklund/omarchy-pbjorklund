@@ -3,6 +3,8 @@
 # Replace chromium with zen browser
 set -e
 
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
+
 # Remove chromium if installed
 if pacman -Q chromium >/dev/null 2>&1; then
     echo "Removing chromium..."
@@ -17,13 +19,9 @@ if [ -f "applications/chromium.desktop" ]; then
     rm applications/chromium.desktop
 fi
 
-# Install zen browser from AUR (skip if already installed)
-if ! pacman -Q zen-browser-bin >/dev/null 2>&1; then
-    echo "Installing zen browser..."
-    yay -S --noconfirm zen-browser-bin
-else
-    echo "Zen browser already installed"
-fi
+# Install zen browser from AUR with GitHub fallback
+echo "Installing zen browser..."
+install_package "zen-browser-bin"
 
 # Configure zen browser as default browser
 echo "Setting zen browser as default..."

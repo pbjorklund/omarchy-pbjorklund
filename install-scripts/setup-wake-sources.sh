@@ -27,7 +27,23 @@ done
 
 if [ -z "$keyboard_device" ]; then
     echo "Warning: No USB keyboard found!"
-    exit 1
+    echo "This is normal when ThinkPad is not docked or using built-in keyboard."
+    echo "Built-in keyboard wake sources are handled by firmware."
+    
+    # Still configure basic USB wake settings for when external devices are connected
+    echo "Configuring basic USB wake settings..."
+    
+    # Enable common USB controllers that might be needed later
+    all_usb_controllers=$(grep -E "^(XHC|XH)[0-9]+" /proc/acpi/wakeup | awk '{print $1}')
+    for controller in $all_usb_controllers; do
+        if grep -q "^$controller.*disabled" /proc/acpi/wakeup 2>/dev/null; then
+            echo "Enabling $controller for future USB devices"
+            echo "$controller" | sudo tee /proc/acpi/wakeup >/dev/null
+        fi
+    done
+    
+    echo "Wake source configuration complete (no external keyboard)."
+    exit 0
 fi
 
 # Enable keyboard wake source

@@ -1,12 +1,9 @@
 #!/bin/bash
 set -e
 
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
+
 # Install keyring manager
 echo "Installing keyring manager..."
 
-if command -v seahorse &> /dev/null; then
-    echo "✓ Keyring manager already installed"
-else
-    echo "Installing seahorse keyring manager..."
-    log_command "yay -S --noconfirm seahorse" "seahorse-install" "Keyring manager installed" "Keyring manager installation failed"
-fi
+install_package "seahorse"

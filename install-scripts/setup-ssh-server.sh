@@ -26,12 +26,7 @@ if [ -z "$SSH_KEY_NAME" ]; then
 fi
 
 # Install OpenSSH server
-if pacman -Q openssh >/dev/null 2>&1; then
-    show_skip "OpenSSH server already installed"
-else
-    show_action "Installing OpenSSH server"
-    log_command "sudo pacman -S --noconfirm openssh" "openssh-install" "OpenSSH server installed" "OpenSSH server installation failed"
-fi
+install_package "openssh"
 
 # Create SSH directory
 show_action "Setting up SSH directory"

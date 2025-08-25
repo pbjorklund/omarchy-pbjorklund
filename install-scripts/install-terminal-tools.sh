@@ -2,14 +2,11 @@
 
 set -e
 
-# Install terminal tools
-if ! command -v tmux &> /dev/null; then
-    yay -S --noconfirm tmux < /dev/null
-fi
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
-if ! command -v zellij &> /dev/null; then
-    yay -S --noconfirm zellij < /dev/null
-fi
+# Install terminal tools
+install_package "tmux"
+install_package "zellij"
 
 # Install TPM (Tmux Plugin Manager) if not present
 if [ ! -d ~/.tmux/plugins/tpm ]; then

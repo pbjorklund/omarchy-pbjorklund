@@ -6,18 +6,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 show_action "Installing mouse configuration tools"
 
 # Install piper (GUI for configuring gaming mice)
-if ! command -v piper >/dev/null 2>&1; then
-    log_command "yay -S --noconfirm piper" "piper-install" "Piper installed" "Piper installation failed"
-else
-    show_skip "Piper already installed"
-fi
+install_package "piper"
 
-# libratbag should already be installed, but ensure it's there
-if ! pacman -Q libratbag >/dev/null 2>&1; then
-    log_command "yay -S --noconfirm libratbag" "libratbag-install" "libratbag installed" "libratbag installation failed"
-else
-    show_skip "libratbag already installed"  
-fi
+# Install libratbag (mouse configuration daemon)
+install_package "libratbag"
 
 show_action "Configuring gaming mouse DPI settings"
 

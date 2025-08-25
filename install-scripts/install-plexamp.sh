@@ -3,10 +3,8 @@
 # Install Plexamp music client for Plex
 set -e
 
-# Install plexamp from AUR (skip if already installed)
-if ! pacman -Q plexamp-appimage >/dev/null 2>&1; then
-    echo "Installing Plexamp..."
-    yay -S --noconfirm plexamp-appimage >/dev/null 2>&1
-else
-    echo "Plexamp already installed"
-fi
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
+
+# Install plexamp from AUR with GitHub fallback
+echo "Installing Plexamp..."
+install_package "plexamp-appimage"

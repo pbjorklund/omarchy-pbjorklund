@@ -6,22 +6,7 @@ init_logging "setup-wake-on-lan"
 
 INTERFACE="eno1"  # Your main ethernet interface
 
-# Install package function
-install_package() {
-    local package="$1"
-    if ! command -v "$package" &> /dev/null; then
-        show_action "Installing $package"
-        mkdir -p ./logs
-        if yay -S --noconfirm "$package" > ./logs/"$package".log 2>&1; then
-            show_success "$package installed"
-        else
-            show_error "$package installation failed (see ./logs/$package.log)"
-            return 1
-        fi
-    else
-        show_success "$package already installed"
-    fi
-}
+# Note: Using global install_package function from utils.sh
 
 setup_wake_on_lan() {
     show_action "Installing ethtool for Wake-on-LAN configuration"

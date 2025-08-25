@@ -8,8 +8,6 @@ if [ -z "$LOG_DIR" ]; then
 fi
 
 install_intel_vaapi() {
-    mkdir -p "$LOG_DIR"
-    
     show_action "Installing Intel VAAPI drivers for screen recording"
     
     # Check if packages are already installed
@@ -19,30 +17,10 @@ install_intel_vaapi() {
     fi
     
     # Install Intel VAAPI utilities
-    if ! yay -Q libva-utils &>/dev/null; then
-        show_action "Installing Intel VAAPI utilities"
-        if yay -S --noconfirm libva-utils > "$LOG_DIR/libva-utils.log" 2>&1; then
-            show_success "Intel VAAPI utilities installed"
-        else
-            show_error "Intel VAAPI utilities installation failed (see $LOG_DIR/libva-utils.log)"
-            return 1
-        fi
-    else
-        show_success "Intel VAAPI utilities already installed"
-    fi
+    install_package "libva-utils"
     
     # Install Intel media driver
-    if ! yay -Q intel-media-driver &>/dev/null; then
-        show_action "Installing Intel media driver"
-        if yay -S --noconfirm intel-media-driver > "$LOG_DIR/intel-media-driver.log" 2>&1; then
-            show_success "Intel media driver installed"
-        else
-            show_error "Intel media driver installation failed (see $LOG_DIR/intel-media-driver.log)"
-            return 1
-        fi
-    else
-        show_success "Intel media driver already installed"
-    fi
+    install_package "intel-media-driver"
     
     show_success "Intel VAAPI drivers installation complete"
 }

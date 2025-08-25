@@ -2,24 +2,12 @@
 
 set -e
 
-source ./utils.sh
+source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
 echo "Installing hyprpolkitagent..."
 
-mkdir -p ./logs
-
-# Install hyprpolkitagent
-if ! command -v hyprpolkitagent &> /dev/null; then
-    echo "Installing hyprpolkitagent..."
-    if yay -S --noconfirm hyprpolkitagent > ./logs/hyprpolkitagent.log 2>&1; then
-        echo "✓ hyprpolkitagent installed"
-    else
-        echo "✗ hyprpolkitagent installation failed (see ./logs/hyprpolkitagent.log)"
-        return 1
-    fi
-else
-    echo "✓ hyprpolkitagent already installed"
-fi
+# Install hyprpolkitagent with GitHub fallback
+install_package "hyprpolkitagent"
 
 # Kill any running polkit-gnome agents
 if pgrep -f "polkit-gnome-authentication-agent" > /dev/null; then

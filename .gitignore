@@ -8,3 +8,13 @@ logs/
 *.tmp
 .DS_Store
 
+# GitHub package fallbacks
+github-packages/
+
+github-packages/
+github-packages/
+github-packages/
+github-packages/
+github-packages/
+github-packages/
+github-packages/

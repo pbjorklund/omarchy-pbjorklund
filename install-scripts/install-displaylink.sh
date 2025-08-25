@@ -47,43 +47,13 @@ install_displaylink_drivers() {
     show_action "Installing DisplayLink drivers for ThinkPad"
     
     # Install kernel headers (required for DKMS module compilation)
-    if ! yay -Q linux-headers &>/dev/null; then
-        show_action "Installing kernel headers for DKMS compilation"
-        if yay -S --noconfirm linux-headers > "$LOG_DIR/kernel-headers.log" 2>&1; then
-            show_success "Kernel headers installed"
-        else
-            show_error "Kernel headers installation failed (see $LOG_DIR/kernel-headers.log)"
-            return 1
-        fi
-    else
-        show_success "Kernel headers already installed"
-    fi
+    install_package "linux-headers"
     
     # Install EVDI kernel module (DKMS version)
-    if ! yay -Q evdi-dkms &>/dev/null; then
-        show_action "Installing evdi-dkms kernel module"
-        if yay -S --noconfirm evdi-dkms > "$LOG_DIR/evdi-install.log" 2>&1; then
-            show_success "EVDI kernel module installed"
-        else
-            show_error "EVDI installation failed (see $LOG_DIR/evdi-install.log)"
-            return 1
-        fi
-    else
-        show_success "EVDI kernel module already installed"
-    fi
+    install_package "evdi-dkms"
     
     # Install DisplayLink driver
-    if ! yay -Q displaylink &>/dev/null; then
-        show_action "Installing DisplayLink driver"
-        if yay -S --noconfirm displaylink > "$LOG_DIR/displaylink-install.log" 2>&1; then
-            show_success "DisplayLink driver installed"
-        else
-            show_error "DisplayLink driver installation failed (see $LOG_DIR/displaylink-install.log)"
-            return 1
-        fi
-    else
-        show_success "DisplayLink driver already installed"
-    fi
+    install_package "displaylink"
     
     # Enable DisplayLink service
     if ! systemctl is-enabled displaylink.service &>/dev/null; then

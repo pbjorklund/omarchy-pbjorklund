@@ -24,15 +24,8 @@ else
     show_skip "LibreOffice not installed"
 fi
 
-# Install ONLYOFFICE
-if ! command -v onlyoffice-desktopeditors &> /dev/null; then
-    show_action "Installing ONLYOFFICE"
-    log_command "yay -S --noconfirm onlyoffice-bin" \
-        "onlyoffice-install" \
-        "ONLYOFFICE installed" \
-        "ONLYOFFICE installation failed"
-else
-    show_success "ONLYOFFICE already installed"
-fi
+# Install ONLYOFFICE with GitHub fallback
+show_action "Installing ONLYOFFICE"
+install_package "onlyoffice-bin"
 
 show_success "Office suite setup complete"

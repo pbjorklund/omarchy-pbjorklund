@@ -32,7 +32,7 @@ declare -a INSTALL_STEPS=(
   "install-displaylink.sh|DisplayLink drivers setup|THINKPAD"
   "setup-ssh-server.sh|SSH server setup|DESKTOP"
   "install-zen-browser.sh|Zen browser setup|ALL"
-  "install-ungoogled-chromium.sh|Ungoogled Chromium installation|ALL"
+
   "install-opencode.sh|OpenCode setup|ALL"
   "install-claude-code.sh|Claude Code setup|ALL"
   "install-onlyoffice.sh|ONLYOFFICE installation|ALL"
@@ -52,6 +52,7 @@ declare -a INSTALL_STEPS=(
   "uninstall-spotify.sh|Spotify removal|ALL"
   "remove-polkit-gnome.sh|GNOME polkit agent removal|ALL"
   "install-hyprpolkitagent.sh|Hyprland polkit agent installation|ALL"
+  "configure-polkit-fingerprint.sh|Polkit fingerprint authentication setup|ALL"
   "configure-audio.sh|USB Audio configuration|DESKTOP"
   "setup-mouse.sh|Gaming mouse configuration|DESKTOP"
   "setup-wake-on-lan.sh|Wake-on-LAN setup|DESKTOP"
