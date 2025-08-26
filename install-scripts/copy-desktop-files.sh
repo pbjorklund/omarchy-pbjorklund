@@ -1,11 +1,16 @@
 #!/bin/bash
 
+set -e
+
 # Install desktop files for custom applications
 APPLICATIONS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../applications" && pwd)"
 DESKTOP_DIR="$HOME/.local/share/applications"
+ICONS_DIR="$HOME/.local/share/applications/icons"
 
 mkdir -p "$DESKTOP_DIR"
+mkdir -p "$ICONS_DIR"
 
+# Copy desktop files
 if [ -d "$APPLICATIONS_DIR/custom" ]; then
     for desktop_file in "$APPLICATIONS_DIR/custom"/*.desktop; do
         if [ -f "$desktop_file" ]; then
@@ -15,6 +20,15 @@ if [ -d "$APPLICATIONS_DIR/custom" ]; then
                 cp "$DESKTOP_DIR/$filename" "$DESKTOP_DIR/$filename.bak"
             fi
             cp "$desktop_file" "$DESKTOP_DIR/"
+        fi
+    done
+fi
+
+# Copy icon files
+if [ -d "$APPLICATIONS_DIR/icons" ]; then
+    for icon_file in "$APPLICATIONS_DIR/icons"/*; do
+        if [ -f "$icon_file" ]; then
+            cp "$icon_file" "$ICONS_DIR/"
         fi
     done
 fi
