@@ -1,4 +1,4 @@
-#!/home/pbjorklund/omarchy-pbjorklund/venv/bin/python
+#!/usr/bin/env python3
 
 import argparse
 import json
@@ -10,11 +10,40 @@ import tempfile
 import time
 from pathlib import Path
 
-# Add the venv site-packages to Python path
-sys.path.insert(0, '/home/pbjorklund/omarchy-pbjorklund/venv/lib/python3.12/site-packages')
+# Try to find and add the venv site-packages to Python path
+def setup_venv_path():
+    """Find and add the project venv to Python path"""
+    # Look for venv in common locations relative to this script
+    script_dir = Path(__file__).parent.parent if Path(__file__).parent.name == 'bin' else Path(__file__).parent
+    possible_venvs = [
+        script_dir / 'venv',
+        Path.home() / 'omarchy-pbjorklund' / 'venv',
+        Path('/usr/local/share/omarchy-pbjorklund/venv'),
+    ]
+    
+    for venv_path in possible_venvs:
+        site_packages = venv_path / 'lib'
+        if site_packages.exists():
+            # Find the actual python version directory
+            for python_dir in site_packages.iterdir():
+                if python_dir.name.startswith('python3.'):
+                    pkg_path = python_dir / 'site-packages'
+                    if pkg_path.exists():
+                        sys.path.insert(0, str(pkg_path))
+                        return True
+    
+    return False
 
-from atproto import Client, models
-from atproto.exceptions import AtProtocolError
+# Setup venv path before importing atproto
+venv_setup = setup_venv_path()
+
+try:
+    from atproto import Client, models
+    from atproto.exceptions import AtProtocolError
+except ImportError as e:
+    print(f"Error: Required Python libraries not found: {e}")
+    print("Please run: install-scripts/install-bs-dependencies.sh")
+    sys.exit(1)
 
 
 class BlueskyPoster:
