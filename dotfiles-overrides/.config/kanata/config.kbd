@@ -38,6 +38,9 @@
   _    _    _              _              _    _    _    _
 )
 
+;; tap-hold syntax: (tap-hold tap_timeout hold_timeout tap_action hold_action)
+;; tap_timeout: max time (ms) for tap detection
+;; hold_timeout: min time (ms) to trigger hold action
 (defalias
   l2 (layer-while-held l2)
   aa (tap-hold 200 200 (cmd wtype å) (cmd wtype Å))
