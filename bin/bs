@@ -10,10 +10,7 @@ import tempfile
 import time
 from pathlib import Path
 
-# Try to find and add the venv site-packages to Python path
 def setup_venv_path():
-    """Find and add the project venv to Python path"""
-    # Look for venv in common locations relative to this script
     script_dir = Path(__file__).parent.parent if Path(__file__).parent.name == 'bin' else Path(__file__).parent
     possible_venvs = [
         script_dir / 'venv',
@@ -24,18 +21,15 @@ def setup_venv_path():
     for venv_path in possible_venvs:
         site_packages = venv_path / 'lib'
         if site_packages.exists():
-            # Find the actual python version directory
             for python_dir in site_packages.iterdir():
                 if python_dir.name.startswith('python3.'):
                     pkg_path = python_dir / 'site-packages'
                     if pkg_path.exists():
                         sys.path.insert(0, str(pkg_path))
                         return True
-    
     return False
 
-# Setup venv path before importing atproto
-venv_setup = setup_venv_path()
+setup_venv_path()
 
 try:
     from atproto import Client, models
@@ -55,7 +49,6 @@ class BlueskyPoster:
         self.client = None
 
     def load_bsky_credentials(self):
-        """Load Bluesky credentials from config file"""
         if not self.config_path.exists():
             return None, None
         
@@ -67,7 +60,6 @@ class BlueskyPoster:
             return None, None
 
     def get_bsky_client(self):
-        """Get authenticated Bluesky client"""
         if self.client is not None:
             return self.client
         
@@ -84,94 +76,26 @@ class BlueskyPoster:
             print(f"Failed to authenticate with Bluesky: {e}")
             return None
 
-    def is_bluesky_url(self, text):
-        """Check if input is a Bluesky URL or AT URI"""
-        patterns = [
-            r'^https?://bsky\.app/profile/.*/post/.*',
-            r'^at://did:plc:[^/]+/app\.bsky\.feed\.post/.*'
-        ]
-        return any(re.match(pattern, text) for pattern in patterns)
-
-    def extract_at_uri(self, url):
-        """Extract AT URI from Bluesky web URL or return if already AT URI"""
-        # If already an AT URI, return as-is
-        if re.match(r'^at://did:plc:[^/]+/app\.bsky\.feed\.post/.*', url):
-            return url
-        
-        # Extract from web URL format
-        match = re.match(r'https?://bsky\.app/profile/([^/]+)/post/([^/?#]+)', url)
-        if not match:
-            return url
-        
-        handle, post_id = match.groups()
-        
-        try:
-            client = self.get_bsky_client()
-            if not client:
-                return url
-            
-            # Resolve handle to DID
-            profile = client.resolve_handle(handle)
-            if profile and profile.did:
-                return f"at://{profile.did}/app.bsky.feed.post/{post_id}"
-        except AtProtocolError:
-            pass
-        
-        return url
-
-    def like_bluesky_post(self, url):
-        """Like a Bluesky post"""
-        client = self.get_bsky_client()
-        if not client:
-            return False
-        
-        at_uri = self.extract_at_uri(url)
-        print("Liking Bluesky post...")
-        
-        try:
-            # Get the post to get its CID
-            post_thread = client.get_post_thread(at_uri)
-            if not post_thread.thread or not hasattr(post_thread.thread, 'post'):
-                print("✗ Could not find post to like")
-                return False
-            
-            post = post_thread.thread.post
-            client.like(post.uri, post.cid)
-            print("✓ Bluesky: Post liked successfully")
-            self.notify("Social Media", "Liked Bluesky post!")
-            return True
-        except AtProtocolError as e:
-            print(f"✗ Bluesky like failed: {e}")
-            self.notify("Social Media Error", "Failed to like Bluesky post")
-            return False
+    # Removed liking functionality to keep tool focused on posting
 
     def split_text_for_bluesky(self, text):
-        """Split text into Bluesky-sized chunks while preserving structure"""
-        if not text:
-            return [""]
-        
-        if len(text) <= self.BSKY_LIMIT:
-            return [text]
+        if not text or len(text) <= self.BSKY_LIMIT:
+            return [text] if text else [""]
         
         parts = []
         lines = text.split('\n')
         current_chunk = ""
         
         for line in lines:
-            # Calculate potential chunk with this line
             potential_chunk = line if not current_chunk else f"{current_chunk}\n{line}"
             
             if len(potential_chunk) <= self.BSKY_LIMIT:
-                # Line fits
                 current_chunk = potential_chunk
             else:
-                # Line doesn't fit
                 if current_chunk:
-                    # Save current chunk and start new one
                     parts.append(current_chunk)
                     current_chunk = line
                 else:
-                    # Single line is too long, split it
                     remaining = line
                     while remaining:
                         if len(remaining) <= self.BSKY_LIMIT:
@@ -185,74 +109,61 @@ class BlueskyPoster:
                                 break_pos = i
                                 break
                         
-                        # Add chunk and continue with remainder
                         parts.append(remaining[:break_pos])
                         remaining = remaining[break_pos:].lstrip()
         
-        # Add final chunk if it has content
         if current_chunk:
             parts.append(current_chunk)
         
         return parts
 
     def post_to_bluesky(self, message):
-        """Post message to Bluesky, splitting into thread if needed"""
         client = self.get_bsky_client()
         if not client:
             return False
         
         print("Posting to Bluesky...")
-        
         parts = self.split_text_for_bluesky(message)
         
         try:
             if len(parts) == 1:
-                # Single post
                 post = client.send_post(parts[0])
                 print(f"✓ Bluesky: {post.uri}")
                 return True
-            else:
-                # Thread posting
-                print(f"Creating thread with {len(parts)} parts...")
-                root_post = None
-                parent_post = None
+            
+            print(f"Creating thread with {len(parts)} parts...")
+            root_post = parent_post = None
+            
+            for i, part in enumerate(parts):
+                if parent_post is None:
+                    post = client.send_post(part)
+                    root_post = parent_post = post
+                    print(f"✓ Bluesky thread part {i+1}/{len(parts)}: {post.uri}")
+                else:
+                    parent_ref = models.ComAtprotoRepoStrongRef.Main(
+                        cid=parent_post.cid,
+                        uri=parent_post.uri
+                    )
+                    root_ref = models.ComAtprotoRepoStrongRef.Main(
+                        cid=root_post.cid,
+                        uri=root_post.uri
+                    )
+                    reply_ref = models.AppBskyFeedPost.ReplyRef(
+                        parent=parent_ref,
+                        root=root_ref
+                    )
+                    reply = client.send_post(part, reply_to=reply_ref)
+                    parent_post = reply
+                    print(f"✓ Bluesky thread part {i+1}/{len(parts)}: {reply.uri}")
                 
-                for i, part in enumerate(parts):
-                    if parent_post is None:
-                        # First post in thread
-                        post = client.send_post(part)
-                        root_post = post
-                        parent_post = post
-                        print(f"✓ Bluesky thread part {i+1}/{len(parts)}: {post.uri}")
-                    else:
-                        # Reply to previous post to create thread
-                        parent_ref = models.ComAtprotoRepoStrongRef.Main(
-                            cid=parent_post.cid,
-                            uri=parent_post.uri
-                        )
-                        root_ref = models.ComAtprotoRepoStrongRef.Main(
-                            cid=root_post.cid,
-                            uri=root_post.uri
-                        )
-                        reply_ref = models.AppBskyFeedPost.ReplyRef(
-                            parent=parent_ref,
-                            root=root_ref
-                        )
-                        reply = client.send_post(part, reply_to=reply_ref)
-                        parent_post = reply
-                        print(f"✓ Bluesky thread part {i+1}/{len(parts)}: {reply.uri}")
-                    
-                    # Small delay between posts
-                    time.sleep(0.5)
-                
-                return True
-                
+                time.sleep(0.5)
+            
+            return True
         except AtProtocolError as e:
             print(f"Bluesky failed: {e}")
             return False
 
     def post_to_mastodon(self, message):
-        """Post message to Mastodon via toot"""
         if not self.command_exists('toot'):
             print("toot command not found - install with: yay -S toot")
             return False
@@ -271,11 +182,9 @@ class BlueskyPoster:
             return False
 
     def post_to_services(self, message):
-        """Post to both Bluesky and Mastodon"""
         bsky_success = self.post_to_bluesky(message)
         toot_success = self.post_to_mastodon(message)
         
-        # Show results
         if bsky_success and toot_success:
             self.notify("Social Media", "Posted to both Bluesky and Mastodon!")
             return True
@@ -290,15 +199,12 @@ class BlueskyPoster:
             return False
 
     def get_message_from_editor(self):
-        """Open nvim for message editing"""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as temp_file:
             temp_path = temp_file.name
         
         try:
-            # Open nvim with temp file
             subprocess.run(['nvim', temp_path], check=True)
             
-            # Read content after editing
             with open(temp_path, 'r') as f:
                 content = f.read().strip()
             
@@ -312,53 +218,40 @@ class BlueskyPoster:
             print("Editor cancelled")
             return None
         finally:
-            # Clean up temp file
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
     def command_exists(self, command):
-        """Check if a command exists in PATH"""
         return subprocess.run(['which', command], 
                             capture_output=True).returncode == 0
 
     def notify(self, title, message):
-        """Send desktop notification"""
         if self.command_exists('notify-send'):
             subprocess.run(['notify-send', title, message], 
                          capture_output=True)
 
     def main(self):
-        """Main entry point"""
         parser = argparse.ArgumentParser(
-            description='Social media posting script for Bluesky and Mastodon'
+            description='Post to Bluesky and Mastodon'
         )
         parser.add_argument('message', nargs='*', 
-                          help='Message to post (if none provided, opens editor)')
+                          help='Message to post (if omitted, reads stdin or opens editor)')
         
         args = parser.parse_args()
         
-        # Determine message source
         if args.message:
-            # Message provided as arguments
             message = ' '.join(args.message)
         elif not sys.stdin.isatty():
-            # Message piped from stdin
             message = sys.stdin.read().strip()
             if not message:
                 print("No content to post")
                 return 1
         else:
-            # Open editor for message
             message = self.get_message_from_editor()
             if message is None:
                 return 1
         
-        # Check if this is a Bluesky URL to like
-        if self.is_bluesky_url(message):
-            success = self.like_bluesky_post(message)
-        else:
-            success = self.post_to_services(message)
-        
+        success = self.post_to_services(message)
         return 0 if success else 1
 
 
