@@ -131,19 +131,45 @@ EOF
     fi
 fi
 
-# Configure zen browser as default browser
-echo "Setting zen browser as default..."
-if xdg-settings set default-web-browser zen-browser.desktop 2>/dev/null; then
-    echo "✓ Default browser set successfully"
-else
-    echo "Warning: Could not set default browser (may need to set manually)"
+# Create desktop file if missing (common with AUR packages)
+if [ ! -f "/usr/share/applications/zen.desktop" ]; then
+    echo "Creating missing zen.desktop file..."
+    sudo tee /usr/share/applications/zen.desktop > /dev/null << 'EOF'
+[Desktop Entry]
+Name=Zen Browser
+Comment=Experience tranquillity while browsing the web without people tracking you!
+GenericName=Web Browser
+X-GNOME-FullName=Zen Web Browser
+Exec=/usr/bin/zen-browser %u
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=zen
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+EOF
+    echo "✓ zen.desktop created"
 fi
 
-if xdg-mime default zen-browser.desktop x-scheme-handler/http 2>/dev/null && \
-   xdg-mime default zen-browser.desktop x-scheme-handler/https 2>/dev/null; then
+# Ensure desktop file has correct permissions
+sudo chmod 644 /usr/share/applications/zen.desktop
+
+# Configure zen browser as default browser
+echo "Setting zen browser as default..."
+if xdg-settings set default-web-browser zen.desktop 2>/dev/null; then
+    echo "✓ Default browser set successfully"
+else
+    echo "✗ Could not set default browser - zen.desktop may be missing"
+    exit 1
+fi
+
+if xdg-mime default zen.desktop x-scheme-handler/http 2>/dev/null && \
+   xdg-mime default zen.desktop x-scheme-handler/https 2>/dev/null; then
     echo "✓ MIME associations set successfully"
 else
-    echo "Warning: Could not set MIME associations (may need to set manually)"
+    echo "✗ Could not set MIME associations - zen.desktop may be missing" 
+    exit 1
 fi
 
 # Configure 1Password integration
