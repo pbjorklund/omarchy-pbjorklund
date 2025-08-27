@@ -84,7 +84,6 @@ if [[ $(whoami) != "vscode" ]]; then
   # Application shortcuts
   alias c='claude --dangerously-skip-permissions'
   alias zel='zellij a -c'
-  alias bs='~/omarchy-pbjorklund/bin/bs'
 fi
 
 # =============================================================================
