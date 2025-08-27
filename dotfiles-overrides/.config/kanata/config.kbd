@@ -1,3 +1,12 @@
+;; Kanata Configuration Notes:
+;; - Requires kanata-git version (AUR) for cmd support
+;; - Unicode functionality doesn't work (outputs f6+carriagereturn)
+;; - Direct characters like 'å' don't work
+;; - cmd wtype works but doesn't respect shift modifiers
+;; - multi with S- doesn't work for uppercase variants
+;; - TODO: Find solution for shift+altgr combinations to produce uppercase variants
+;; - Current workaround: (multi (cmd wtype å) S-[) on line 33
+
 (defcfg
   process-unmapped-keys yes
   danger-enable-cmd yes
@@ -23,12 +32,15 @@
 
 (deflayer l2
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _    _    _    _    _    _    _    _    _    (cmd wtype å)    _
-  _    _    _    _    _    _    _    _    _    _    (cmd wtype ö)    (cmd wtype ä)    _    _
+  _    _    _    _    _    _    _    _    _    _    _    @aa    _
+  _    _    _    _    _    _    _    _    _    _    @oo    @ae    _    _
   _    _    _    _    _    _    _    _    _    _    _    _
   _    _    _              _              _    _    _    _
 )
 
 (defalias
   l2 (layer-while-held l2)
+  aa (tap-hold 200 200 (cmd wtype å) (cmd wtype Å))
+  oo (tap-hold 200 200 (cmd wtype ö) (cmd wtype Ö))
+  ae (tap-hold 200 200 (cmd wtype ä) (cmd wtype Ä))
 )
