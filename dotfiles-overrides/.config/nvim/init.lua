@@ -30,7 +30,8 @@ require("lazy").setup({
   require("plugins.alignment"),          -- Code alignment
   require("plugins.file-watcher"),       -- Auto-reload files
   require("plugins.whitespace-cleanup"), -- Clean whitespace
+  require("plugins.kanata"),             -- Kanata formatting
 })
 
-require("options")  -- Load vim options
-require("keybinds") -- Load keybindings
+require("options")      -- Load vim options
+require("keybinds")     -- Load keybindings

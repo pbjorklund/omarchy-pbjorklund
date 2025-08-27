@@ -53,9 +53,10 @@
 ;; SERVICE MANAGEMENT:
 ;; • Runs as systemd user service
 ;; • systemctl --user start kanata
-;; • systemctl --user stop kanata  
+;; • systemctl --user stop kanata
 ;; • systemctl --user restart kanata
 ;; • systemctl --user status kanata
+;; • journalctl --user -u kanata -n 50 -f
 ;;
 ;; KNOWN LIMITATIONS & WORKAROUNDS:
 ;; • Unicode functionality broken (outputs f6+carriagereturn instead of chars)
