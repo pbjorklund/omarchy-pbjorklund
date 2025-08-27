@@ -1,14 +1,3 @@
-;; Kanata Configuration Notes:
-;; - Requires kanata-git (AUR) for cmd support, installed via install-scripts/install-kanata.sh
-;; - Requires wtype package for Wayland text input
-;; - Requires user in input and uinput groups with proper udev rules
-;; - Unicode functionality doesn't work (outputs f6+carriagereturn)
-;; - Direct characters like 'å' don't work
-;; - cmd wtype works but doesn't respect shift modifiers
-;; - multi with S- doesn't work for uppercase variants
-;; - Solution: tap-hold with separate cmd wtype calls for upper/lowercase
-;; - Service runs as systemd user service: systemctl --user {start|stop|restart} kanata
-
 (defcfg
   process-unmapped-keys yes
   danger-enable-cmd yes
@@ -49,3 +38,35 @@
   oo (tap-hold 200 200 (cmd wtype ö) (cmd wtype Ö))
   ae (tap-hold 200 200 (cmd wtype ä) (cmd wtype Ä))
 )
+
+;; ============================================================================
+;; KANATA CONFIGURATION DOCUMENTATION
+;; ============================================================================
+;;
+;; INSTALLATION REQUIREMENTS:
+;; • kanata-git (AUR) - provides cmd support for external commands
+;; • wtype package - handles Wayland text input
+;; • User must be in 'input' and 'uinput' groups
+;; • Proper udev rules for /dev/uinput permissions
+;; • Install via: install-scripts/install-kanata.sh
+;;
+;; SERVICE MANAGEMENT:
+;; • Runs as systemd user service
+;; • systemctl --user start kanata
+;; • systemctl --user stop kanata  
+;; • systemctl --user restart kanata
+;; • systemctl --user status kanata
+;;
+;; KNOWN LIMITATIONS & WORKAROUNDS:
+;; • Unicode functionality broken (outputs f6+carriagereturn instead of chars)
+;; • Direct character literals like 'å' don't work
+;; • Shift modifiers don't work with cmd actions: S-(cmd wtype X) fails
+;; • multi with S- syntax doesn't work for uppercase variants
+;;
+;; CURRENT SOLUTION:
+;; • Use tap-hold with separate cmd wtype calls for each case
+;; • Quick tap (under 200ms) = lowercase character
+;; • Hold (200ms+) = uppercase character
+;; • Works for: å/Å, ö/Ö, ä/Ä via altgr+[, altgr+;, altgr+'
+;;
+;; ============================================================================
