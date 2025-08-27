@@ -1,73 +1,32 @@
 (defcfg
   process-unmapped-keys yes
   danger-enable-cmd yes
-  log-layer-changes no
-  linux-unicode-termination space
 )
 
 (defsrc
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]
-  caps a    s    d    f    g    h    j    k    l    ;    '    \    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           spc            ralt rmet menu rctl
+  caps
+  [
+  ;    '
+  ralt
 )
 
 (deflayer base
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]
-  lctl a    s    d    f    g    h    j    k    l    ;    '    \    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           spc            @l2 rmet menu rctl
+  lctl
+  [
+  ;    '
+  @l2
 )
 
 (deflayer l2
-  _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _    _    _    _    _    _    _    _    _    @aa    _
-  _    _    _    _    _    _    _    _    _    _    @oo    @ae    _    _
-  _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _              _              _    _    _    _
+  _
+  @aa
+  @oo  @ae
+  _
 )
 
-;; tap-hold syntax: (tap-hold tap_timeout hold_timeout tap_action hold_action)
-;; tap_timeout: how long to wait for additional input before triggering tap
-;; hold_timeout: minimum time key must be held to trigger hold action
 (defalias
   l2 (layer-while-held l2)
   aa (tap-hold 200 200 (cmd wtype å) (cmd wtype Å))
   oo (tap-hold 200 200 (cmd wtype ö) (cmd wtype Ö))
   ae (tap-hold 200 200 (cmd wtype ä) (cmd wtype Ä))
 )
-
-;; ============================================================================
-;; KANATA CONFIGURATION DOCUMENTATION
-;; ============================================================================
-;;
-;; INSTALLATION REQUIREMENTS:
-;; • kanata-git (AUR) - provides cmd support for external commands
-;; • wtype package - handles Wayland text input
-;; • User must be in 'input' and 'uinput' groups
-;; • Proper udev rules for /dev/uinput permissions
-;; • Install via: install-scripts/install-kanata.sh
-;;
-;; SERVICE MANAGEMENT:
-;; • Runs as systemd user service
-;; • systemctl --user start kanata
-;; • systemctl --user stop kanata
-;; • systemctl --user restart kanata
-;; • systemctl --user status kanata
-;; • journalctl --user -u kanata -n 50 -f
-;;
-;; KNOWN LIMITATIONS & WORKAROUNDS:
-;; • Unicode functionality broken (outputs f6+carriagereturn instead of chars)
-;; • Direct character literals like 'å' don't work
-;; • Shift modifiers don't work with cmd actions: S-(cmd wtype X) fails
-;; • multi with S- syntax doesn't work for uppercase variants
-;;
-;; CURRENT SOLUTION:
-;; • Use tap-hold with separate cmd wtype calls for each case
-;; • Quick tap (under 200ms) = lowercase character
-;; • Hold (200ms+) = uppercase character
-;; • Works for: å/Å, ö/Ö, ä/Ä via altgr+[, altgr+;, altgr+'
-;;
-;; ============================================================================
