@@ -1,11 +1,13 @@
 ;; Kanata Configuration Notes:
-;; - Requires kanata-git version (AUR) for cmd support
+;; - Requires kanata-git (AUR) for cmd support, installed via install-scripts/install-kanata.sh
+;; - Requires wtype package for Wayland text input
+;; - Requires user in input and uinput groups with proper udev rules
 ;; - Unicode functionality doesn't work (outputs f6+carriagereturn)
 ;; - Direct characters like 'å' don't work
 ;; - cmd wtype works but doesn't respect shift modifiers
 ;; - multi with S- doesn't work for uppercase variants
-;; - TODO: Find solution for shift+altgr combinations to produce uppercase variants
-;; - Current workaround: (multi (cmd wtype å) S-[) on line 33
+;; - Solution: tap-hold with separate cmd wtype calls for upper/lowercase
+;; - Service runs as systemd user service: systemctl --user {start|stop|restart} kanata
 
 (defcfg
   process-unmapped-keys yes
