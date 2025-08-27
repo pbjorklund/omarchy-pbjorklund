@@ -43,6 +43,15 @@ if [ -d "$DOTFILES_DIR" ]; then
     # --no-folding prevents stow from creating directory symlinks
     stow -R --no-folding -t "$HOME" dotfiles-overrides
     
+    # Enable user services that were deployed
+    systemctl --user daemon-reload
+    
+    # Enable kanata service if it exists
+    if [ -f "$HOME/.config/systemd/user/kanata.service" ]; then
+        systemctl --user enable kanata.service
+        echo "Kanata service enabled"
+    fi
+    
     echo "Personal dotfiles deployed successfully"
 else
     echo "Dotfiles directory not found: $DOTFILES_DIR"

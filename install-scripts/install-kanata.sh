@@ -24,7 +24,23 @@ install_package "kanata-git" "jtroo/kanata" "kanata" "git"
 # Install wtype for Wayland unicode support
 install_package "wtype" "wtype" "wtype" "release"
 
+# Deploy systemd service if dotfiles are already stowed
+if [ -f "$HOME/.config/systemd/user/kanata.service" ]; then
+    show_action "Enabling kanata user service"
+    systemctl --user daemon-reload
+    systemctl --user enable kanata.service
+    
+    # Start the service if it's not already running
+    if ! systemctl --user is-active kanata.service > /dev/null 2>&1; then
+        systemctl --user start kanata.service
+        show_success "Kanata service started"
+    else
+        show_success "Kanata service already running"
+    fi
+else
+    show_success "Kanata service will be enabled after dotfiles deployment"
+fi
+
 show_success "Kanata installation complete"
 echo "Note: Configuration files will be deployed during dotfiles setup"
-echo "Note: Service will be enabled after dotfiles deployment"
 echo "Note: Restart required for input group membership to take effect"
