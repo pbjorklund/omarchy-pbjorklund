@@ -11,6 +11,6 @@ for script in "$SCRIPT_DIR"/*; do
         script_name=$(basename "$script")
         echo "Installing $script_name to /usr/local/bin/"
         sudo cp "$script" "/usr/local/bin/"
-        sudo chmod +x "/usr/local/bin/$script_name"
+        sudo chmod 755 "/usr/local/bin/$script_name"
     fi
 done
