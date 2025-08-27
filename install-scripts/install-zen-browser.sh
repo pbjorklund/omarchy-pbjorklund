@@ -35,11 +35,11 @@ if ! pacman -Qi zen-browser-bin > /dev/null 2>&1; then
     echo "Installing zen-browser-bin from AUR..."
     mkdir -p ./logs
     
-    # Check available version before installing
-    AVAILABLE_VERSION=$(yay -Si zen-browser-bin 2>/dev/null | grep '^Version' | awk '{print $3}' | head -1)
+    # Check available version from AUR specifically (not chaotic-aur)
+    AVAILABLE_VERSION=$(yay -Si aur/zen-browser-bin 2>/dev/null | grep '^Version' | awk '{print $3}' | head -1)
     
     if [ -z "$AVAILABLE_VERSION" ]; then
-        echo "✗ Could not determine available zen-browser-bin version"
+        echo "✗ Could not determine available zen-browser-bin version from AUR"
         exit 1
     fi
     
@@ -56,7 +56,8 @@ if ! pacman -Qi zen-browser-bin > /dev/null 2>&1; then
         exit 1
     fi
     
-    if yay -S --noconfirm zen-browser-bin > ./logs/zen-browser-install.log 2>&1; then
+    # Install specifically from AUR (not chaotic-aur)
+    if yay -S --noconfirm aur/zen-browser-bin > ./logs/zen-browser-install.log 2>&1; then
         echo "✓ Zen Browser $AVAILABLE_VERSION installed from AUR"
     else
         echo "✗ Failed to install zen-browser-bin (see ./logs/zen-browser-install.log)"
@@ -71,7 +72,8 @@ else
     if [ "$(printf '%s\n' "$MIN_VERSION" "$INSTALLED_NUM" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
         echo "Upgrading zen-browser-bin to meet minimum version requirement..."
         mkdir -p ./logs
-        if yay -S --noconfirm zen-browser-bin > ./logs/zen-browser-upgrade.log 2>&1; then
+        # Upgrade specifically from AUR (not chaotic-aur)
+        if yay -S --noconfirm aur/zen-browser-bin > ./logs/zen-browser-upgrade.log 2>&1; then
             NEW_VERSION=$(pacman -Qi zen-browser-bin | grep '^Version' | awk '{print $3}')
             echo "✓ Zen Browser upgraded to $NEW_VERSION"
         else
