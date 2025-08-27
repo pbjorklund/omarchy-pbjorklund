@@ -1,72 +1,89 @@
 #!/bin/bash
 
-# Replace chromium with zen browser
+# Install zen-browser from AUR
 set -e
 
 source "$(dirname "${BASH_SOURCE[0]}")/../utils.sh"
 
-# Remove old AUR package if it exists
-if pacman -Qi zen-browser-bin > /dev/null 2>&1; then
-    echo "Removing old AUR zen-browser-bin package..."
-    yay -R --noconfirm zen-browser-bin > ./logs/zen-removal.log 2>&1
-    echo "✓ Old AUR package removed"
-fi
-
-# Download and install Zen Browser directly from GitHub
-echo "Installing Zen Browser from GitHub..."
-mkdir -p ./logs
-
-# Get the latest release version from GitHub API
-echo "Fetching latest Zen Browser version..."
-ZEN_VERSION=$(curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-
-if [ -z "$ZEN_VERSION" ]; then
-    echo "✗ Failed to fetch latest version"
-    exit 1
-fi
-
-echo "Latest version: $ZEN_VERSION"
-ZEN_URL="https://github.com/zen-browser/desktop/releases/download/${ZEN_VERSION}/zen-x86_64.AppImage"
-
-# Download to /opt/zen-browser
-sudo mkdir -p /opt/zen-browser
-
+# Remove old GitHub AppImage installation if it exists
 if [ -f "/opt/zen-browser/zen-browser.AppImage" ]; then
-    echo "Removing old version..."
-    sudo rm -f /opt/zen-browser/zen-browser.AppImage
+    echo "Removing old GitHub AppImage installation..."
+    sudo rm -rf /opt/zen-browser
+    echo "✓ GitHub AppImage removed"
 fi
 
-echo "Downloading Zen Browser ${ZEN_VERSION}..."
-if sudo wget -q --show-progress -O /opt/zen-browser/zen-browser.AppImage "$ZEN_URL" > ./logs/zen-download.log 2>&1; then
-    sudo chmod 755 /opt/zen-browser
-    sudo chmod 755 /opt/zen-browser/zen-browser.AppImage
-    echo "✓ Zen Browser downloaded and installed"
+# Remove any leftover symlinks
+if [ -L "/usr/bin/zen-browser" ]; then
+    sudo rm -f /usr/bin/zen-browser
+    echo "✓ Old zen-browser symlink removed"
+fi
+
+# Remove old custom desktop file if it exists
+if [ -f "/usr/share/applications/zen.desktop" ]; then
+    sudo rm -f /usr/share/applications/zen.desktop
+    echo "✓ Old custom desktop file removed"
+fi
+
+# Remove old custom icon if it exists
+if [ -f "/usr/share/icons/zen.png" ]; then
+    sudo rm -f /usr/share/icons/zen.png
+    echo "✓ Old custom icon removed"
+fi
+
+# Install zen-browser-bin from AUR (minimum version 1.15b)
+if ! pacman -Qi zen-browser-bin > /dev/null 2>&1; then
+    echo "Installing zen-browser-bin from AUR..."
+    mkdir -p ./logs
+    
+    # Check available version before installing
+    AVAILABLE_VERSION=$(yay -Si zen-browser-bin 2>/dev/null | grep '^Version' | awk '{print $3}' | head -1)
+    
+    if [ -z "$AVAILABLE_VERSION" ]; then
+        echo "✗ Could not determine available zen-browser-bin version"
+        exit 1
+    fi
+    
+    echo "Available version: $AVAILABLE_VERSION"
+    
+    # Extract version number for comparison (remove 'b' suffix and any package revision)
+    AVAILABLE_NUM=$(echo "$AVAILABLE_VERSION" | sed 's/b.*$//' | sed 's/-.*//')
+    MIN_VERSION="1.15"
+    
+    # Simple version comparison
+    if [ "$(printf '%s\n' "$MIN_VERSION" "$AVAILABLE_NUM" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
+        echo "✗ Available version ($AVAILABLE_VERSION) is older than minimum required (1.15b)"
+        echo "   Please wait for AUR package to be updated or install manually from GitHub"
+        exit 1
+    fi
+    
+    if yay -S --noconfirm zen-browser-bin > ./logs/zen-browser-install.log 2>&1; then
+        echo "✓ Zen Browser $AVAILABLE_VERSION installed from AUR"
+    else
+        echo "✗ Failed to install zen-browser-bin (see ./logs/zen-browser-install.log)"
+        exit 1
+    fi
 else
-    echo "✗ Failed to download Zen Browser (see ./logs/zen-download.log)"
-    exit 1
+    # Check if installed version meets minimum requirement
+    INSTALLED_VERSION=$(pacman -Qi zen-browser-bin | grep '^Version' | awk '{print $3}')
+    INSTALLED_NUM=$(echo "$INSTALLED_VERSION" | sed 's/b.*$//' | sed 's/-.*//')
+    MIN_VERSION="1.15"
+    
+    if [ "$(printf '%s\n' "$MIN_VERSION" "$INSTALLED_NUM" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
+        echo "Upgrading zen-browser-bin to meet minimum version requirement..."
+        mkdir -p ./logs
+        if yay -S --noconfirm zen-browser-bin > ./logs/zen-browser-upgrade.log 2>&1; then
+            NEW_VERSION=$(pacman -Qi zen-browser-bin | grep '^Version' | awk '{print $3}')
+            echo "✓ Zen Browser upgraded to $NEW_VERSION"
+        else
+            echo "✗ Failed to upgrade zen-browser-bin (see ./logs/zen-browser-upgrade.log)"
+            exit 1
+        fi
+    else
+        echo "✓ zen-browser-bin $INSTALLED_VERSION already installed"
+    fi
 fi
 
-# Create desktop file
-sudo tee /usr/share/applications/zen.desktop > /dev/null << 'EOF'
-[Desktop Entry]
-Version=1.0
-Name=Zen Browser
-Comment=Experience tranquillity while browsing the web
-Exec=/opt/zen-browser/zen-browser.AppImage %U
-Icon=zen
-Terminal=false
-Type=Application
-Categories=Network;WebBrowser;
-MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
-StartupNotify=true
-EOF
-
-# Download icon
-if [ ! -f "/usr/share/icons/zen.png" ]; then
-    sudo wget -q -O /usr/share/icons/zen.png https://github.com/zen-browser/desktop/raw/main/src/browser/branding/zen/content/zen-wordmark.png > ./logs/zen-icon.log 2>&1
-fi
-
-# Fix profile configuration if migrating from AUR package
+# Fix profile configuration if migrating from GitHub AppImage
 if [ -f "$HOME/.zen/profiles.ini" ]; then
     echo "Checking Zen Browser profile configuration..."
     
@@ -114,15 +131,15 @@ fi
 
 # Configure zen browser as default browser
 echo "Setting zen browser as default..."
-if xdg-settings set default-web-browser zen.desktop 2>/dev/null; then
-    echo "Default browser set successfully"
+if xdg-settings set default-web-browser zen-browser.desktop 2>/dev/null; then
+    echo "✓ Default browser set successfully"
 else
     echo "Warning: Could not set default browser (may need to set manually)"
 fi
 
-if xdg-mime default zen.desktop x-scheme-handler/http 2>/dev/null && \
-   xdg-mime default zen.desktop x-scheme-handler/https 2>/dev/null; then
-    echo "MIME associations set successfully"
+if xdg-mime default zen-browser.desktop x-scheme-handler/http 2>/dev/null && \
+   xdg-mime default zen-browser.desktop x-scheme-handler/https 2>/dev/null; then
+    echo "✓ MIME associations set successfully"
 else
     echo "Warning: Could not set MIME associations (may need to set manually)"
 fi
@@ -130,6 +147,16 @@ fi
 # Configure 1Password integration
 sudo mkdir -p /etc/1password
 sudo touch /etc/1password/custom_allowed_browsers
-if ! sudo grep -q "zen-bin" /etc/1password/custom_allowed_browsers 2>/dev/null; then
+
+# Remove old zen entry if it exists (from AppImage version)
+if sudo grep -q "^zen$" /etc/1password/custom_allowed_browsers 2>/dev/null; then
+    sudo sed -i '/^zen$/d' /etc/1password/custom_allowed_browsers
+fi
+
+# Add zen-bin entry for AUR package if not present
+if ! sudo grep -q "^zen-bin$" /etc/1password/custom_allowed_browsers 2>/dev/null; then
     echo "zen-bin" | sudo tee -a /etc/1password/custom_allowed_browsers >/dev/null
+    echo "✓ Added zen-bin to 1Password allowed browsers"
+else
+    echo "✓ zen-bin already in 1Password allowed browsers"
 fi
