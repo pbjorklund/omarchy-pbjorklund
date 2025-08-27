@@ -24,8 +24,7 @@ install_package "kanata-git" "jtroo/kanata" "kanata" "git"
 # Install wtype for Wayland unicode support
 install_package "wtype" "wtype" "wtype" "release"
 
-show_success "Kanata user service will be deployed via dotfiles and auto-started by Hyprland"
-
 show_success "Kanata installation complete"
 echo "Note: Configuration files will be deployed during dotfiles setup"
+echo "Note: Service will be enabled after dotfiles deployment"
 echo "Note: Restart required for input group membership to take effect"
