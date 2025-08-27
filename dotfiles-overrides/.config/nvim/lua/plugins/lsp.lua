@@ -88,5 +88,24 @@ return {
         require("keybinds").setup_lsp(ev.buf)
       end,
     })
+
+    -- Kanata filetype detection and basic setup
+    vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+      pattern = "*.kbd",
+      callback = function()
+        vim.bo.filetype = "kanata"
+        vim.bo.commentstring = ";; %s"
+        -- Basic syntax highlighting
+        vim.cmd([[
+          syntax match kanataComment ";;.*$"
+          syntax match kanataKeyword "\v<(def\w+|layer-while-held|tap-hold|cmd|multi)>"
+          syntax match kanataString '"[^"]*"'
+          syntax region kanataParens start="(" end=")" fold transparent
+          hi link kanataComment Comment
+          hi link kanataKeyword Keyword
+          hi link kanataString String
+        ]])
+      end,
+    })
   end,
 }
