@@ -9,6 +9,10 @@
 ;; - key-tap-threshold controls "typing vs mod" cutoff (default 250ms)
 ;; - tap-hold-release avoids autorepeat while holding mods
 ;; - key-timing 3 less-than ...: allow up to 3-key rolls/chords before mods engage
+;;
+;; Layers:
+;; - numbers: numbers and umlauts (space + hold) 
+;; - symbols: symbols (shift + hold)
 
 (defvar
   tap-time 200
@@ -48,13 +52,21 @@
   q w e r t y u i o p [
   esc @a @s @d @f @j @k @l ' @; XX
   XX b n m , XX
-  caps XX XX @spc-l2 enter XX XX XX
+  caps XX XX @spc-num enter XX XX XX
 )
 
-(deflayer l2
+(deflayer numbers
   _
   1 2 3 4 5 6 7 8 9 0 @aa
   _ _ _ _ _ _ _ _ @oo @ae XX
+  XX _ _ _ _ XX
+  XX XX XX _ _ XX XX XX
+)
+
+(deflayer symbols
+  _
+  S-1 S-2 S-3 S-4 S-5 S-6 S-7 S-8 S-9 S-0 _
+  _ _ _ _ _ _ _ _ _ _ XX
   XX _ _ _ _ XX
   XX XX XX _ _ XX XX XX
 )
@@ -66,18 +78,25 @@
   )
 )
 
+(deftemplate shiftmod (char mod)
+  (switch
+    ((key-timing 3 less-than $key-tap-threshold)) $char break
+    () (tap-hold-release $tap-time $hold-time $char (multi $mod (layer-while-held symbols))) break
+  )
+)
+
 (defalias
-  spc-l2 (tap-hold 250 300 spc (layer-while-held l2))
+  spc-num (tap-hold 250 300 spc (layer-while-held numbers))
   aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
   oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
   ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
 
   a (t! charmod a lmet)
   s (t! charmod s lalt)
-  d (t! charmod d lsft)
+  d (t! shiftmod d lsft)
   f (t! charmod f lctl)
   j (t! charmod j rctl)
-  k (t! charmod k rsft)
+  k (t! shiftmod k rsft)
   l (t! charmod l ralt)
   ; (t! charmod ; rmet)
 )
