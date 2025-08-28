@@ -7,26 +7,26 @@
   caps
   [
   ;    '
-  ralt
+  spc
 )
 
 (deflayer base
   lctl
   [
   ;    '
-  @l2
+  @spc-l2
 )
 
 (deflayer l2
   _
   @aa
-  @oo  @ae
+  @oo  @ae  
   _
 )
 
 (defalias
-  l2 (layer-while-held l2)
-  aa (tap-hold 200 200 (cmd wtype å) (cmd wtype Å))
-  oo (tap-hold 200 200 (cmd wtype ö) (cmd wtype Ö))
-  ae (tap-hold 200 200 (cmd wtype ä) (cmd wtype Ä))
+  spc-l2 (tap-hold 250 300 spc (layer-while-held l2))
+  aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
+  oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
+  ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
 )
