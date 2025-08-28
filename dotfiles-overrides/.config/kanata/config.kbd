@@ -1,21 +1,22 @@
 (defcfg
   process-unmapped-keys yes
   concurrent-tap-hold yes
+  danger-enable-cmd yes
 )
 
 (defvar
-  tap-time 150
-  hold-time 200
+  tap-time 119
+  hold-time 120
   chord-s 30
 )
 
 (defsrc
   esc
   u i o [ 
-  caps a s d f j k l ' ; enter
+caps a s d f j k l ' ; enter
   lsft n m , . rshft
   lctrl lmet lalt spc ralt rmet menu rctl
-)
+ )
 
 ;; unset esc
 ;; unset shift
@@ -23,7 +24,17 @@
 ;; unset lalt
 ;; unset super
 ;; unset menu
-;; remap ralt to enter
+
+;; remap ralt = enter
+;; remap a    = super
+;; remap s    = alt
+;; remap d    = shift
+;; remap f    = ctrl
+;; remap j    = ctrl
+;; remap k    = shift
+;; remap l    = alt
+;; remp ;     = super
+
 (deflayer base
   XX
   u i o [
@@ -66,11 +77,3 @@
 )
 
 
-;;a = super
-;;s = alt
-;;d = shift
-;;f = ctrl
-;;j = ctrl
-;;k = shift
-;;l = alt
-;;; = super
