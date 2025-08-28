@@ -44,19 +44,19 @@
 ;; remp ;     = super
 
 (deflayer base
-  XX
+  _
   q w e r t y u i o p [
-  esc @a @s @d @f @j @k @l ' @; XX
-  XX b n m , XX
-  caps XX XX @spc-num enter XX XX XX
+  lctrl @a @s @d @f @j @k @l ' @; _
+  _ b n m , _
+  caps _ _ @spc-num enter _ _ _
 )
 
 (deflayer numbers
   _
   1 2 3 4 5 6 7 8 9 0 @aa
-  _ _ _ _ _ _ _ _ @oo @ae XX
-  XX _ _ _ _ XX
-  XX XX XX _ _ XX XX XX
+  _ _ _ _ _ _ _ _ @oo @ae _
+  _ _ _ _ _ _
+  _ _ _ _ _ _ _ _
 )
 
 (deftemplate charmod (char mod)
@@ -82,7 +82,7 @@
   ; (t! charmod ; rmet)
 )
 (defchordsv2
-  (f j) enter $chord-s all-released ()
+  (f j) esc $chord-s all-released ()
   (d k) bspc $chord-s all-released ()
 )
 
