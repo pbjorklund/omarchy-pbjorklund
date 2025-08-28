@@ -4,16 +4,6 @@
   danger-enable-cmd yes
 )
 
-;; Home-row mods use the key-timing switch pattern from
-;; https://github.com/jtroo/kanata/discussions/1455
-;; - key-tap-threshold controls "typing vs mod" cutoff (default 250ms)
-;; - tap-hold-release avoids autorepeat while holding mods
-;; - key-timing 3 less-than ...: allow up to 3-key rolls/chords before mods engage
-;;
-;; Layers:
-;; - numbers: numbers and umlauts (space + hold) 
-;; - symbols: symbols (shift + hold)
-
 (defvar
   tap-time 200
   hold-time 400
@@ -28,6 +18,12 @@
   lsft b n m , rshft
   lctrl lmet lalt spc ralt rmet menu rctl
  )
+
+;; Home-row mods use the key-timing switch pattern from
+;; https://github.com/jtroo/kanata/discussions/1455
+;; - key-tap-threshold controls "typing vs mod" cutoff (default 250ms)
+;; - tap-hold-release avoids autorepeat while holding mods
+;; - key-timing 3 less-than ...: allow up to 3-key rolls/chords before mods engage
 
 ;; unset esc
 ;; unset shift
@@ -63,25 +59,10 @@
   XX XX XX _ _ XX XX XX
 )
 
-(deflayer symbols
-  _
-  S-1 S-2 S-3 S-4 S-5 S-6 S-7 S-8 S-9 S-0 _
-  _ _ _ _ _ _ _ _ _ _ XX
-  XX _ _ _ _ XX
-  XX XX XX _ _ XX XX XX
-)
-
 (deftemplate charmod (char mod)
   (switch
     ((key-timing 3 less-than $key-tap-threshold)) $char break
     () (tap-hold-release $tap-time $hold-time $char $mod) break
-  )
-)
-
-(deftemplate shiftmod (char mod)
-  (switch
-    ((key-timing 3 less-than $key-tap-threshold)) $char break
-    () (tap-hold-release $tap-time $hold-time $char (multi $mod (layer-while-held symbols))) break
   )
 )
 
@@ -93,10 +74,10 @@
 
   a (t! charmod a lmet)
   s (t! charmod s lalt)
-  d (t! shiftmod d lsft)
+  d (t! charmod d lsft)
   f (t! charmod f lctl)
   j (t! charmod j rctl)
-  k (t! shiftmod k rsft)
+  k (t! charmod k rsft)
   l (t! charmod l ralt)
   ; (t! charmod ; rmet)
 )
@@ -104,5 +85,4 @@
   (f j) enter $chord-s all-released ()
   (d k) bspc $chord-s all-released ()
 )
-
 
