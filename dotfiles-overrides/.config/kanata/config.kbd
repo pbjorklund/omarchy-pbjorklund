@@ -19,9 +19,9 @@
 
 (defsrc
   esc
-  u i o [ 
-caps a s d f j k l ' ; enter
-  lsft n m , . rshft
+  q w e r t y u i o p [
+  caps a s d f j k l ' ; enter
+  lsft b n m , rshft
   lctrl lmet lalt spc ralt rmet menu rctl
  )
 
@@ -37,6 +37,7 @@ caps a s d f j k l ' ; enter
 ;; remap s    = alt
 ;; remap d    = shift
 ;; remap f    = ctrl
+;; --- mirror ---
 ;; remap j    = ctrl
 ;; remap k    = shift
 ;; remap l    = alt
@@ -44,21 +45,17 @@ caps a s d f j k l ' ; enter
 
 (deflayer base
   XX
-  u i o [
+  q w e r t y u i o p [
   esc @a @s @d @f @j @k @l ' @; XX
-  XX n m , . XX
+  XX b n m , XX
   caps XX XX @spc-l2 enter XX XX XX
 )
 
-;;   u i o -   7 8 9
-;;   j k l -   4 5 6
-;; n m , . - 0 1 2 3
-
 (deflayer l2
   _
-  7 8 9 @aa
-  _ _ _ _ _ 4 5 6 @oo @ae XX
-  XX 0 1 2 3 XX
+  1 2 3 4 5 6 7 8 9 0 @aa
+  _ _ _ _ _ _ _ _ @oo @ae XX
+  XX _ _ _ _ XX
   XX XX XX _ _ XX XX XX
 )
 
