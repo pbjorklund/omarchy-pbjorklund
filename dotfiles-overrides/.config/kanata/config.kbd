@@ -25,13 +25,6 @@
 ;; - tap-hold-release avoids autorepeat while holding mods
 ;; - key-timing 3 less-than ...: allow up to 3-key rolls/chords before mods engage
 
-;; unset esc
-;; unset shift
-;; unset ctrl
-;; unset lalt
-;; unset super
-;; unset menu
-
 ;; remap ralt = enter
 ;; remap a    = super
 ;; remap s    = alt
