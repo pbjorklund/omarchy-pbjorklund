@@ -4,10 +4,17 @@
   danger-enable-cmd yes
 )
 
+;; Home-row mods use the key-timing switch pattern from
+;; https://github.com/jtroo/kanata/discussions/1455
+;; - key-tap-threshold controls "typing vs mod" cutoff (default 250ms)
+;; - tap-hold-release avoids autorepeat while holding mods
+;; - key-timing 3 less-than ...: allow up to 3-key rolls/chords before mods engage
+
 (defvar
-  tap-time 119
-  hold-time 120
+  tap-time 200
+  hold-time 400
   chord-s 30
+  key-tap-threshold 250
 )
 
 (defsrc
@@ -38,7 +45,7 @@ caps a s d f j k l ' ; enter
 (deflayer base
   XX
   u i o [
-  @escctrl @a @s @d @f @j @k @l ' @; XX
+  esc @a @s @d @f @j @k @l ' @; XX
   XX n m , . XX
   caps XX XX @spc-l2 enter XX XX XX
 )
@@ -55,21 +62,27 @@ caps a s d f j k l ' ; enter
   XX XX XX _ _ XX XX XX
 )
 
+(deftemplate charmod (char mod)
+  (switch
+    ((key-timing 3 less-than $key-tap-threshold)) $char break
+    () (tap-hold-release $tap-time $hold-time $char $mod) break
+  )
+)
+
 (defalias
   spc-l2 (tap-hold 250 300 spc (layer-while-held l2))
   aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
   oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
   ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
-  
-  escctrl (tap-hold $tap-time $hold-time esc lctl)
-  a (multi f24 (tap-hold $tap-time $hold-time a lmet))
-  s (multi f24 (tap-hold $tap-time $hold-time s lalt))
-  d (multi f24 (tap-hold $tap-time $hold-time d lsft))
-  f (multi f24 (tap-hold $tap-time $hold-time f lctl))
-  j (multi f24 (tap-hold $tap-time $hold-time j rctl))
-  k (multi f24 (tap-hold $tap-time $hold-time k rsft))
-  l (multi f24 (tap-hold $tap-time $hold-time l ralt))
-  ; (multi f24 (tap-hold $tap-time $hold-time ; rmet))
+
+  a (t! charmod a lmet)
+  s (t! charmod s lalt)
+  d (t! charmod d lsft)
+  f (t! charmod f lctl)
+  j (t! charmod j rctl)
+  k (t! charmod k rsft)
+  l (t! charmod l ralt)
+  ; (t! charmod ; rmet)
 )
 (defchordsv2
   (f j) enter $chord-s all-released ()
