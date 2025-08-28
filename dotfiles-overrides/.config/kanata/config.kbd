@@ -8,7 +8,7 @@
   tap-time 200
   hold-time 400
   chord-s 30
-  key-tap-threshold 250
+  key-tap-threshold 140
 )
 
 (defsrc
@@ -55,7 +55,7 @@
 (deftemplate charmod (char mod)
   (switch
     ((key-timing 3 less-than $key-tap-threshold)) $char break
-    () (tap-hold-release $tap-time $hold-time $char $mod) break
+    () (tap-hold-release 0 $hold-time $char $mod) break
   )
 )
 
