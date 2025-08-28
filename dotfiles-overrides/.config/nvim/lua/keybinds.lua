@@ -9,7 +9,6 @@ local silent = { silent = true }             -- Silent option
 
 -- Basic
 keymap('n', '<Esc>', '<cmd>nohlsearch<CR>')
-keymap("i", "jj", "<Esc>")
 
 -- Window navigation
 keymap("n", "<C-h>", "<C-w>h")

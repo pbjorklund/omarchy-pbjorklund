@@ -1,27 +1,42 @@
 (defcfg
   process-unmapped-keys yes
   danger-enable-cmd yes
+  concurrent-tap-hold yes
+)
+
+(defvar
+  tap-time 150
+  hold-time 200
+  chord-s 30
 )
 
 (defsrc
-  caps
-  [
-  ;    '
-  spc
+  esc
+  u i o [ 
+  caps a s d f j k l ' ; 
+  lsft n m , .
+  lctrl spc
 )
 
+;; unset esc, all numbers, left shift
 (deflayer base
-  lctl
-  [
-  ;    '
-  @spc-l2
+  XX
+  u i o [
+  @escctrl @a @s @d @f @j @k @l ' @;
+  XX n m , .
+  caps @spc-l2
 )
+
+;;   u i o -   7 8 9
+;;   j k l -   4 5 6
+;; n m , . - 0 1 2 3
 
 (deflayer l2
   _
-  @aa
-  @oo  @ae  
-  _
+  7 8 9 @aa
+  _ _ _ _ _ 4 5 6 @oo @ae
+  XX 0 1 2 3
+  XX _
 )
 
 (defalias
@@ -29,4 +44,27 @@
   aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
   oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
   ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
+
+  escctrl (tap-hold 100 100 esc lctl)
+  a (multi f24 (tap-hold $tap-time $hold-time a lmet))
+  s (multi f24 (tap-hold $tap-time $hold-time s lalt))
+  d (multi f24 (tap-hold $tap-time $hold-time d lsft))
+  f (multi f24 (tap-hold $tap-time $hold-time f lctl))
+  j (multi f24 (tap-hold $tap-time $hold-time j rctl))
+  k (multi f24 (tap-hold $tap-time $hold-time k rsft))
+  l (multi f24 (tap-hold $tap-time $hold-time l ralt))
+  ; (multi f24 (tap-hold $tap-time $hold-time ; rmet))
 )
+(defchordsv2
+  (f j) enter $chord-s all-released ()
+)
+
+
+;;a = super
+;;s = alt
+;;d = shift
+;;f = ctrl
+;;j = ctrl
+;;k = shift
+;;l = alt
+;;; = super
