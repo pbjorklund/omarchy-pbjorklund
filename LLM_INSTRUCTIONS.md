@@ -6,6 +6,13 @@
 - No interactive prompts
 - Test on fresh Arch VM before committing
 - NEVER run interactive commands (pacman without --noconfirm, etc.)
+- **ABSOLUTELY NO INTERACTIVE COMMANDS** - Never use commands that enter interactive modes:
+  - No `vim`, `nano`, `emacs`, or any editors
+  - No `less`, `more`, `tail -f`, `watch`, or pagers
+  - No `git rebase -i`, `git add -i` or interactive Git commands
+  - No `systemctl edit` or other interactive system tools
+  - Always use non-interactive flags: `--noconfirm`, `--yes`, `--assume-yes`, `--non-interactive`
+  - Redirect input with `< /dev/null` to prevent hanging on stdin
 - **ALWAYS consult Arch Wiki first** - Before writing any installation script, especially for hardware drivers or system components, check the official Arch Wiki documentation to understand the proper installation method and avoid unnecessary complexity
 
 ## Output Style Guidelines (Match Omarchy)
@@ -131,6 +138,7 @@ yay -S --noconfirm package < /dev/null
 - Preserve omarchy's update compatibility - use overrides, not replacements
 - **Use shared utilities**: Source `utils.sh` for common functions like `install_package()`, `show_success()`, etc.
 - **Consistent messaging**: Use utility functions (`show_action()`, `show_success()`, `show_error()`) for consistent output formatting
+- **NEVER use fallbacks** - Write code that works correctly, don't rely on fallback mechanisms to guard against failures. Code should be robust and handle edge cases properly, not depend on fallbacks to catch when it doesn't work
 
 ## Dotfiles & Stow Configuration
 - **Dotfiles managed via GNU Stow** from `dotfiles-overrides/` directory
