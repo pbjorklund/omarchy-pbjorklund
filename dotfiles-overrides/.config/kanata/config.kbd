@@ -35,8 +35,8 @@
    layer-tap-time 250             ;; Default: 200ms - Slightly slower for accuracy
    layer-hold-time 300            ;; Default: 200ms - Longer hold for layer stability
    
-   ;; Chord timing (f+j=esc, d+k=backspace)
-   chord-timeout 30               ;; Default: 30ms - Standard chord detection window
+    ;; Chord timing (w+e=esc, i+o=backspace, x+c=tab)
+    chord-timeout 15               ;; Default: 30ms - Reduced for faster typing rollover
  )
  
  (defsrc
