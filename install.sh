@@ -44,6 +44,7 @@ declare -a INSTALL_STEPS=(
   "install-zotero.sh|Zotero installation|ALL"
   "install-plexamp.sh|Plexamp installation|ALL"
   "install-tidal-hifi.sh|Tidal HiFi installation|ALL"
+  "install-youtube-music.sh|YouTube Music installation|ALL"
   "install-bsky.sh|Bluesky installation|ALL"
   "install-toot.sh|Mastodon CLI client installation|ALL"
   "install-tailscale.sh|Tailscale installation|ALL"

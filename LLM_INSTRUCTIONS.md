@@ -13,6 +13,12 @@
   - No `systemctl edit` or other interactive system tools
   - Always use non-interactive flags: `--noconfirm`, `--yes`, `--assume-yes`, `--non-interactive`
   - Redirect input with `< /dev/null` to prevent hanging on stdin
+- **NEVER INSTALL PACKAGES MANUALLY** - Always use the install script system:
+  - Create install scripts in `install-scripts/` directory
+  - Add script to `install.sh` INSTALL_STEPS array
+  - Run via `source install-scripts/script-name.sh` for testing
+  - NEVER run `yay`, `pacman`, or package managers directly
+  - Use the `install_package()` utility function from `utils.sh`
 - **ALWAYS consult Arch Wiki first** - Before writing any installation script, especially for hardware drivers or system components, check the official Arch Wiki documentation to understand the proper installation method and avoid unnecessary complexity
 
 ## Output Style Guidelines (Match Omarchy)
