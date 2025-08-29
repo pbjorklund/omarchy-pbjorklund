@@ -22,10 +22,21 @@
  )
  
  (defvar
-   tap-time 200
-   hold-time 400
-   chord-s 30
-   key-tap-threshold 400
+   ;; TYPING PROFILE: 90-120 WPM, Swedish/English multilingual
+   ;; Tuned to prevent accidental modifiers during fast sequences like "att"
+   
+   ;; Home-row mod timing settings
+   fast-typing-threshold 400      ;; Default: 250ms - INCREASED for Swedish "att" sequences
+   homerow-tap-timeout 200        ;; Default: 200ms - Standard tap detection
+   homerow-hold-timeout 500       ;; Default: 500ms - Standard hold timeout  
+   max-chord-keys 3               ;; Default: 3 - Max keys in simultaneous roll/chord
+   
+   ;; Layer switching timing (space to numbers layer)
+   layer-tap-time 250             ;; Default: 200ms - Slightly slower for accuracy
+   layer-hold-time 300            ;; Default: 200ms - Longer hold for layer stability
+   
+   ;; Chord timing (f+j=esc, d+k=backspace)
+   chord-timeout 30               ;; Default: 30ms - Standard chord detection window
  )
  
  (defsrc
@@ -54,13 +65,13 @@
  
  (deftemplate charmod (char mod)
    (switch
-     ((key-timing 3 less-than $key-tap-threshold)) $char break
-     () (tap-hold-release-timeout 200 500 $char $mod $char) break
+     ((key-timing $max-chord-keys less-than $fast-typing-threshold)) $char break
+     () (tap-hold-release-timeout $homerow-tap-timeout $homerow-hold-timeout $char $mod $char) break
    )
  )
 
  (defalias
-   spc-num (tap-hold 250 300 spc (layer-while-held numbers))
+   spc-num (tap-hold $layer-tap-time $layer-hold-time spc (layer-while-held numbers))
    aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
    oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
    ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
@@ -75,8 +86,8 @@
    ; (t! charmod ; rmet)
  )
  (defchordsv2
-   (f j) esc $chord-s all-released ()
-   (d k) bspc $chord-s all-released ()
+   (f j) esc $chord-timeout all-released ()
+   (d k) bspc $chord-timeout all-released ()
  )
  
  
