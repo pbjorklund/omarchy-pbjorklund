@@ -1,0 +1,121 @@
+{
+  "reload_style_on_change": true,
+  "layer": "top", 
+  "position": "top",
+  "spacing": 0,
+  "height": 26,
+  "modules-left": ["custom/omarchy", "hyprland/workspaces"],
+  "modules-center": ["clock", "custom/update"],
+  "modules-right": [
+    "group/tray-expander", 
+    "custom/kanata-layer",
+    "bluetooth",
+    "network", 
+    "pulseaudio",
+    "cpu",
+    "battery"
+  ],
+  "hyprland/workspaces": {
+    "on-click": "activate",
+    "format": "{icon}",
+    "format-icons": {
+      "default": "",
+      "1": "1", 
+      "2": "2",
+      "3": "3",
+      "4": "4", 
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10"
+    }
+  },
+  "custom/omarchy": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "omarchy-manager"
+  },
+  "custom/update": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "omarchy-system-status-updater",
+    "restart-interval": 600,
+    "tooltip": false
+  },
+  "clock": {
+    "timezone": "Europe/Stockholm",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "format-alt": "{:%Y-%m-%d}"
+  },
+  "cpu": {
+    "format": "{usage}%",
+    "tooltip": false,
+    "on-click": "alacritty -e htop"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "network": {
+    "format-wifi": "{icon}",
+    "format-ethernet": "",
+    "tooltip-format": "{essid} ({signalStrength}%) via {gwaddr}",
+    "format-linked": "{ifname} (No IP)",
+    "format-disconnected": "Disconnected ⚠",
+    "format-alt": "{ifname}: {ipaddr}/{cidr}",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-bluetooth": "{icon} {volume}% ",
+    "format-bluetooth-muted": "󰝟 ",
+    "format-muted": "󰝟",
+    "format-icons": {
+      "default": ["", "", ""]
+    }
+  },
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-on": "",
+    "format-connected": "",
+    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
+  },
+  "group/tray-expander": {
+    "orientation": "inherit", 
+    "drawer": {
+      "transition-duration": 600,
+      "children-class": "tray-group-item"
+    },
+    "modules": ["custom/expand-icon", "tray"]
+  },
+  "custom/expand-icon": {
+    "format": " ",
+    "tooltip": false
+  },
+  "tray": {
+    "icon-size": 12,
+    "spacing": 12
+  },
+  "custom/kanata-layer": {
+    "format": "⌨ {}",
+    "return-type": "json", 
+    "exec": "~/.local/bin/waybar-kanata-layer",
+    "restart-interval": 1,
+    "tooltip": true,
+    "on-click": "systemctl --user restart kanata.service"
+  }
+}
