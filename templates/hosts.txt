@@ -1,4 +1,9 @@
-# OpenCode security - block cloud services
+# Static table lookup for hostnames.
+# See hosts(5) for details.
+127.0.0.1        localhost
+::1              localhost
+
+# OpenCode - block cloud services and telemetry
 127.0.0.1 api.opencode.ai
 127.0.0.1 api.gateway.opencode.ai
 127.0.0.1 api.dev.opencode.ai
@@ -9,8 +14,28 @@
 127.0.0.1 x.ai
 127.0.0.1 api.deepseek.com
 127.0.0.1 api.z.ai
-
-# Additional AI telemetry blocking
 127.0.0.1 copilot.microsoft.com
+127.0.0.1 copilot.cloud.microsoft
 127.0.0.1 bard.google.com
 127.0.0.1 gemini.google.com
+127.0.0.1 sydney.bing.com
+127.0.0.1 edgeservices.bing.com
+
+# MSN News blocking
+127.0.0.1 msn.com
+127.0.0.1 www.msn.com
+127.0.0.1 news.msn.com
+127.0.0.1 www.news.msn.com
+127.0.0.1 feeds.msn.com
+127.0.0.1 assets.msn.com
+127.0.0.1 static-assets.msn.com
+127.0.0.1 amp.msn.com
+127.0.0.1 img-prod-cms-rt-microsoft-com.akamaized.net
+127.0.0.1 api.msn.com
+127.0.0.1 content.msn.com
+127.0.0.1 ntp.msn.com
+127.0.0.1 microsoftstart.msn.com
+127.0.0.1 assets.msn.cn
+127.0.0.1 start.msn.com
+127.0.0.1 arc.msn.com
+127.0.0.1 arc-backend.msn.com
