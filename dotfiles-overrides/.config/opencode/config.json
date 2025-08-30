@@ -2,6 +2,18 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "material",
   "autoupdate": true,
+  "disabled_providers": [
+    "google",
+    "amazon-bedrock", 
+    "azure",
+    "vercel",
+    "openrouter",
+    "huggingface",
+    "groq",
+    "xai",
+    "deepseek",
+    "zhipuai"
+  ],
   "model": "anthropic/claude-sonnet-4-20250514",
   "agent": {
     "teach": {

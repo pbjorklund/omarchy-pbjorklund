@@ -1,0 +1,16 @@
+# OpenCode security - block cloud services
+127.0.0.1 api.opencode.ai
+127.0.0.1 api.gateway.opencode.ai
+127.0.0.1 api.dev.opencode.ai
+127.0.0.1 us.i.posthog.com
+127.0.0.1 posthog.com
+
+# Block unauthorized AI providers
+127.0.0.1 x.ai
+127.0.0.1 api.deepseek.com
+127.0.0.1 api.z.ai
+
+# Additional AI telemetry blocking
+127.0.0.1 copilot.microsoft.com
+127.0.0.1 bard.google.com
+127.0.0.1 gemini.google.com

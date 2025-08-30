@@ -36,7 +36,8 @@ declare -a INSTALL_STEPS=(
   "setup-ssh-server.sh|SSH server setup|DESKTOP"
   "install-zen-browser.sh|Zen browser setup|ALL"
 
-  "install-opencode.sh|OpenCode setup|ALL"
+  "install-hosts.sh|Hosts file installation|ALL"
+  "install-opencode.sh|OpenCode installation|ALL"
   "install-claude-code.sh|Claude Code setup|ALL"
   "install-onlyoffice.sh|ONLYOFFICE installation|ALL"
   "install-teams-for-linux.sh|Teams for Linux installation|ALL"
