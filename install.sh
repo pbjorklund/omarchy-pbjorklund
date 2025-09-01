@@ -35,13 +35,11 @@ declare -a INSTALL_STEPS=(
   "install-displaylink.sh|DisplayLink drivers setup|THINKPAD"
   "setup-ssh-server.sh|SSH server setup|DESKTOP"
   "install-zen-browser.sh|Zen browser setup|ALL"
-
   "install-hosts.sh|Hosts file installation|ALL"
   "install-opencode.sh|OpenCode installation|ALL"
   "install-claude-code.sh|Claude Code setup|ALL"
   "install-onlyoffice.sh|ONLYOFFICE installation|ALL"
   "install-teams-for-linux.sh|Teams for Linux installation|ALL"
-
   "install-zotero.sh|Zotero installation|ALL"
   "install-plexamp.sh|Plexamp installation|ALL"
   "install-tidal-hifi.sh|Tidal HiFi installation|ALL"
@@ -64,6 +62,7 @@ declare -a INSTALL_STEPS=(
   "setup-mouse.sh|Gaming mouse configuration|DESKTOP"
   "setup-wake-on-lan.sh|Wake-on-LAN setup|DESKTOP"
   "setup-wake-sources.sh|Wake sources setup|ALL"
+  "install-libation.sh|Libation audiobook downloader installation|DESKTOP"
 )
 
 # =============================================================================

@@ -1,5 +1,21 @@
 include "%H/.local/share/omarchy/default/xcompose"
 
 # Personal expansions - e for "expand" category
-<Multi_key> <e> <e> : "patrik@cognit.se"    # expand + email
+<Multi_key> <e> <c> : "patrik@cognit.se"    # expand + email
+<Multi_key> <e> <p> : "me@pbjorklund.com"    # expand + email
+<Multi_key> <e> <g> : "p.bjorklund@gmail.com"    # expand + email
 <Multi_key> <e> <n> : "pbjorklund"          # expand + name
+
+# LLM prompts - l for "llm" category
+<Multi_key> <l> <s> : "Let's think step by step."
+<Multi_key> <l> <r> : "That's incorrect. Let me reconsider this problem from scratch."
+<Multi_key> <l> <t> : "Let's work through this systematically. First, I need to understand..."
+<Multi_key> <l> <d> : "Before I answer, let me consider multiple perspectives on this."
+<Multi_key> <l> <c> : "Let me double-check my reasoning: Is this conclusion actually supported by the evidence?"
+<Multi_key> <l> <e> : "I'll solve this by breaking it into parts: 1) 2) 3)"
+<Multi_key> <l> <a> : "Actually, let me think about whether there are flaws in my reasoning..."
+<Multi_key> <l> <m> : "Wait, I should verify this claim before proceeding."
+<Multi_key> <l> <w> : "What would an expert in this field say about this approach?"
+<Multi_key> <l> <f> : "Let me trace through this logic more carefully to find any errors."
+
+patrik@cognit.se  
