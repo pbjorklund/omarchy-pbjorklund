@@ -62,13 +62,13 @@
    lctrl lmet lalt spc ralt rmet menu rctl
   )
  
- (deflayer base
-   _
-   q w e r t y u i o p [
-   lctrl @a @s @d @f @j @k @l ' @; _
-   _ b n m , _
-   caps _ _ @spc-num enter _ _ _
- )
+  (deflayer base
+    _
+    q w e r t y u i o p [
+    lctrl @a @s @d @f @j @k @l ' @; _
+    _ b n m , _
+    lctrl _ _ @spc-num enter _ _ _
+  )
  
  (deflayer numbers
    _
@@ -94,8 +94,8 @@
    a (t! charmod a lmet)
    s (t! charmod s lalt)
    d (t! charmod d lsft)
-   f (t! charmod f lctl)
-   j (t! charmod j rctl)
+    f (t! charmod f lctl)
+    j (t! charmod j lctl)
    k (t! charmod k rsft)
    l (t! charmod l ralt)
    ; (t! charmod ; rmet)
