@@ -1,0 +1,5 @@
+include "%H/.local/share/omarchy/default/xcompose"
+
+# Personal expansions - e for "expand" category
+<Multi_key> <e> <e> : "patrik@cognit.se"    # expand + email
+<Multi_key> <e> <n> : "pbjorklund"          # expand + name

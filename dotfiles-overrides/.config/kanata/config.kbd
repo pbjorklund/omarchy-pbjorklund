@@ -54,29 +54,29 @@
     chord-timeout 15               ;; Default: 30ms - Reduced for faster typing rollover
  )
  
- (defsrc
-   esc
-   q w e r t y u i o p [
-   caps a s d f j k l ' ; enter
-   lsft b n m , rshft
-   lctrl lmet lalt spc ralt rmet menu rctl
-  )
+  (defsrc
+    esc
+    tab q w e r t y u i o p [
+    caps a s d f j k l ' ; enter
+    lsft b n m , rshft
+    lctrl lmet lalt spc ralt rmet menu rctl
+   )
  
   (deflayer base
     _
-    q w e r t y u i o p [
+    @tab-compose q w e r t y u i o p [
     lctrl @a @s @d @f @j @k @l ' @; _
     _ b n m , _
     lctrl _ _ @spc-num enter _ _ _
   )
  
- (deflayer numbers
-   _
-   1 2 3 4 5 6 7 8 9 0 @aa
-   _ _ _ _ _ _ _ _ @oo @ae _
-   _ _ _ _ _ _
-   _ _ _ _ _ _ _ _
- )
+  (deflayer numbers
+    _
+    _ 1 2 3 4 5 6 7 8 9 0 @aa
+    _ _ _ _ _ _ _ _ @oo @ae _
+    _ _ _ _ _ _
+    _ _ _ _ _ _ _ _
+  )
  
  (deftemplate charmod (char mod)
    (switch
@@ -85,21 +85,22 @@
    )
  )
 
- (defalias
-   spc-num (tap-hold $layer-tap-time $layer-hold-time spc (layer-while-held numbers))
-   aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
-   oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
-   ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
- 
-   a (t! charmod a lmet)
-   s (t! charmod s lalt)
-   d (t! charmod d lsft)
+  (defalias
+    spc-num (tap-hold $layer-tap-time $layer-hold-time spc (layer-while-held numbers))
+    tab-compose (tap-hold-release-timeout $homerow-tap-timeout $homerow-hold-timeout tab rctl tab)
+    aa (fork (cmd wtype å) (cmd wtype Å) (lsft rsft))
+    oo (fork (cmd wtype ö) (cmd wtype Ö) (lsft rsft))
+    ae (fork (cmd wtype ä) (cmd wtype Ä) (lsft rsft))
+  
+    a (t! charmod a lmet)
+    s (t! charmod s lalt)
+    d (t! charmod d lsft)
     f (t! charmod f lctl)
     j (t! charmod j lctl)
-   k (t! charmod k rsft)
-   l (t! charmod l ralt)
-   ; (t! charmod ; rmet)
- )
+    k (t! charmod k rsft)
+    l (t! charmod l ralt)
+    ; (t! charmod ; rmet)
+  )
  (defchordsv2
    (w e) esc $chord-timeout all-released ()
    (i o) bspc $chord-timeout all-released ()

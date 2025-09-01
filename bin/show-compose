@@ -1,0 +1,54 @@
+#!/bin/bash
+# Display XCompose sequences in a nice format
+
+set -e
+
+show_compose() {
+    echo "=== COMPOSE SEQUENCES ==="
+    echo
+    echo "Hold TAB + key combinations:"
+    echo
+    
+    # Parse the default omarchy XCompose file
+    echo "📦 Default Omarchy Sequences:"
+    if [[ -f "/home/pbjorklund/.local/share/omarchy/default/xcompose" ]]; then
+        while IFS= read -r line; do
+            if [[ $line =~ ^\<Multi_key\>.*:.*#.* ]]; then
+                # Extract the key sequence and description
+                keys=$(echo "$line" | sed 's/<Multi_key>/Tab +/g; s/[<>]//g; s/ : .*//')
+                output=$(echo "$line" | sed 's/.*: "\([^"]*\)".*/\1/')
+                comment=$(echo "$line" | sed 's/.*# //')
+                
+                printf "  %-20s → %-8s # %s\n" "$keys" "$output" "$comment"
+            fi
+        done < "/home/pbjorklund/.local/share/omarchy/default/xcompose"
+    fi
+    
+    echo
+    echo "🎯 Personal Expansions:"
+    if [[ -f "/home/pbjorklund/.XCompose" ]]; then
+        while IFS= read -r line; do
+            if [[ $line =~ ^\<Multi_key\>.*:.*#.* ]]; then
+                # Extract the key sequence and description
+                keys=$(echo "$line" | sed 's/<Multi_key>/Tab +/g; s/[<>]//g; s/ : .*//')
+                output=$(echo "$line" | sed 's/.*: "\([^"]*\)".*/\1/')
+                comment=$(echo "$line" | sed 's/.*# //')
+                
+                printf "  %-20s → %-20s # %s\n" "$keys" "$output" "$comment"
+            fi
+        done < "/home/pbjorklund/.XCompose"
+    fi
+    
+    echo
+    echo "Press any key to close..."
+    read -n 1 -s
+}
+
+# Make the function available for sourcing
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Called directly, run the function
+    show_compose
+else
+    # Sourced, just define the function
+    :
+fi
