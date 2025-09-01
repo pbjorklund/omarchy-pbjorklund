@@ -1,5 +1,5 @@
 #!/bin/bash
-# Display XCompose sequences in a nice format
+# Display XCompose sequences in a nice format - optimized for speed
 
 set -e
 
@@ -9,34 +9,44 @@ show_compose() {
     echo "Hold TAB + key combinations:"
     echo
     
-    # Parse the default omarchy XCompose file
     echo "📦 Default Omarchy Sequences:"
-    if [[ -f "/home/pbjorklund/.local/share/omarchy/default/xcompose" ]]; then
-        while IFS= read -r line; do
-            if [[ $line =~ ^\<Multi_key\>.*:.*#.* ]]; then
-                # Extract the key sequence and description
-                keys=$(echo "$line" | sed 's/<Multi_key>/Tab +/g; s/[<>]//g; s/ : .*//')
-                output=$(echo "$line" | sed 's/.*: "\([^"]*\)".*/\1/')
-                comment=$(echo "$line" | sed 's/.*# //')
-                
-                printf "  %-20s → %-8s # %s\n" "$keys" "$output" "$comment"
-            fi
-        done < "/home/pbjorklund/.local/share/omarchy/default/xcompose"
-    fi
+    # Use grep + awk for much faster parsing
+    grep '^<Multi_key>' /home/pbjorklund/.local/share/omarchy/default/xcompose 2>/dev/null | \
+    awk -F'"' '
+    {
+        # Extract keys between < and >
+        gsub(/<Multi_key>/, "Tab +")
+        gsub(/[<>]/, "")
+        split($0, parts, " : ")
+        keys = parts[1]
+        output = $2
+        # Extract comment after #
+        if (match($0, /# /)) {
+            comment = substr($0, RSTART+2)
+        } else {
+            comment = ""
+        }
+        printf "  %-20s → %-8s # %s\n", keys, output, comment
+    }'
     
     echo
     echo "🎯 Personal Expansions:"
-    if [[ -f "/home/pbjorklund/.XCompose" ]]; then
-        while IFS= read -r line; do
-            if [[ $line =~ ^\<Multi_key\>.*:.*#.* ]]; then
-                # Extract the key sequence and description
-                keys=$(echo "$line" | sed 's/<Multi_key>/Tab +/g; s/[<>]//g; s/ : .*//')
-                output=$(echo "$line" | sed 's/.*: "\([^"]*\)".*/\1/')
-                comment=$(echo "$line" | sed 's/.*# //')
-                
-                printf "  %-20s → %-20s # %s\n" "$keys" "$output" "$comment"
-            fi
-        done < "/home/pbjorklund/.XCompose"
+    if [[ -f "$HOME/.XCompose" ]]; then
+        grep '^<Multi_key>' "$HOME/.XCompose" 2>/dev/null | \
+        awk -F'"' '
+        {
+            gsub(/<Multi_key>/, "Tab +")
+            gsub(/[<>]/, "")
+            split($0, parts, " : ")
+            keys = parts[1]
+            output = $2
+            if (match($0, /# /)) {
+                comment = substr($0, RSTART+2)
+            } else {
+                comment = ""
+            }
+            printf "  %-20s → %-20s # %s\n", keys, output, comment
+        }'
     fi
     
     echo
@@ -44,11 +54,5 @@ show_compose() {
     read -n 1 -s
 }
 
-# Make the function available for sourcing
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    # Called directly, run the function
-    show_compose
-else
-    # Sourced, just define the function
-    :
-fi
+# Call the function
+show_compose
