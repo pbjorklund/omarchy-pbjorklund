@@ -97,7 +97,7 @@
    f (t! charmod f lctl)
    j (t! charmod j rctl)
    k (t! charmod k rsft)
-   l (t! charmod l lalt)
+   l (t! charmod l ralt)
    ; (t! charmod ; rmet)
  )
  (defchordsv2
