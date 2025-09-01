@@ -30,6 +30,7 @@ declare -a INSTALL_STEPS=(
   "install-node-lts.sh|Node.js LTS installation|ALL"
   "install-terminal-tools.sh|Terminal tools installation|ALL"
   "install-kanata.sh|Kanata keyboard remapper setup|ALL"
+  "install-espanso.sh|Espanso text expander setup|ALL"
   "install-intel-vaapi.sh|Intel VAAPI for screen recording|THINKPAD"
   "install-amd-drivers.sh|AMD graphics drivers setup|DESKTOP"
   "install-displaylink.sh|DisplayLink drivers setup|THINKPAD"

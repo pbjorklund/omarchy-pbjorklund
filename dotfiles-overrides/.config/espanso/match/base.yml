@@ -1,0 +1,98 @@
+matches:
+  # Personal Information
+  - trigger: ",pb,"
+    replace: "me@pbjorklund.com"
+    
+  - trigger: ",name,"
+    replace: "Patrik Björklund"
+    
+  - trigger: ",sig,"
+    replace: |
+      /Patrik, 073 660 90 74
+      
+  # LLM Correction & Guidance Prompts
+  - trigger: ",nqr,"
+    replace: |
+      That was not quite right. You need to think through this problem from scratch.
+      
+      Please:
+      1. Re-read the original request carefully
+      2. Identify what specific requirement you missed or misunderstood  
+      3. Think step-by-step through the correct approach
+      4. Provide a complete solution that addresses all aspects of the problem
+      
+      Don't just patch your previous response - start fresh with the correct understanding.
+      
+  - trigger: ",focus,"
+    replace: |
+      You're getting off track. Focus on exactly what I asked for:
+      
+      - Answer the specific question I posed
+      - Don't add extra explanations unless requested
+      - Stay within the scope of my request
+      - Be direct and concise
+      
+  - trigger: ",context,"
+    replace: |
+      You seem to be missing important context. Before proceeding:
+      
+      1. Review all the information I've provided
+      2. Ask clarifying questions if anything is unclear
+      3. Don't make assumptions about what I want
+      4. Consider the full scope of the problem
+      
+  - trigger: ",specific,"
+    replace: "Please be more specific. Give concrete examples and actionable steps, not general advice."
+    
+  - trigger: ",code,"
+    replace: |
+      Please provide working code, not pseudocode. Include:
+      - Complete, runnable examples
+      - Proper imports/dependencies  
+      - Error handling where relevant
+      - Comments explaining non-obvious parts
+      
+  # Dates and Time
+  - trigger: ",date,"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"
+          
+  - trigger: ",time,"
+    replace: "{{mytime}}"
+    vars:
+      - name: mytime
+        type: date
+        params:
+          format: "%H:%M"
+          
+  - trigger: ",datetime,"
+    replace: "{{mydatetime}}"
+    vars:
+      - name: mydatetime
+        type: date
+        params:
+          format: "%Y-%m-%d %H:%M"
+    
+  # Corrections (common typos)
+  - trigger: "teh"
+    replace: "the"
+    
+  - trigger: "adn"
+    replace: "and"
+    
+  - trigger: "recieve"
+    replace: "receive"
+    
+  - trigger: "seperate"
+    replace: "separate"
+    
+  - trigger: "occured"
+    replace: "occurred"
+    
+  - trigger: "necesary"
+    replace: "necessary"
+
