@@ -19,21 +19,6 @@
   process-unmapped-keys yes
   concurrent-tap-hold yes
   danger-enable-cmd yes
-  
-  ;; Device detection - works for both desktop (USB) and laptop (built-in) keyboards
-  ;; Linux input subsystem devices
-  linux-dev (
-    ;; ThinkPad/laptop built-in keyboard (common across many laptops)
-    /dev/input/by-path/platform-i8042-serio-0-event-kbd
-    ;; Generic AT keyboard (fallback for built-in keyboards)  
-    /dev/input/event3
-    ;; USB keyboards (desktop setups, docking stations)
-    /dev/input/by-id/usb-*-kbd
-    /dev/input/by-id/usb-*-keyboard
-    ;; Additional common paths
-    /dev/input/by-path/pci-*-kbd
-    /dev/input/by-path/pci-*-keyboard
-  )
 )
  
  (defvar

@@ -9,8 +9,6 @@ StartLimitIntervalSec=60s
 Type=simple
 Environment=WAYLAND_DISPLAY=wayland-1
 Environment=XDG_RUNTIME_DIR=/run/user/1000
-# Pre-start check to validate devices are available
-ExecStartPre=/bin/bash -c 'source %h/omarchy-pbjorklund/bin/find-keyboard-controller.sh; detect_keyboards_for_kanata'
 ExecStart=/usr/bin/kanata -c %h/.config/kanata/config.kbd
 Restart=on-failure
 RestartSec=5s
