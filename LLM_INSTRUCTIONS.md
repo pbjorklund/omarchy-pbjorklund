@@ -65,12 +65,32 @@ fi
 - `run_step()` in `install.sh` handles "Running:" and "✓ complete"
 
 ## Packages & Logging
-- Use `yay -S --noconfirm` for all packages
+- **ALWAYS use `install_package()` from utils.sh** - Never manually implement installation
+- **ALWAYS use `remove_package()` from utils.sh** - Never manually implement removal
+- **ALWAYS use messaging functions**: `show_action()`, `show_success()`, `show_error()`, `show_skip()`
 - Log to `./logs/` not `/dev/null`
 - Format: `> ./logs/package-name.log 2>&1`
 - Flatpak for GUI apps
 - Always `mkdir -p ./logs` first
 - Show errors to user AND capture in logs
+
+### Installation Function Usage
+```bash
+# Standard package installation
+install_package "package-name"
+
+# With different binary name
+install_package "package-name" "" "binary-name"
+
+# With GitHub fallback
+install_package "package-name" "user/repo" "binary-name" "release"
+```
+
+### Other Utils Functions
+- `remove_package()` - Package removal
+- `show_action()`, `show_success()`, `show_error()`, `show_skip()` - Consistent messaging
+- `get_system_type()` - Detect DESKTOP/THINKPAD
+- `init_logging()` - Initialize logging directory
 
 ### Logging Examples
 ```bash
