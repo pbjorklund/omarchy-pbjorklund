@@ -63,6 +63,8 @@ declare -a INSTALL_STEPS=(
   "setup-wake-on-lan.sh|Wake-on-LAN setup|DESKTOP"
   "setup-wake-sources.sh|Wake sources setup|ALL"
   "install-libation.sh|Libation audiobook downloader installation|DESKTOP"
+  "install-openrgb.sh|OpenRGB RGB lighting control|DESKTOP"
+  "install-bambustudio.sh|BambuStudio 3D printer software|DESKTOP"
 )
 
 # =============================================================================
