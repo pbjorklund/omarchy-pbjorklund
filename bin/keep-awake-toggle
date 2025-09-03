@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Toggle keep-awake mode using systemd-inhibit
+# This prevents the system from going to sleep/idle
+
+INHIBIT_FILE="/tmp/keep-awake-inhibit.pid"
+
+if [ -f "$INHIBIT_FILE" ]; then
+    # Kill existing inhibit process
+    if kill "$(cat "$INHIBIT_FILE")" 2>/dev/null; then
+        rm -f "$INHIBIT_FILE"
+        notify-send "Keep Awake: OFF" "Normal sleep behavior restored" --expire-time=2000
+    else
+        # Process already dead, clean up file
+        rm -f "$INHIBIT_FILE"
+        notify-send "Keep Awake: OFF" "Normal sleep behavior restored" --expire-time=2000
+    fi
+else
+    # Start inhibit process in background
+    systemd-inhibit --what=idle:sleep:handle-lid-switch --who="keep-awake-toggle" --why="User requested keep awake" sleep infinity &
+    echo $! > "$INHIBIT_FILE"
+    notify-send "Keep Awake: ON" "Laptop will not sleep" --expire-time=2000
+fi
