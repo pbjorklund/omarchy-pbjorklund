@@ -48,7 +48,6 @@ declare -a INSTALL_STEPS=(
   "install-toot.sh|Mastodon CLI client installation|ALL"
   "install-tailscale.sh|Tailscale installation|ALL"
   "install-pbp.sh|Personal project setup|ALL"
-  "copy-desktop-files.sh|Desktop files copying|ALL"
   "setup-desktop-suspend.sh|Desktop suspend and hypridle setup|ALL"
   "fix-waybar-stacking.sh|Fix waybar stacking on lock/unlock|ALL"
   "setup-network-resume.sh|Network resume after suspend setup|DESKTOP"
@@ -65,6 +64,8 @@ declare -a INSTALL_STEPS=(
   "install-libation.sh|Libation audiobook downloader installation|DESKTOP"
   "install-openrgb.sh|OpenRGB RGB lighting control|DESKTOP"
   "install-bambustudio.sh|BambuStudio 3D printer software|DESKTOP"
+  "copy-desktop-files.sh|Desktop files copying|ALL"
+  "link-dotfiles.sh|Personal dotfiles deployment|ALL"
 )
 
 # =============================================================================
