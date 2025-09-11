@@ -11,7 +11,7 @@ sudo cp /etc/hosts /etc/hosts.backup
 
 # Download StevenBlack unified hosts file
 echo "Downloading unified hosts file..."
-curl -fsSL https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts > "$PROJECT_ROOT/logs/stevenblack-hosts.tmp" 2>&1
+# curl -fsSL https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts > "$PROJECT_ROOT/logs/stevenblack-hosts.tmp" 2>&1
 echo "✓ Downloaded unified hosts"
 
 # Start with our template (includes base system + OpenCode entries)

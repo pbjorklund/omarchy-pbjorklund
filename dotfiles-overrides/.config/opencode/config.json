@@ -19,7 +19,7 @@
     "teach": {
       "description": "Educational agent that explains concepts, creates learning materials, and prepares presentations",
       "mode": "primary",
-      "temperature": 0.3,
+      "temperature": 0.8,
       "tools": {
         "write": true,
         "edit": true,
@@ -34,7 +34,7 @@
     "guide": {
       "description": "Step-by-step guidance agent that provides incremental instructions and conducts web research when needed",
       "mode": "primary",
-      "temperature": 0.2,
+      "temperature": 0.8,
       "tools": {
         "write": false,
         "edit": false,
@@ -50,7 +50,7 @@
     "spec": {
       "description": "Technical specification writer focused on creating comprehensive, implementable specs using Gherkin syntax",
       "mode": "primary",
-      "temperature": 0.1,
+      "temperature": 0.8,
       "tools": {
         "write": true,
         "edit": true,

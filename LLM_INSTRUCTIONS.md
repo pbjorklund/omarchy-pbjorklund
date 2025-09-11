@@ -20,6 +20,16 @@
 - Consult Arch Wiki first for hardware/drivers
 - No fallbacks - write correct code
 
+## Debugging Workflow - ALWAYS Follow This Pattern
+1. **Create todo list** for multi-step tasks to track progress
+2. **Check for multiple processes** - `ps aux | grep service-name` before troubleshooting
+3. **Use parallel tool calls** when gathering multiple pieces of information
+4. **Kill conflicting processes** with `pkill -f` before restarting services  
+5. **Use system-provided restart methods** (like `omarchy-restart-*`) instead of manual launches
+6. **Check logs systematically** - recent logs first, then specific error patterns
+7. **Verify configuration hierarchy** - which config files are actually being used
+8. **Mark todos complete immediately** after finishing each step
+
 ## Output Style (Match Omarchy)
 - No emojis
 - Minimal output
@@ -159,6 +169,29 @@ yay -S --noconfirm package < /dev/null
 - **VS Code**: Create `~/.config/Code/User/` first, symlink only `settings.json`
 - **Stow flags**: `-R --no-folding` for file-level control
 - **No `--adopt`**: Moves files INTO dotfiles, overwrites customizations
+
+## Omarchy Configuration Architecture
+**CRITICAL**: Understanding this hierarchy prevents conflicts and multiple service instances.
+
+### Hyprland Configuration Flow
+1. **Omarchy base**: `~/.local/share/omarchy/config/hypr/hyprland.conf` (main entry point)
+2. **Sources defaults**: `~/.local/share/omarchy/default/hypr/*.conf` (omarchy defaults)
+3. **Sources theme**: `~/.config/omarchy/current/theme/hyprland.conf` (current theme)
+4. **Sources user overrides**: `~/.config/hypr/*.conf` (our customizations)
+
+### User Override Files (symlinked to dotfiles-overrides)
+- `~/.config/hypr/autostart.conf` → Contains `exec-once = uwsm app -- hypridle`
+- `~/.config/hypr/hypridle.conf` → Our custom hypridle configuration
+- `~/.config/hypr/monitors.conf`, `input.conf`, `bindings.conf`, `envs.conf`
+
+### Key Points
+- **Omarchy auto-launches hypridle** via uwsm in autostart.conf:13
+- **Our hypridle.conf is used** (properly symlinked) but launched by omarchy
+- **Use `omarchy-restart-hypridle`** to restart cleanly, not manual `hypridle &`
+- **Multiple processes = conflicts** - always check for duplicate services
+- **Service management**: Omarchy manages app lifecycle via uwsm, not systemd
+
+
 
 ## Security Patterns
 - Hosts blocking via `templates/hosts.txt`
