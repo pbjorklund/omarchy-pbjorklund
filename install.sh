@@ -38,6 +38,7 @@ declare -a INSTALL_STEPS=(
   "install-hosts.sh|Hosts file installation|ALL"
   "install-opencode.sh|OpenCode installation|ALL"
   "install-claude-code.sh|Claude Code setup|ALL"
+  "install-remmina.sh|Remmina remote desktop client installation|ALL"
   "install-onlyoffice.sh|ONLYOFFICE installation|ALL"
   "install-teams-for-linux.sh|Teams for Linux installation|ALL"
   "install-zotero.sh|Zotero installation|ALL"
