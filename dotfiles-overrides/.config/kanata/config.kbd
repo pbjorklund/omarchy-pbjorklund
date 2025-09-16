@@ -86,10 +86,4 @@
    l (t! charmod l ralt)
    ; (t! charmod ; rmet)
  )
- (defchordsv2
-   (w e) esc $chord-timeout all-released ()
-   (i o) bspc $chord-timeout all-released ()
-   (x c) tab $chord-timeout all-released ()
- )
- 
  
