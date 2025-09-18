@@ -1,21 +1,20 @@
 include "%H/.local/share/omarchy/default/xcompose"
 
 # Personal expansions - e for "expand" category
-<Multi_key> <e> <c> : "patrik@cognit.se"    # expand + email
-<Multi_key> <e> <p> : "me@pbjorklund.com"    # expand + email
-<Multi_key> <e> <g> : "p.bjorklund@gmail.com"    # expand + email
-<Multi_key> <e> <n> : "pbjorklund"          # expand + name
+<Multi_key> <e> <c> : "patrik@cognit.se"
+<Multi_key> <e> <p> : "me@pbjorklund.com"
+<Multi_key> <e> <g> : "p.bjorklund@gmail.com"
+<Multi_key> <e> <n> : "pbjorklund"
 
+# Code prompts
+<Multi_key> <l> <c> : "Commit and push all uncommitted changes: create separate commits for each logical change, use imperative commit messages that explain why the change was made, stage specific files with git add {files} for each commit instead of using git add ., and push to remote when complete."
 # LLM prompts - l for "llm" category
-<Multi_key> <l> <s> : "Let's think step by step."
-<Multi_key> <l> <r> : "That's incorrect. Let me reconsider this problem from scratch."
-<Multi_key> <l> <t> : "Let's work through this systematically. First, I need to understand..."
-<Multi_key> <l> <d> : "Before I answer, let me consider multiple perspectives on this."
-<Multi_key> <l> <c> : "Let me double-check my reasoning: Is this conclusion actually supported by the evidence?"
-<Multi_key> <l> <e> : "I'll solve this by breaking it into parts: 1) 2) 3)"
-<Multi_key> <l> <a> : "Actually, let me think about whether there are flaws in my reasoning..."
-<Multi_key> <l> <m> : "Wait, I should verify this claim before proceeding."
-<Multi_key> <l> <w> : "What would an expert in this field say about this approach?"
-<Multi_key> <l> <f> : "Let me trace through this logic more carefully to find any errors."
-
-patrik@cognit.se  
+<Multi_key> <l> <t> : "Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realizes they're wrong at any point then they leave. The question is:"
+<Multi_key> <l> <s> : "You are an expert AI assistant that specializes in logical reasoning. When you respond, please think step by step and show your work. First, identify the key components of the problem. Then, work through each component systematically. Finally, synthesize your findings into a clear conclusion."
+<Multi_key> <l> <r> : "Take a deep breath and work on this problem step-by-step."
+<Multi_key> <l> <f> : "Let's think step by step. I need to work backwards from first principles to solve this problem systematically."
+<Multi_key> <l> <d> : "Please critique my reasoning and point out any flaws or gaps in my logic. After providing your critique, offer an improved solution."
+<Multi_key> <l> <e> : "Explain this concept at multiple levels: first for a beginner, then for someone with intermediate knowledge, and finally for an expert. What would each group need to know?"
+<Multi_key> <l> <a> : "Find analogies in at least two different domains that help explain this concept. Use these analogies to reason about the problem from multiple angles."
+<Multi_key> <l> <m> : "Consider this problem from multiple perspectives: What would a [domain expert], a [user], and a [critic] each say about this approach? Synthesize their viewpoints."
+<Multi_key> <l> <v> : "Before giving your final answer, please verify your reasoning by: 1) Checking for logical consistency, 2) Testing against edge cases, 3) Considering alternative explanations, 4) Identifying potential sources of error."

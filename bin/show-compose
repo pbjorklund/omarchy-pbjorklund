@@ -26,7 +26,13 @@ show_compose() {
         } else {
             comment = ""
         }
-        printf "  %-20s → %-8s # %s\n", keys, output, comment
+        # Truncate long output to 90 chars
+        if (length(output) > 90) {
+            output = substr(output, 1, 87) "..."
+        }
+        printf "%s → %s", keys, output
+        if (comment != "") printf " # %s", comment
+        print ""
     }'
     
     echo
@@ -45,7 +51,13 @@ show_compose() {
             } else {
                 comment = ""
             }
-            printf "  %-20s → %-20s # %s\n", keys, output, comment
+            # Truncate long output to 90 chars
+            if (length(output) > 90) {
+                output = substr(output, 1, 87) "..."
+            }
+            printf "%s → %s", keys, output
+            if (comment != "") printf " # %s", comment
+            print ""
         }'
     fi
     
