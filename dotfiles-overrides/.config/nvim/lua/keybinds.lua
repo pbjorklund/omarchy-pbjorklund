@@ -122,6 +122,61 @@ keymap("n", "<F4>", function()
   require("notify").dismiss({ silent = true, pending = true })
 end)
 
+-- Right-click context menu for LSP actions
+local function show_lsp_context_menu()
+  -- Check if LSP is attached to current buffer
+  local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+  if #clients == 0 then
+    vim.notify("No LSP server attached to current buffer", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Create menu options
+  local actions = {
+    { "Go to Definition", function() builtin.lsp_definitions() end },
+    { "Find References", function() builtin.lsp_references() end },
+    { "Go to Implementation", function() builtin.lsp_implementations() end },
+    { "Go to Type Definition", function() builtin.lsp_type_definitions() end },
+    { "Document Symbols", function() builtin.lsp_document_symbols() end },
+    { "Workspace Symbols", function() builtin.lsp_dynamic_workspace_symbols() end },
+    { "Code Actions", function() vim.lsp.buf.code_action() end },
+    { "Rename", function() vim.lsp.buf.rename() end },
+    { "Format", function() vim.lsp.buf.format({ async = true }) end },
+    { "Hover Documentation", function() vim.lsp.buf.hover() end },
+    { "Signature Help", function() vim.lsp.buf.signature_help() end },
+  }
+  
+  -- Use vim.ui.select to show the menu
+  local options = {}
+  for i, action in ipairs(actions) do
+    table.insert(options, action[1])
+  end
+  
+  vim.ui.select(options, {
+    prompt = "LSP Actions:",
+    format_item = function(item)
+      return "  " .. item
+    end,
+  }, function(choice)
+    if choice then
+      for _, action in ipairs(actions) do
+        if action[1] == choice then
+          action[2]()
+          break
+        end
+      end
+    end
+  end)
+end
+
+-- Right-click mapping
+keymap("n", "<RightMouse>", function()
+  -- Position cursor at mouse click location
+  vim.cmd("normal! <RightMouse>")
+  -- Show context menu after a short delay to allow cursor positioning
+  vim.defer_fn(show_lsp_context_menu, 10)
+end, { desc = "Show LSP context menu" })
+
 -- LSP (called from autocmd)
 local M = {}
 function M.setup_lsp(bufnr)

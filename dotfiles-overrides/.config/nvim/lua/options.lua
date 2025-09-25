@@ -31,5 +31,9 @@ vim.opt.foldlevel = 99                          -- Start with code visible, fold
 vim.opt.wildmode = "longest:full,full"          -- Complete longest common string, then show all options
 vim.opt.completeopt = "menu,menuone,noselect"   -- Better completion menu behavior for nvim-cmp
 
+-- Mouse support
+vim.opt.mouse = "a"                             -- Enable mouse support for all modes
+vim.opt.mousemodel = "popup_setpos"             -- Right-click shows context menu and positions cursor
+
 -- File management
 vim.opt.swapfile = false                        -- Modern editors auto-save, swap files create clutter
