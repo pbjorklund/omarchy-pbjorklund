@@ -55,6 +55,8 @@ keymap("n", "<leader>fg", builtin.live_grep)
 keymap("n", "<leader>fb", builtin.buffers)
 keymap("n", "<leader>fh", builtin.help_tags)
 keymap("n", "<leader>fd", builtin.diagnostics)
+keymap("n", "<leader>fs", builtin.lsp_document_symbols)
+keymap("n", "<leader>fS", builtin.lsp_dynamic_workspace_symbols)
 keymap("n", "<C-g>", builtin.git_status)
 
 -- Git
@@ -125,11 +127,12 @@ local M = {}
 function M.setup_lsp(bufnr)
   local opts = { buffer = bufnr, silent = true }
   
-  keymap("n", "gd", vim.lsp.buf.definition, opts)
+  -- Enhanced LSP navigation with Telescope
+  keymap("n", "gd", builtin.lsp_definitions, opts)
   keymap("n", "gD", vim.lsp.buf.declaration, opts)
-  keymap("n", "gi", vim.lsp.buf.implementation, opts)
-  keymap("n", "gt", vim.lsp.buf.type_definition, opts)
-  keymap("n", "gr", vim.lsp.buf.references, opts)
+  keymap("n", "gi", builtin.lsp_implementations, opts)
+  keymap("n", "gt", builtin.lsp_type_definitions, opts)
+  keymap("n", "gr", builtin.lsp_references, opts)
   keymap("n", "K", vim.lsp.buf.hover, opts)
   keymap("n", "<C-k>", vim.lsp.buf.signature_help, opts)
   keymap({"n", "v"}, "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -142,6 +145,10 @@ function M.setup_lsp(bufnr)
   keymap("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, opts)
   keymap("n", "<leader>lwr", vim.lsp.buf.remove_workspace_folder, opts)
   keymap("n", "<leader>lwl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+  
+  -- Additional Telescope LSP features
+  keymap("n", "<leader>ls", builtin.lsp_document_symbols, opts)
+  keymap("n", "<leader>lS", builtin.lsp_dynamic_workspace_symbols, opts)
 end
 
 return M
