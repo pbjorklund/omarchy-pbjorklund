@@ -53,8 +53,51 @@ return {
     -- Python LSP
     lspconfig.pyright.setup({})
 
-    -- C# LSP
-    lspconfig.omnisharp.setup({})
+    -- C# LSP with ASP.NET support
+    local dotnet_sdk_path = vim.fn.expand("~/.local/share/mise/installs/dotnet/9.0.304")
+    lspconfig.omnisharp.setup({
+      cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+      root_dir = function(file)
+        return lspconfig.util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json")(file)
+          or lspconfig.util.root_pattern("*.cs")(file)
+          or lspconfig.util.find_git_ancestor(file)
+      end,
+      init_options = {
+        DotNet = {
+          SdkPath = dotnet_sdk_path
+        }
+      },
+      settings = {
+        FormattingOptions = {
+          EnableEditorConfigSupport = true,
+          OrganizeImports = true,
+        },
+        MsBuild = {
+          LoadProjectsOnDemand = false,
+        },
+        RoslynExtensionsOptions = {
+          EnableAnalyzersSupport = true,
+          EnableImportCompletion = true,
+          AnalyzeOpenDocumentsOnly = false,
+        },
+        Sdk = {
+          IncludePrereleases = true,
+        },
+      },
+      on_attach = function(client, bufnr)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        
+        -- Enable semantic tokens
+        if client.server_capabilities.semanticTokensProvider then
+          client.server_capabilities.semanticTokensProvider = true
+        end
+        
+        -- Disable omnisharp's built-in formatting in favor of other formatters
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+      end,
+    })
 
     -- HTML LSP
     lspconfig.html.setup({})
@@ -86,6 +129,26 @@ return {
       callback = function(ev)
         -- Setup LSP keybinds for this buffer
         require("keybinds").setup_lsp(ev.buf)
+      end,
+    })
+
+    -- ASP.NET Core file type detection and configuration
+    vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+      pattern = {"*.cshtml", "*.razor", "*.csproj", "*.sln", "*.props", "*.targets"},
+      callback = function()
+        local file_ext = vim.fn.expand("%:e")
+        if file_ext == "cshtml" then
+          vim.bo.filetype = "html"
+          vim.bo.syntax = "html"
+        elseif file_ext == "razor" then
+          vim.bo.filetype = "html"
+          vim.bo.syntax = "html"
+        elseif file_ext == "csproj" or file_ext == "props" or file_ext == "targets" then
+          vim.bo.filetype = "xml"
+          vim.bo.syntax = "xml"
+        elseif file_ext == "sln" then
+          vim.bo.filetype = "dosini"
+        end
       end,
     })
 

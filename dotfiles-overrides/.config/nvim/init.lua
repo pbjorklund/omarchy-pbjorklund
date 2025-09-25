@@ -22,6 +22,8 @@ require("lazy").setup({
   require("plugins.bufferline"),         -- Buffer management
   require("plugins.neo-tree"),           -- File browser
   require("plugins.copilot"),            -- AI completion
+  require("plugins.completion"),         -- LSP completion
+  require("plugins.dap"),                -- Debug adapter protocol
   require("plugins.which-key"),          -- Keybind discovery
   require("plugins.neoscroll"),          -- Smooth scrolling
   require("plugins.lazygit"),            -- Git TUI
