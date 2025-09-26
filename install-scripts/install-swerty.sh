@@ -1,9 +1,11 @@
 #!/bin/bash
 set -e
 
-source "$(dirname "$0")/../utils.sh"
+# Source utils for package installation
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../utils.sh"
 
-init_logging
+init_logging "swerty"
 
 show_action "Installing Swerty keyboard layout"
 
@@ -16,12 +18,13 @@ fi
 # Download Swerty if not present
 if [ ! -f "swerty-linux.tar.gz" ]; then
     show_action "Downloading Swerty..."
-    wget https://johanegustafsson.net/projects/swerty/swerty-linux.tar.gz > ./logs/swerty-download.log 2>&1
+    wget https://johanegustafsson.net/projects/swerty/swerty-linux.tar.gz > "$LOG_DIR/swerty-download.log" 2>&1
 fi
 
 # Extract if not present
 if [ ! -d "swerty_linux" ]; then
-    tar -xzf swerty-linux.tar.gz > ./logs/swerty-extract.log 2>&1
+    show_action "Extracting Swerty..."
+    tar -xzf swerty-linux.tar.gz > "$LOG_DIR/swerty-extract.log" 2>&1
 fi
 
 # Backup original files
