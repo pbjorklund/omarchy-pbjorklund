@@ -96,6 +96,18 @@ install_package() {
             return 0
         fi
         
+        # Check if failure was due to 404 errors (stale mirrors)
+        if grep -q "The requested URL returned error: 404" "$LOG_DIR/$package_name-yay.log"; then
+            show_action "Syncing package database and retrying $package_name"
+            
+            # Sync package database and retry once
+            if sudo pacman -Sy > "$LOG_DIR/$package_name-sync.log" 2>&1 && \
+               yay -S --noconfirm "$package_name" > "$LOG_DIR/$package_name-yay-retry.log" 2>&1; then
+                show_success "$package_name installed via package manager (after sync)"
+                return 0
+            fi
+        fi
+        
         # If GitHub repo provided and yay failed, try GitHub fallback
         if [[ -n "$github_repo" ]]; then
             show_action "Package manager failed, trying GitHub fallback for $package_name"
