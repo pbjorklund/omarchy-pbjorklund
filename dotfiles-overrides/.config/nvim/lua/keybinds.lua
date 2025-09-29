@@ -177,6 +177,9 @@ keymap("n", "<RightMouse>", function()
   vim.defer_fn(show_lsp_context_menu, 10)
 end, { desc = "Show LSP context menu" })
 
+-- Keyboard shortcut to show LSP context menu
+keymap("n", "<leader>lm", show_lsp_context_menu, { desc = "Show LSP context menu" })
+
 -- LSP (called from autocmd)
 local M = {}
 function M.setup_lsp(bufnr)

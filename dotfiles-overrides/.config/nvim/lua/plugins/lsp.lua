@@ -12,7 +12,6 @@ return {
         "lua_ls", 
         "ts_ls", 
         "pyright",
-        "omnisharp",
         "html",
         "cssls",
         "jsonls",
@@ -54,19 +53,11 @@ return {
     lspconfig.pyright.setup({})
 
     -- C# LSP with ASP.NET support
-    local dotnet_sdk_path = vim.fn.expand("~/.local/share/mise/installs/dotnet/9.0.304")
     lspconfig.omnisharp.setup({
       cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
-      root_dir = function(file)
-        return lspconfig.util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json")(file)
-          or lspconfig.util.root_pattern("*.cs")(file)
-          or lspconfig.util.find_git_ancestor(file)
-      end,
-      init_options = {
-        DotNet = {
-          SdkPath = dotnet_sdk_path
-        }
-      },
+      filetypes = { "csharp", "vb" },
+      root_dir = lspconfig.util.root_pattern("*.csproj", "*.sln", "*.fsproj", "omnisharp.json", "function.json"),
+      init_options = {},
       settings = {
         FormattingOptions = {
           EnableEditorConfigSupport = true,
@@ -84,18 +75,21 @@ return {
           IncludePrereleases = true,
         },
       },
+      capabilities = require('cmp_nvim_lsp').default_capabilities(),
       on_attach = function(client, bufnr)
+        -- Print debug info
+        vim.notify("OmniSharp attached to buffer " .. bufnr)
+        vim.notify("Server capabilities: " .. vim.inspect(client.server_capabilities))
+        
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         
-        -- Enable semantic tokens
-        if client.server_capabilities.semanticTokensProvider then
-          client.server_capabilities.semanticTokensProvider = true
+        -- Ensure definition capability is available
+        if client.server_capabilities.definitionProvider then
+          vim.notify("Definition provider is available")
+        else
+          vim.notify("Definition provider is NOT available", vim.log.levels.WARN)
         end
-        
-        -- Disable omnisharp's built-in formatting in favor of other formatters
-        client.server_capabilities.documentFormattingProvider = false
-        client.server_capabilities.documentRangeFormattingProvider = false
       end,
     })
 
@@ -132,7 +126,7 @@ return {
       end,
     })
 
-    -- ASP.NET Core file type detection and configuration
+    -- ASP.NET Core file type detection and configuration  
     vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
       pattern = {"*.cshtml", "*.razor", "*.csproj", "*.sln", "*.props", "*.targets"},
       callback = function()
