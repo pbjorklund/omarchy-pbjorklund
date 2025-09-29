@@ -154,5 +154,67 @@
   "editor.fontFamily": "monospace",
   "editor.fontSize": 15,
   "chat.tools.autoApprove": true,
-  "chat.todoListTool.enabled": true
+  "chat.todoListTool.enabled": true,
+  "mssql.connectionGroups": [
+    {
+      "name": "ROOT",
+      "id": "6E459292-90BF-4F49-A2B5-81A4626E0611"
+    },
+    {
+      "name": "AMPLIFLOW PROD",
+      "color": "#C50F1F",
+      "id": "263BB997-8B8B-4E68-82AF-7C5E29FCB114",
+      "parentId": "6E459292-90BF-4F49-A2B5-81A4626E0611"
+    }
+  ],
+  "mssql.connections": [
+    {
+      "authenticationType": "SqlLogin",
+      "connectTimeout": 30,
+      "applicationName": "vscode-mssql",
+      "applicationIntent": "ReadWrite",
+      "server": "localhost",
+      "user": "sa",
+      "password": "",
+      "database": "provesslasql_20250926_133809",
+      "trustServerCertificate": true,
+      "profileName": "provesslasql_20250926_133809",
+      "groupId": "6E459292-90BF-4F49-A2B5-81A4626E0611",
+      "id": "9DC62806-EDB5-44AD-B978-6E068046704C",
+      "commandTimeout": 30,
+      "encrypt": "Mandatory",
+      "containerName": "provessla-sql"
+    },
+    {
+      "authenticationType": "SqlLogin",
+      "connectTimeout": 30,
+      "applicationName": "vscode-mssql",
+      "applicationIntent": "ReadWrite",
+      "server": "provesslasql.database.windows.net",
+      "database": "provesslasql",
+      "user": "theprovesslamaster",
+      "password": "",
+      "profileName": "PROD",
+      "groupId": "263BB997-8B8B-4E68-82AF-7C5E29FCB114",
+      "id": "EC8C7850-8000-4A62-98A8-74377F4AE226",
+      "commandTimeout": 30,
+      "encrypt": "Mandatory",
+      "profileSource": 0,
+      "emptyPasswordInput": false
+    }
+  ],
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  }
 }
