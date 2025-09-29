@@ -1,44 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "command": {
-    "test": {
-      "template": "Run the full test suite with coverage report and show any failures.\nFocus on the failing tests and suggest fixes.",
-      "description": "Run tests with coverage",
-      "agent": "build",
-      "model": "anthropic/claude-3-5-sonnet-20241022",
-    },
-    "component": {
-      "template": "Create a new React component named $ARGUMENTS with TypeScript support.\nInclude proper typing and basic structure.",
-      "description": "Create a new component",
-    },
-    "prompt-experts": {
-      "template": "Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realizes they're wrong at any point then they leave. The question is: $ARGUMENTS",
-      "description": "Three expert analysis approach"
-    },
-    "prompt-analyze": {
-      "template": "You are an expert AI assistant that specializes in logical reasoning. When you respond, please think step by step and show your work. First, identify the key components of the problem. Then, work through each component systematically. Finally, synthesize your findings into a clear conclusion.\n\nProblem: $ARGUMENTS",
-      "description": "Step-by-step logical analysis"
-    },
-    "prompt-critique": {
-      "template": "Please critique my reasoning and point out any flaws or gaps in my logic. After providing your critique, offer an improved solution.\n\nReasoning to critique: $ARGUMENTS",
-      "description": "Critique reasoning and suggest improvements"
-    },
-    "prompt-explain": {
-      "template": "Explain this concept at multiple levels: first for a beginner, then for someone with intermediate knowledge, and finally for an expert. What would each group need to know?\n\nConcept: $ARGUMENTS",
-      "description": "Multi-level explanation"
-    },
-    "prompt-perspectives": {
-      "template": "Consider this problem from multiple perspectives: What would a domain expert, a user, and a critic each say about this approach? Synthesize their viewpoints.\n\nProblem: $ARGUMENTS",
-      "description": "Multiple perspective analysis"
-    },
-    "prompt-verify": {
-      "template": "Before giving your final answer, please verify your reasoning by: 1) Checking for logical consistency, 2) Testing against edge cases, 3) Considering alternative explanations, 4) Identifying potential sources of error.\n\nReasoning to verify: $ARGUMENTS",
-      "description": "Verify reasoning systematically"
-    },
     "commit": {
-      "template": "PHASE 1 - DISCOVERY: Run git status and git diff to understand what files changed and what the actual changes are.\n\nPHASE 2 - ANALYSIS: Group changes by logical purpose using these criteria: (a) Feature additions - all files needed for one complete feature, (b) Bug fixes - minimal files that fix one specific issue, (c) Refactoring - code improvements that don't change behavior, (d) Documentation - docs/comments/README changes, (e) Configuration - settings/build/dependency changes, (f) Tests - test files that validate specific functionality. Each group must be independently revertable and leave codebase functional.\n\nPHASE 3 - VALIDATION: For each proposed commit group, verify: Does this group serve exactly one purpose? Can I revert this commit without breaking other functionality? Are all dependencies for this change included? Does the commit message clearly explain the business value?\n\nPHASE 4 - COMMIT MESSAGES: Write imperative, concise messages following this format:\n- Start with action verb: add/fix/remove/update/refactor/improve\n- 50 chars max for subject line\n- No periods, articles (a/an/the), or filler words\n- Be specific: 'fix login validation' not 'fix bug'\n- Examples: 'add dark mode toggle', 'fix memory leak in parser', 'remove deprecated auth methods', 'update deps for security patches'\n- NO: 'Update the configuration file', 'Fix some issues', 'Add new feature', 'Improve code quality'\n- YES: 'update webpack config for hot reload', 'fix race condition in api client', 'add user profile validation', 'improve query performance'\n\nPHASE 5 - EXECUTION: For each validated group: git add [specific files], commit with crafted message, verify staged changes with git diff --staged. After all commits, push to remote.\n\nIf any commit group seems too large or mixed-purpose, break it down further. If changes are too intertwined to separate cleanly, create one well-documented commit explaining the complexity.",
-      "description": "Systematic multi-phase commit process"
+      "template": "Create logical, atomic commits following these guidelines:\n\n**Tasks:**\n- [ ] Run `git status` and `git diff` to understand changes\n- [ ] Check branch name follows conventions (feature/*, fix/*, refactor/*, docs/*)\n- [ ] Group related changes into logical commits\n- [ ] Write clear commit messages (imperative, <50 chars, specific)\n- [ ] Stage and commit each logical group\n- [ ] Push commits to remote\n\n**Commit Message Examples:**\n✅ `add dark mode toggle to settings`\n✅ `fix memory leak in file parser`\n✅ `remove deprecated auth methods`\n✅ `update webpack config for hot reload`\n✅ `fix race condition in api client`\n✅ `add user profile validation`\n✅ `improve query performance`\n✅ `update deps for security patches`\n\n❌ `Update the configuration file`\n❌ `Fix some issues`\n❌ `Add new feature`\n❌ `Improve code quality`\n❌ `Various improvements`\n❌ `fix bug`\n\n**Format:** `verb + what + where/context` (no periods, articles, or filler words)",
+      "description": "Create logical commits with clear messages"
     },
+    "pr": {
+      "template": "Create a pull request with proper validation and description:\n\n**Tasks:**\n- [ ] Verify not on main/master/develop branch\n- [ ] Check branch name follows conventions (feature/*, fix/*, refactor/*, docs/*)\n- [ ] Ensure all changes are committed and pushed\n- [ ] Run `git log main..HEAD` to review all commits\n- [ ] Create PR title following commit message format\n- [ ] Write technical description of changes made\n- [ ] Link related issues if applicable (Closes #123)\n- [ ] Use `gh pr create` with title and description\n- [ ] Verify PR creation and share URL\n\n**PR Title Examples:**\n✅ `add user authentication system`\n✅ `fix race condition in api client`\n✅ `refactor database connection pool`\n✅ `remove deprecated auth methods`\n✅ `update webpack config for hot reload`\n✅ `add dark mode toggle to settings`\n\n❌ `Update the configuration file`\n❌ `Fix some issues`\n❌ `Add new feature`\n❌ `Various improvements`\n\n**Description Focus:**\n- Technical changes made (what was modified)\n- Link to related issues for business context\n- Implementation notes or decisions\n- Any testing or verification steps",
+      "description": "Create PR with validation and clear description"
+    }
   },
   "theme": "material",
   "autoupdate": true,
