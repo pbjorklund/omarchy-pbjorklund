@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+# Usage: read-opencode-agent <agent-name>
+# Reads agent file from ~/.config/opencode/agent/ and outputs to stdout
+# This allows reading agent definitions without violating working directory restrictions
+
+if [ $# -eq 0 ]; then
+    echo "Usage: read-opencode-agent <agent-name>" >&2
+    echo "Example: read-opencode-agent swe-alice" >&2
+    exit 1
+fi
+
+AGENT_NAME="$1"
+AGENT_FILE="$HOME/.config/opencode/agent/${AGENT_NAME}.md"
+
+if [ ! -f "$AGENT_FILE" ]; then
+    echo "Error: Agent file not found: $AGENT_FILE" >&2
+    echo "Available agents:" >&2
+    ls -1 "$HOME/.config/opencode/agent/" | sed 's/\.md$//' | sed 's/^/  - /' >&2
+    exit 1
+fi
+
+cat "$AGENT_FILE"

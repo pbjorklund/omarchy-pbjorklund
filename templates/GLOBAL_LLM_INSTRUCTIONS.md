@@ -43,14 +43,14 @@ This project uses a three-phase workflow for features and fixes, managed through
 
 ```
 Problem Discovery → Specification → Implementation
-   (pm-maya)         (spec-alex)      (swe-jordan)
+   (pm-patrik)       (spec-elliot)      (swe-alice)
       ↓                  ↓                 ↓
    .idea.md          .spec.md          [code changes]
 ```
 
 Each phase is a separate conversation. Files in `specs/` directory connect the phases.
 
-## Phase 1: Problem Discovery (pm-maya)
+## Phase 1: Problem Discovery (pm-patrik)
 
 **When to use:** You have a problem/pain point but no solution yet
 
@@ -59,7 +59,7 @@ Each phase is a separate conversation. Files in `specs/` directory connect the p
 "Users report that hypridle starts multiple instances after laptop resume"
 ```
 
-**What pm-maya does:**
+**What pm-patrik does:**
 1. Searches codebase for related code/config
 2. Asks focused questions about pain point, evidence, impact
 3. Validates problem definition with you
@@ -81,7 +81,7 @@ Review the brief. When ready for specification, start a new conversation with:
 "Create specification from specs/2025-10-02-hypridle-restart-fix.idea.md"
 ```
 
-## Phase 2: Specification Writing (spec-alex)
+## Phase 2: Specification Writing (spec-elliot)
 
 **When to use:** You have a validated `.idea.md` file and need implementation plan
 
@@ -90,7 +90,7 @@ Review the brief. When ready for specification, start a new conversation with:
 "Create specification from specs/YYYY-MM-DD-[name].idea.md"
 ```
 
-**What spec-alex does:**
+**What spec-elliot does:**
 1. Reads your `.idea.md` file
 2. Searches codebase for implementation patterns
 3. Evaluates 2-3 solution approaches
@@ -116,7 +116,7 @@ Review for completeness. When ready for implementation, start a new conversation
 "Implement specs/2025-10-02-hypridle-restart-fix.spec.md"
 ```
 
-## Phase 3: Implementation (swe-jordan)
+## Phase 3: Implementation (swe-alice)
 
 **When to use:** You have a complete `.spec.md` file and want code changes
 
@@ -125,7 +125,7 @@ Review for completeness. When ready for implementation, start a new conversation
 "Implement specs/YYYY-MM-DD-[name].spec.md"
 ```
 
-**What swe-jordan does:**
+**What swe-alice does:**
 1. Reads your `.spec.md` file
 2. Executes implementation tasks in order
 3. Runs verification commands from testing strategy
@@ -183,11 +183,11 @@ specs/2025-10-02-kanata-reload-optimization.spec.md
 
 **Conversation boundaries:** Each phase is independent. Don't try to continue from previous phase in same conversation.
 
-**Naming consistency:** pm-maya suggests name; spec-alex uses same name. If you want different name, tell spec-alex explicitly.
+**Naming consistency:** pm-patrik suggests name; spec-elliot uses same name. If you want different name, tell spec-elliot explicitly.
 
 **Spec reuse:** You can implement same spec multiple times (e.g., retry after failure, apply to different environment).
 
 **Iteration:** If implementation reveals spec issues, you can:
 1. Update `.spec.md` file manually
 2. Start new "Implement..." conversation
-3. Or ask swe-jordan to deviate with explanation
+3. Or ask swe-alice to deviate with explanation

@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+for f in ~/.config/opencode/agent/*.md; do
+    name=$(basename "$f" .md)
+    fullname=$(grep -m1 "^You are" "$f" | sed -n 's/You are \([^,]*\),.*/\1/p')
+    purpose=$(grep -A2 "^You are" "$f" | tail -1 | sed 's/^## //')
+    echo "   - **$name** ($fullname) - $purpose"
+done
