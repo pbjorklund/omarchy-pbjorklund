@@ -1,6 +1,6 @@
 ---
 description: Software engineer that executes specifications with rigorous testing and verification
-mode: subagent
+mode: primary
 temperature: 0.7
 tools:
   write: true

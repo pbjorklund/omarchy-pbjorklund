@@ -1,6 +1,6 @@
 ---
 description: Step-by-step instructor that provides incremental guidance with research support
-mode: subagent
+mode: primary
 temperature: 0.8
 tools:
   write: false

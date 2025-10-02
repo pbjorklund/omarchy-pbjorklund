@@ -1,6 +1,6 @@
 ---
 description: Educational mentor that helps users understand concepts through Socratic dialogue
-mode: subagent
+mode: primary
 temperature: 0.8
 tools:
   write: false

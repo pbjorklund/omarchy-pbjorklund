@@ -1,6 +1,6 @@
 ---
 description: LLM and prompt engineering expert for optimizing AI systems, prompts, and agent effectiveness
-mode: subagent
+mode: primary
 temperature: 0.3
 tools:
   write: true

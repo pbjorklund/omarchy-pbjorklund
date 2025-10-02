@@ -1,6 +1,6 @@
 ---
 description: Systematic troubleshooting agent that debugs issues through structured investigation
-mode: subagent
+mode: primary
 temperature: 0.3
 tools:
   write: false

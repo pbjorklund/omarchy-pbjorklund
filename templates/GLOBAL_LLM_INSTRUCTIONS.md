@@ -32,3 +32,162 @@ The user has expressed strong preferences for communication that helps them achi
 This user consistently values **long-term success through accurate information** over short-term comfort through agreement. They prefer helpers who challenge their thinking constructively rather than simply affirm their existing views.
 
 Following these preferences will make your assistance much more valuable and appreciated by this user.
+
+---
+
+# Problem → Specification → Implementation Workflow
+
+This project uses a three-phase workflow for features and fixes, managed through file-based state transfer between specialized agents.
+
+## Workflow Overview
+
+```
+Problem Discovery → Specification → Implementation
+   (pm-maya)         (spec-alex)      (swe-jordan)
+      ↓                  ↓                 ↓
+   .idea.md          .spec.md          [code changes]
+```
+
+Each phase is a separate conversation. Files in `specs/` directory connect the phases.
+
+## Phase 1: Problem Discovery (pm-maya)
+
+**When to use:** You have a problem/pain point but no solution yet
+
+**How to invoke:** Start conversation with problem description:
+```
+"Users report that hypridle starts multiple instances after laptop resume"
+```
+
+**What pm-maya does:**
+1. Searches codebase for related code/config
+2. Asks focused questions about pain point, evidence, impact
+3. Validates problem definition with you
+4. Writes: `specs/YYYY-MM-DD-[name].idea.md`
+5. Provides handoff instruction for next phase
+
+**Output file contains:**
+- Problem statement
+- Evidence and reproduction steps
+- Success metrics (baseline → target)
+- Scope boundaries (IN/OUT)
+- Constraints
+
+**Example output:**
+```
+✓ Problem brief written to specs/2025-10-02-hypridle-restart-fix.idea.md
+
+Review the brief. When ready for specification, start a new conversation with:
+"Create specification from specs/2025-10-02-hypridle-restart-fix.idea.md"
+```
+
+## Phase 2: Specification Writing (spec-alex)
+
+**When to use:** You have a validated `.idea.md` file and need implementation plan
+
+**How to invoke:** Start new conversation with:
+```
+"Create specification from specs/YYYY-MM-DD-[name].idea.md"
+```
+
+**What spec-alex does:**
+1. Reads your `.idea.md` file
+2. Searches codebase for implementation patterns
+3. Evaluates 2-3 solution approaches
+4. Defines testable requirements (R1, R2, R3...)
+5. Creates implementation plan with tasks
+6. Writes testing strategy with verification commands
+7. Writes: `specs/YYYY-MM-DD-[name].spec.md`
+8. Provides handoff instruction for next phase
+
+**Output file contains:**
+- Solution approach with justification
+- Requirements (R1, R2, R3...)
+- Implementation tasks with file paths
+- Testing strategy (T1, T2, T3...) with exact verification commands
+- Risk assessment and rollback plan
+
+**Example output:**
+```
+✓ Specification written to specs/2025-10-02-hypridle-restart-fix.spec.md
+✓ Based on problem brief: specs/2025-10-02-hypridle-restart-fix.idea.md
+
+Review for completeness. When ready for implementation, start a new conversation with:
+"Implement specs/2025-10-02-hypridle-restart-fix.spec.md"
+```
+
+## Phase 3: Implementation (swe-jordan)
+
+**When to use:** You have a complete `.spec.md` file and want code changes
+
+**How to invoke:** Start new conversation with:
+```
+"Implement specs/YYYY-MM-DD-[name].spec.md"
+```
+
+**What swe-jordan does:**
+1. Reads your `.spec.md` file
+2. Executes implementation tasks in order
+3. Runs verification commands from testing strategy
+4. Creates implementation report showing:
+   - Requirements met (R1 ✓, R2 ✓...)
+   - Tests passed (T1 ✓, T2 ✓...)
+   - Files modified
+   - Verification output
+
+## File Naming Convention
+
+All files in `specs/` follow this pattern:
+
+```
+specs/YYYY-MM-DD-[name].[idea|spec].md
+```
+
+**Components:**
+- **Date:** `YYYY-MM-DD` (ISO 8601 format, date created)
+- **Name:** `kebab-case-descriptor` (short, clear identifier)
+- **Extension:** `.idea.md` (problem brief) or `.spec.md` (specification)
+
+**Examples:**
+```
+specs/2025-10-02-hypridle-restart-fix.idea.md
+specs/2025-10-02-hypridle-restart-fix.spec.md
+specs/2025-10-02-kanata-reload-optimization.idea.md
+specs/2025-10-02-kanata-reload-optimization.spec.md
+```
+
+**Naming ensures:**
+- Chronological ordering (date prefix)
+- Clear problem/spec pairing (matching names)
+- Stage identification (extension)
+- Easy discovery (glob patterns work)
+
+## When to Use This Workflow
+
+**Use full workflow when:**
+- Problem is complex or unclear
+- Multiple solution approaches exist
+- Implementation affects multiple files
+- Risk assessment needed
+- Future reference valuable
+
+**Skip to direct implementation when:**
+- Problem and solution are obvious
+- Single-file change
+- Low risk
+- No spec needed for future reference
+
+## Tips
+
+**State transfer:** Each agent reads from `specs/` directory. Keep files there, don't move them.
+
+**Conversation boundaries:** Each phase is independent. Don't try to continue from previous phase in same conversation.
+
+**Naming consistency:** pm-maya suggests name; spec-alex uses same name. If you want different name, tell spec-alex explicitly.
+
+**Spec reuse:** You can implement same spec multiple times (e.g., retry after failure, apply to different environment).
+
+**Iteration:** If implementation reveals spec issues, you can:
+1. Update `.spec.md` file manually
+2. Start new "Implement..." conversation
+3. Or ask swe-jordan to deviate with explanation

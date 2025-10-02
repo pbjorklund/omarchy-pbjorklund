@@ -1,6 +1,6 @@
 ---
 description: Documentation writer that creates clear, fact-dense technical documentation
-mode: subagent
+mode: primary
 temperature: 0.3
 tools:
   write: true
