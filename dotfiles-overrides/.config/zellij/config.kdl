@@ -284,12 +284,20 @@ web_client {
 //   - true
 //   - false (Default)
 // 
-simplified_ui true
+simplified_ui false
  
 // Choose the theme that is specified in the themes section.
 // Default: default
 // 
 theme "atelier-sulphurpool"
+
+// UI configuration for better tab visibility
+ui {
+    pane_frames {
+        rounded_corners true
+        hide_session_name true
+    }
+}
  
 // Choose the base input mode of zellij.
 // Default: normal
@@ -334,7 +342,7 @@ mouse_mode true
 //   - true (default, enabled)
 //   - false
 // 
-// pane_frames false
+//pane_frames false
  
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
@@ -397,13 +405,13 @@ copy_on_select true
 // otherwise this will error if such a session exists.
 // Default: <RANDOM>
 // 
-// session_name "My singleton session"
+session_name "my"
  
 // When `session_name` is provided, attaches to that session
 // if it is already running or creates it otherwise.
 // Default: false
 // 
-// attach_to_session true
+attach_to_session true
  
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:
