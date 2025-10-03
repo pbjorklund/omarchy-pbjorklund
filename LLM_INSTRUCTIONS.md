@@ -2,6 +2,7 @@
 
 ## MUST Follow
 - Use `set -e` in scripts
+- Use `rg -.` to search in actual dotfiles
 - Use `source` not `bash` in install.sh
 - No interactive prompts
 - Test on fresh Arch VM before committing
